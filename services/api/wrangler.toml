@@ -1,0 +1,25 @@
+name = "canmyeatthis-api"
+main = "src/index.ts"
+compatibility_date = "2026-09-01"
+compatibility_flags = ["nodejs_compat"]
+
+# KV namespace for: response cache (docs/03 kv cache), global daily spend counter,
+# kill switch and provider config (docs/10-hobby-scope.md §3). Bound once the
+# namespace is created with `wrangler kv namespace create CACHE`.
+# [[kv_namespaces]]
+# binding = "CACHE"
+# id = "<set after `wrangler kv namespace create CACHE`>"
+
+# D1 database for request logging (docs/03) — bound when Phase 5 needs it.
+# [[d1_databases]]
+# binding = "DB"
+# database_name = "canmyeatthis"
+# database_id = "<set after `wrangler d1 create canmyeatthis`>"
+
+[vars]
+# Non-secret config only. Real secrets are set with:
+#   wrangler secret put GEMINI_API_KEY
+#   wrangler secret put OPENAI_API_KEY
+# Never put a secret in this file — AGENTS.md #6, docs/10-hobby-scope.md §3.
+DEV_SESSION_TOKENS_ENABLED = "false"
+VISION_DAILY_CALL_CAP = "500"

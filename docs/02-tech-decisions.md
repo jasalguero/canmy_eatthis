@@ -195,3 +195,28 @@ packages/kb          KB source data, build script, validation, fixtures
 `packages/shared` holding the *resolution logic* (not just types) is deliberate: the same
 normalise-and-match code runs on-device and at the edge, so local and server resolution cannot
 disagree.
+
+## D16 — Phase 0 schema deviations from `docs/03-api-contract.md` (hobby scope)
+
+Implementing Phase 0 (`packages/shared/src/schemas/`), two of docs/03's schemas as written
+assume the funded plan and conflict with `docs/10-hobby-scope.md`. Per AGENTS.md "Before you
+deviate", recording the change here rather than silently diverging:
+
+1. **`VerdictPayload` drops `mechanism`, `riskBand`, `riskBandExplanation`.** Doc 10 §1/§4 cuts
+   per-entry mechanism prose and weight×amount risk banding outright (AGENTS.md #16) — they are
+   exactly the highest-expertise, least-reviewable parts of the funded schema, and Doc 10 is
+   explicit that they don't exist without a vet. `onsetHours` is kept: it's a sourced fact
+   ("signs typically appear within N–M hours"), not a judgement call, so it clears the bar Doc 10
+   §4 sets.
+2. **`POST /v1/verdict` request drops `context` (`petWeightKg`, `amount`).** Both inputs existed
+   only to compute `riskBand`, which no longer exists. The request is now `{ kbId, species }`.
+3. **`ApiError` drops `QUOTA_EXCEEDED` (402, "Paywall sheet"), adds `SPEND_CAP_EXCEEDED`.** Doc
+   03's `QUOTA_EXCEEDED` belonged to the funded plan's per-user subscription quota; AGENTS.md #18
+   cuts all monetisation code, so there is nothing to paywall. `SPEND_CAP_EXCEEDED` names the
+   real hobby-scope failure mode instead (Doc 10 §3): the *global* daily vision-call counter is
+   exceeded, and the app must degrade to offline-KB-only with an honest message, never an error
+   screen.
+
+Everything else in doc 03 (`Species`, `Verdict`, `IdentifyRequest`, `IdentifyResponse`, the
+`toxic`/`unknown`/`model_fallback` invariants) is implemented as specified, including as runtime
+`superRefine` checks in the Zod schemas themselves rather than left to convention.
