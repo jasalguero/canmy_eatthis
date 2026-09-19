@@ -1,0 +1,54 @@
+id: rodenticide
+display_name:
+  en: Rat or mouse poison
+  es: Veneno para ratas o ratones
+category: chemical
+aliases:
+  en: [rat poison, mouse poison, rodenticide, rat bait, mouse bait, rodent bait]
+  es: [veneno para ratas, veneno para ratones, raticida, cebo para ratas, cebo para ratones, matarratas]
+confusable_with: []
+is_ingredient: false
+high_risk: true
+species:
+  dog:
+    verdict: toxic
+    severity: severe
+    headline:
+      en: Toxic to dogs. Emergency — call your vet now.
+      es: Tóxico para perros. Emergencia — llama ahora a tu veterinario.
+    summary:
+      en: Rat and mouse baits use several very different active ingredients — some cause internal bleeding over several days, others attack the nervous system within hours with no antidote at all. Because you usually can't tell which type from the pellets alone, treat any ingestion as an emergency and bring the packaging.
+      es: Los venenos para ratas y ratones usan principios activos muy distintos entre sí — unos provocan hemorragias internas a lo largo de varios días, otros atacan el sistema nervioso en cuestión de horas y no tienen antídoto. Como normalmente no se puede distinguir el tipo solo con los gránulos, trata cualquier ingestión como una emergencia y lleva el envase contigo.
+    signs: [lethargy, weakness, pale_gums, difficulty_breathing, blood_in_vomit, blood_in_stool, seizures, ataxia]
+    onset_hours: { min: 0, max: 72 }
+    emergency_actions: [call_vet_now, do_not_induce_vomiting, bring_packaging]
+  cat:
+    verdict: toxic
+    severity: severe
+    headline:
+      en: Toxic to cats. Emergency — call your vet now.
+      es: Tóxico para gatos. Emergencia — llama ahora a tu veterinario.
+    summary:
+      en: Cats can be poisoned directly by eating bait, or indirectly by catching and eating a poisoned rodent. As with dogs, the active ingredient varies and the packaging is the fastest way for a vet to know what they're treating.
+      es: Los gatos pueden intoxicarse directamente al comer el cebo, o de forma indirecta al cazar y comer un roedor envenenado. Igual que en los perros, el principio activo varía, y el envase es la forma más rápida de que el veterinario sepa a qué se enfrenta.
+    signs: [lethargy, weakness, pale_gums, difficulty_breathing, blood_in_vomit, blood_in_stool, seizures, ataxia]
+    onset_hours: { min: 0, max: 72 }
+    emergency_actions: [call_vet_now, do_not_induce_vomiting, bring_packaging]
+sources:
+  - label: Merck Veterinary Manual — Anticoagulant Rodenticide Poisoning in Animals
+    url: https://www.merckvetmanual.com/toxicology/rodenticide-poisoning/anticoagulant-rodenticide-poisoning-in-animals
+    accessed: 2026-09-19
+  - label: Michigan State University College of Veterinary Medicine — Pets & Poison Control, Making Your Home Safer
+    url: https://cvm.msu.edu/vdl/client-education/guides-for-pet-owners/pets-poison-control-making-your-home-safer
+    accessed: 2026-09-19
+review:
+  reviewed_by: "native speaker"
+  reviewed_at: 2026-09-19
+  status: draft
+translations:
+  es:
+    tier_a: approved
+    tier_b: approved
+    translated_by: "Reviewed by native speaker"
+    reviewed_by: "native speaker"
+    reviewed_at: 2026-09-19

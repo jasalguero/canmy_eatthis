@@ -1,0 +1,54 @@
+id: chocolate_dark
+display_name:
+  en: Dark chocolate
+  es: Chocolate negro
+category: food
+aliases:
+  en: [dark chocolate, baking chocolate, bittersweet chocolate, semisweet chocolate, cocoa powder, unsweetened chocolate, cooking chocolate, cocoa solids, cacao powder]
+  es: [chocolate negro, chocolate amargo, chocolate para postres, chocolate de cobertura, cacao en polvo, chocolate puro, chocolate fondant]
+confusable_with: [chocolate_milk]
+is_ingredient: true
+high_risk: true
+species:
+  dog:
+    verdict: toxic
+    severity: moderate
+    headline:
+      en: Toxic to dogs. Call your vet.
+      es: Tóxico para perros. Llama a tu veterinario.
+    summary:
+      en: Dark chocolate is rich in theobromine, a stimulant dogs clear far more slowly than people do. Even a modest amount of dark or baking chocolate can bring on vomiting, a racing heart, tremors or seizures.
+      es: El chocolate negro es rico en teobromina, un estimulante que los perros eliminan mucho más despacio que las personas. Incluso una cantidad moderada de chocolate negro o de repostería puede causar vómitos, taquicardia, temblores o convulsiones.
+    signs: [vomiting, diarrhoea, restlessness, tachycardia, tremors, seizures, hyperthermia]
+    onset_hours: { min: 6, max: 12 }
+    emergency_actions: [call_vet_now, do_not_induce_vomiting, bring_packaging]
+  cat:
+    verdict: toxic
+    severity: moderate
+    headline:
+      en: Toxic to cats. Call your vet.
+      es: Tóxico para gatos. Llama a tu veterinario.
+    summary:
+      en: Cats rarely choose to eat chocolate, but if one does, the same theobromine that harms dogs harms cats too, and cats are at least as sensitive.
+      es: Los gatos rara vez comen chocolate por voluntad propia, pero si lo hacen, la misma teobromina que afecta a los perros también les afecta a ellos, y son al menos igual de sensibles.
+    signs: [vomiting, diarrhoea, restlessness, tachycardia, tremors, seizures, hyperthermia]
+    onset_hours: { min: 6, max: 12 }
+    emergency_actions: [call_vet_now, do_not_induce_vomiting, bring_packaging]
+sources:
+  - label: Merck Veterinary Manual — Chocolate Toxicosis in Animals
+    url: https://www.merckvetmanual.com/toxicology/food-hazards/chocolate-toxicosis-in-animals
+    accessed: 2026-09-19
+  - label: "Kovalkovičová et al., \"Some food toxic for pets\", Interdisciplinary Toxicology (2009)"
+    url: https://pmc.ncbi.nlm.nih.gov/articles/PMC2984110/
+    accessed: 2026-09-19
+review:
+  reviewed_by: "native speaker"
+  reviewed_at: 2026-09-19
+  status: draft
+translations:
+  es:
+    tier_a: approved
+    tier_b: approved
+    translated_by: "Reviewed by native speaker"
+    reviewed_by: "native speaker"
+    reviewed_at: 2026-09-19

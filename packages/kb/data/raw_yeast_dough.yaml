@@ -1,0 +1,54 @@
+id: raw_yeast_dough
+display_name:
+  en: Raw yeast dough
+  es: Masa de pan cruda con levadura
+category: food
+aliases:
+  en: [raw dough, yeast dough, bread dough, pizza dough, unbaked dough, rising dough]
+  es: [masa cruda, masa de pan, masa con levadura, masa de pizza cruda, masa sin hornear]
+confusable_with: []
+is_ingredient: false
+high_risk: true
+species:
+  dog:
+    verdict: toxic
+    severity: moderate
+    headline:
+      en: Toxic to dogs. Call your vet.
+      es: Tóxico para perros. Llama a tu veterinario.
+    summary:
+      en: A warm stomach is an ideal place for raw yeast dough to keep rising, stretching the stomach, and the yeast produces alcohol as it ferments — so a dog gets both a mechanical problem and alcohol poisoning from the same mouthful.
+      es: Un estómago caliente es un lugar ideal para que la masa cruda con levadura siga creciendo, dilatando el estómago, y la levadura produce alcohol al fermentar — así que el perro sufre a la vez un problema mecánico y una intoxicación alcohólica por el mismo bocado.
+    signs: [bloating, abdominal_pain, ataxia, disorientation, weakness, low_blood_sugar_signs, coma]
+    onset_hours: { min: 0.5, max: 2 }
+    emergency_actions: [call_vet_now, do_not_induce_vomiting, bring_packaging]
+  cat:
+    verdict: toxic
+    severity: moderate
+    headline:
+      en: Toxic to cats. Call your vet.
+      es: Tóxico para gatos. Llama a tu veterinario.
+    summary:
+      en: Cats eat raw dough far less often than dogs, but the same risks — a distended stomach and alcohol produced by the fermenting yeast — apply if one does.
+      es: Los gatos comen masa cruda con mucha menos frecuencia que los perros, pero si lo hacen corren los mismos riesgos — dilatación del estómago y alcohol producido por la levadura al fermentar.
+    signs: [bloating, abdominal_pain, ataxia, disorientation, weakness, low_blood_sugar_signs, coma]
+    onset_hours: { min: 0.5, max: 2 }
+    emergency_actions: [call_vet_now, do_not_induce_vomiting, bring_packaging]
+sources:
+  - label: Merck Veterinary Manual — Bread Dough Toxicosis in Animals
+    url: https://www.merckvetmanual.com/toxicology/food-hazards/bread-dough-toxicosis-in-animals
+    accessed: 2026-09-19
+  - label: "Kovalkovičová et al., \"Some food toxic for pets\", Interdisciplinary Toxicology (2009)"
+    url: https://pmc.ncbi.nlm.nih.gov/articles/PMC2984110/
+    accessed: 2026-09-19
+review:
+  reviewed_by: "native speaker"
+  reviewed_at: 2026-09-19
+  status: draft
+translations:
+  es:
+    tier_a: approved
+    tier_b: approved
+    translated_by: "Reviewed by native speaker"
+    reviewed_by: "native speaker"
+    reviewed_at: 2026-09-19

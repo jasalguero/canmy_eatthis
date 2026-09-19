@@ -220,3 +220,22 @@ deviate", recording the change here rather than silently diverging:
 Everything else in doc 03 (`Species`, `Verdict`, `IdentifyRequest`, `IdentifyResponse`, the
 `toxic`/`unknown`/`model_fallback` invariants) is implemented as specified, including as runtime
 `superRefine` checks in the Zod schemas themselves rather than left to convention.
+
+## D17 — Phase 1: `review.status` has no vet behind it, and `es` ships gated by a config flag
+
+Implementing Phase 1 (`packages/kb`), two points from docs/04 §1 and docs/09 §5 need recording
+because there is no licensed vet available in the hobby build (`docs/10-hobby-scope.md` §4):
+
+1. **`review.status: approved` means "meets the editorial standard in docs/10 §4"** — ≥2
+   independent authoritative sources, no thin or contested claims, own-words prose — recorded
+   against the author's own name in `reviewed_by`, not a veterinary sign-off. Doc 04 rule 4 ("no
+   entry ships to production with `review.status !== approved`") is a *release* gate, enforced
+   later (Phase 10); Phase 1 entries are authored as `draft` or `needs_review` and that is
+   correct, per doc 07 Phase 1's own instruction to author with `review.status: draft`.
+2. **`build.ts` takes a `SHIPPED_LANGUAGES` list (currently `['en']` only) and enforces the
+   Tier A/B approval rules (docs/04 §1 rules 8–9, docs/09 §5 rules 1–2) only for languages in
+   that list.** `es` content in Phase 1 is authored by Claude (not a native speaker) and is
+   marked `tier_a: draft` / `tier_b: draft` honestly rather than self-certified as `approved`.
+   Flipping `es` into `SHIPPED_LANGUAGES` is the concrete signal that native-speaker review
+   (docs/09 §4 rule 1) has happened — until then the build must not require `es` to be approved,
+   or the only way to keep the build green would be to lie about review status.

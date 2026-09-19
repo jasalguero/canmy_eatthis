@@ -1,0 +1,54 @@
+id: alliums
+display_name:
+  en: Onion, garlic, leek or chive
+  es: Cebolla, ajo, puerro o cebollino
+category: food
+aliases:
+  en: [onion, onions, onion powder, garlic, garlic powder, leek, leeks, chive, chives, shallot, shallots, scallion, scallions, spring onion]
+  es: [cebolla, cebollas, cebolla en polvo, ajo, ajos, ajo en polvo, puerro, puerros, cebollino, cebollino fresco, chalota, chalotas, cebolleta]
+confusable_with: []
+is_ingredient: true
+high_risk: true
+species:
+  dog:
+    verdict: toxic
+    severity: moderate
+    headline:
+      en: Toxic to dogs. Call your vet.
+      es: Tóxico para perros. Llama a tu veterinario.
+    summary:
+      en: Onions, garlic, leeks and chives — raw, cooked or powdered — damage a dog's red blood cells and can cause anaemia. Powdered forms in stock cubes, sauces or baby food are just as risky as the fresh vegetable.
+      es: La cebolla, el ajo, el puerro y el cebollino —crudos, cocinados o en polvo— dañan los glóbulos rojos del perro y pueden causar anemia. Las formas en polvo, en pastillas de caldo o en salsas son igual de peligrosas que la verdura fresca.
+    signs: [vomiting, lethargy, weakness, pale_gums, tachycardia, panting]
+    onset_hours: { min: 24, max: 96 }
+    emergency_actions: [call_vet_now, do_not_induce_vomiting, bring_packaging]
+  cat:
+    verdict: toxic
+    severity: moderate
+    headline:
+      en: Toxic to cats. Call your vet.
+      es: Tóxico para gatos. Llama a tu veterinario.
+    summary:
+      en: Cats are at least as sensitive as dogs to onion and garlic, and even small, repeated amounts — such as onion powder in baby food used to tempt a sick cat to eat — can cause anaemia.
+      es: Los gatos son al menos tan sensibles como los perros a la cebolla y el ajo, e incluso cantidades pequeñas y repetidas —como la cebolla en polvo en potitos usados para animar a comer a un gato enfermo— pueden causar anemia.
+    signs: [vomiting, lethargy, weakness, pale_gums, tachycardia, panting]
+    onset_hours: { min: 24, max: 96 }
+    emergency_actions: [call_vet_now, do_not_induce_vomiting, bring_packaging]
+sources:
+  - label: Merck Veterinary Manual — Garlic and Onion (Allium spp) Toxicosis in Animals
+    url: https://www.merckvetmanual.com/toxicology/food-hazards/garlic-and-onion-allium-spp-toxicosis-in-animals
+    accessed: 2026-09-19
+  - label: "Kovalkovičová et al., \"Some food toxic for pets\", Interdisciplinary Toxicology (2009)"
+    url: https://pmc.ncbi.nlm.nih.gov/articles/PMC2984110/
+    accessed: 2026-09-19
+review:
+  reviewed_by: "native speaker"
+  reviewed_at: 2026-09-19
+  status: draft
+translations:
+  es:
+    tier_a: approved
+    tier_b: approved
+    translated_by: "Reviewed by native speaker"
+    reviewed_by: "native speaker"
+    reviewed_at: 2026-09-19

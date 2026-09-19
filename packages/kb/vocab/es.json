@@ -1,0 +1,37 @@
+{
+  "signs": {
+    "vomiting": "Vómitos",
+    "diarrhoea": "Diarrea",
+    "lethargy": "Letargo",
+    "loss_of_appetite": "Pérdida de apetito",
+    "hypersalivation": "Babeo excesivo",
+    "weakness": "Debilidad",
+    "ataxia": "Falta de coordinación al moverse",
+    "tremors": "Temblores",
+    "seizures": "Convulsiones",
+    "tachycardia": "Ritmo cardíaco acelerado",
+    "hyperthermia": "Temperatura corporal elevada",
+    "restlessness": "Inquietud",
+    "agitation": "Agitación",
+    "disorientation": "Desorientación",
+    "collapse": "Colapso",
+    "difficulty_breathing": "Dificultad para respirar",
+    "pale_gums": "Encías pálidas",
+    "abdominal_pain": "Dolor abdominal",
+    "bloating": "Hinchazón abdominal",
+    "increased_thirst": "Aumento de la sed",
+    "increased_urination": "Aumento de la micción",
+    "kidney_failure_signs": "Signos de fallo renal",
+    "low_blood_sugar_signs": "Signos de azúcar bajo en sangre",
+    "panting": "Jadeo",
+    "coma": "Coma",
+    "blood_in_vomit": "Sangre en el vómito",
+    "blood_in_stool": "Sangre en las heces",
+    "jaundice": "Color amarillento en encías, piel u ojos"
+  },
+  "emergency_actions": {
+    "call_vet_now": "Llama ahora a tu veterinario o a una línea de control de intoxicaciones",
+    "do_not_induce_vomiting": "No provoques el vómito salvo que un veterinario te lo indique",
+    "bring_packaging": "Lleva contigo el envase o una muestra"
+  }
+}

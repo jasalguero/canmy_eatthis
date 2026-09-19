@@ -1,0 +1,54 @@
+id: caffeine
+display_name:
+  en: Caffeine
+  es: Cafeína
+category: food
+aliases:
+  en: [caffeine, coffee, coffee grounds, coffee beans, tea bags, energy drink, energy drinks, caffeine pills, espresso]
+  es: [cafeína, café, posos de café, granos de café, bolsitas de té, bebida energética, bebidas energéticas, pastillas de cafeína, café molido]
+confusable_with: []
+is_ingredient: true
+high_risk: true
+species:
+  dog:
+    verdict: toxic
+    severity: moderate
+    headline:
+      en: Toxic to dogs. Call your vet.
+      es: Tóxico para perros. Llama a tu veterinario.
+    summary:
+      en: A lick of coffee or tea is unlikely to cause a problem, but unused coffee grounds, beans, tea bags or caffeine pills are concentrated enough to seriously poison a dog.
+      es: Un lametón de café o té no suele causar problemas, pero los posos de café, los granos, las bolsitas de té o las pastillas de cafeína están lo bastante concentrados como para intoxicar gravemente a un perro.
+    signs: [restlessness, agitation, vomiting, tachycardia, tremors, hyperthermia, seizures]
+    onset_hours: { min: 1, max: 2 }
+    emergency_actions: [call_vet_now, do_not_induce_vomiting, bring_packaging]
+  cat:
+    verdict: toxic
+    severity: moderate
+    headline:
+      en: Toxic to cats. Call your vet.
+      es: Tóxico para gatos. Llama a tu veterinario.
+    summary:
+      en: Cats are at least as sensitive to caffeine as dogs, and it takes their bodies a long time to clear it, so effects can last for hours.
+      es: Los gatos son al menos tan sensibles a la cafeína como los perros, y su cuerpo tarda mucho en eliminarla, por lo que los efectos pueden durar horas.
+    signs: [restlessness, agitation, vomiting, tachycardia, tremors, hyperthermia, seizures]
+    onset_hours: { min: 1, max: 2 }
+    emergency_actions: [call_vet_now, do_not_induce_vomiting, bring_packaging]
+sources:
+  - label: Merck Veterinary Manual — Chocolate Toxicosis in Animals (methylxanthines, incl. caffeine)
+    url: https://www.merckvetmanual.com/toxicology/food-hazards/chocolate-toxicosis-in-animals
+    accessed: 2026-09-19
+  - label: "Kovalkovičová et al., \"Some food toxic for pets\", Interdisciplinary Toxicology (2009)"
+    url: https://pmc.ncbi.nlm.nih.gov/articles/PMC2984110/
+    accessed: 2026-09-19
+review:
+  reviewed_by: "native speaker"
+  reviewed_at: 2026-09-19
+  status: draft
+translations:
+  es:
+    tier_a: approved
+    tier_b: approved
+    translated_by: "Reviewed by native speaker"
+    reviewed_by: "native speaker"
+    reviewed_at: 2026-09-19

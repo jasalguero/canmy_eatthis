@@ -1,0 +1,54 @@
+id: grapes_raisins
+display_name:
+  en: Grapes and raisins
+  es: Uvas y pasas
+category: food
+aliases:
+  en: [grapes, raisins, sultanas, currants, grape, raisin, sultana, currant, dried grapes, zante currants]
+  es: [uvas, pasas, pasas de uva, uva pasa, sultanas, grosellas de corinto, uva]
+confusable_with: []
+is_ingredient: true
+high_risk: true
+species:
+  dog:
+    verdict: toxic
+    severity: severe
+    headline:
+      en: Toxic to dogs. Call your vet.
+      es: Tóxico para perros. Llama a tu veterinario.
+    summary:
+      en: Grapes, raisins and currants can cause sudden kidney failure in dogs. No amount is known to be reliably safe, and some dogs are affected by very small quantities while others tolerate more — there's no way to tell in advance.
+      es: Las uvas, las pasas y las grosellas de Corinto pueden provocar un fallo renal repentino en perros. No se conoce ninguna cantidad que sea claramente segura, y algunos perros se ven afectados con cantidades muy pequeñas mientras que otros toleran más, sin forma de saberlo de antemano.
+    signs: [vomiting, diarrhoea, lethargy, abdominal_pain, increased_thirst, increased_urination, kidney_failure_signs]
+    onset_hours: { min: 6, max: 24 }
+    emergency_actions: [call_vet_now, do_not_induce_vomiting, bring_packaging]
+  cat:
+    verdict: toxic
+    severity: severe
+    headline:
+      en: Toxic to cats. Call your vet.
+      es: Tóxico para gatos. Llama a tu veterinario.
+    summary:
+      en: Cats eat grapes and raisins far less often than dogs, so there's less documented experience, but the same kidney-failure risk is assumed to apply and is treated the same way.
+      es: Los gatos comen uvas y pasas con mucha menos frecuencia que los perros, por lo que hay menos casos documentados, pero se asume el mismo riesgo de fallo renal y se trata de la misma manera.
+    signs: [vomiting, diarrhoea, lethargy, abdominal_pain, increased_thirst, increased_urination, kidney_failure_signs]
+    onset_hours: { min: 6, max: 24 }
+    emergency_actions: [call_vet_now, do_not_induce_vomiting, bring_packaging]
+sources:
+  - label: Merck Veterinary Manual — Grape, Raisin, and Tamarind Toxicosis in Dogs
+    url: https://www.merckvetmanual.com/toxicology/food-hazards/grape-raisin-and-tamarind-vitis-spp-tamarindus-spp-toxicosis-in-dogs
+    accessed: 2026-09-19
+  - label: "Kovalkovičová et al., \"Some food toxic for pets\", Interdisciplinary Toxicology (2009)"
+    url: https://pmc.ncbi.nlm.nih.gov/articles/PMC2984110/
+    accessed: 2026-09-19
+review:
+  reviewed_by: "native speaker"
+  reviewed_at: 2026-09-19
+  status: draft
+translations:
+  es:
+    tier_a: approved
+    tier_b: approved
+    translated_by: "Reviewed by native speaker"
+    reviewed_by: "native speaker"
+    reviewed_at: 2026-09-19

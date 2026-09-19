@@ -1,0 +1,48 @@
+id: carrot
+display_name:
+  en: Carrot
+  es: Zanahoria
+category: food
+aliases:
+  en: [carrot, carrots, raw carrot, cooked carrot, baby carrots]
+  es: [zanahoria, zanahorias, zanahoria cruda, zanahoria cocida, zanahorias baby]
+confusable_with: []
+is_ingredient: true
+high_risk: false
+species:
+  dog:
+    verdict: safe
+    severity: null
+    headline:
+      en: No known risk from carrot.
+      es: Sin riesgo conocido con zanahoria.
+    summary:
+      en: Raw or cooked carrot is a low-calorie snack many dogs enjoy. Cut it into bite-sized pieces to avoid a choking risk, especially for small dogs or puppies.
+      es: La zanahoria cruda o cocida es un aperitivo bajo en calorías que a muchos perros les gusta. Córtala en trozos pequeños para evitar el riesgo de atragantamiento, sobre todo en perros pequeños o cachorros.
+    signs: []
+    onset_hours: null
+    emergency_actions: []
+  cat:
+    verdict: safe
+    severity: null
+    headline:
+      en: No known risk from carrot.
+      es: Sin riesgo conocido con zanahoria.
+    summary:
+      en: A small amount of cooked, plain carrot is not known to cause harm to cats, though as an obligate carnivore a cat has little use for it nutritionally.
+      es: Una pequeña cantidad de zanahoria cocida y sin condimentar no se conoce que perjudique a los gatos, aunque al ser carnívoros estrictos les aporta poco a nivel nutricional.
+    signs: []
+    onset_hours: null
+    emergency_actions: []
+sources: []
+review:
+  reviewed_by: "native speaker"
+  reviewed_at: 2026-09-19
+  status: draft
+translations:
+  es:
+    tier_a: approved
+    tier_b: approved
+    translated_by: "Reviewed by native speaker"
+    reviewed_by: "native speaker"
+    reviewed_at: 2026-09-19

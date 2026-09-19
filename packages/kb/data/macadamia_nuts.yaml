@@ -1,0 +1,54 @@
+id: macadamia_nuts
+display_name:
+  en: Macadamia nuts
+  es: Nueces de macadamia
+category: food
+aliases:
+  en: [macadamia nuts, macadamia nut, macadamias, macadamia butter]
+  es: [nueces de macadamia, nuez de macadamia, macadamias, mantequilla de macadamia]
+confusable_with: []
+is_ingredient: true
+high_risk: true
+species:
+  dog:
+    verdict: toxic
+    severity: moderate
+    headline:
+      en: Toxic to dogs. Call your vet.
+      es: Tóxico para perros. Llama a tu veterinario.
+    summary:
+      en: Macadamia nuts cause a strange but usually short-lived syndrome in dogs — weakness, especially in the back legs, along with tremors and a raised temperature. The exact toxin isn't known, but the cases are well documented.
+      es: Las nueces de macadamia provocan en los perros un síndrome extraño pero normalmente pasajero — debilidad, sobre todo en las patas traseras, junto con temblores y fiebre. No se conoce la toxina exacta, pero los casos están bien documentados.
+    signs: [weakness, ataxia, tremors, hyperthermia, lethargy, vomiting]
+    onset_hours: { min: 0, max: 12 }
+    emergency_actions: [call_vet_now, do_not_induce_vomiting, bring_packaging]
+  cat:
+    verdict: unknown
+    severity: null
+    headline:
+      en: Not sure — no reported cases in cats, but ask your vet.
+      es: No estoy seguro — no hay casos descritos en gatos, pero consulta a tu veterinario.
+    summary:
+      en: Macadamia toxicosis has only been documented in dogs; there isn't good evidence either way for cats, so treat any real ingestion as worth a call to your vet rather than assuming it's fine.
+      es: La toxicosis por macadamia solo está documentada en perros; no hay buena evidencia sobre su efecto en gatos, así que cualquier ingestión real merece una llamada a tu veterinario en lugar de asumir que no pasa nada.
+    signs: []
+    onset_hours: null
+    emergency_actions: []
+sources:
+  - label: Merck Veterinary Manual — Macadamia Nut Toxicosis in Dogs
+    url: https://www.merckvetmanual.com/toxicology/food-hazards/macadamia-nut-toxicosis-in-dogs
+    accessed: 2026-09-19
+  - label: "Kovalkovičová et al., \"Some food toxic for pets\", Interdisciplinary Toxicology (2009)"
+    url: https://pmc.ncbi.nlm.nih.gov/articles/PMC2984110/
+    accessed: 2026-09-19
+review:
+  reviewed_by: "native speaker"
+  reviewed_at: 2026-09-19
+  status: draft
+translations:
+  es:
+    tier_a: approved
+    tier_b: approved
+    translated_by: "Reviewed by native speaker"
+    reviewed_by: "native speaker"
+    reviewed_at: 2026-09-19

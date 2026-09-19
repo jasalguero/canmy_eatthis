@@ -1,0 +1,48 @@
+id: cooked_plain_chicken
+display_name:
+  en: Plain cooked chicken
+  es: Pollo cocinado sin condimentar
+category: food
+aliases:
+  en: [cooked chicken, plain chicken, boiled chicken, grilled chicken, chicken breast, roasted chicken]
+  es: [pollo cocinado, pollo hervido, pollo a la plancha, pechuga de pollo, pollo asado, pollo cocido]
+confusable_with: []
+is_ingredient: true
+high_risk: false
+species:
+  dog:
+    verdict: safe
+    severity: null
+    headline:
+      en: No known risk from plain cooked chicken.
+      es: Sin riesgo conocido con pollo cocinado sin condimentar.
+    summary:
+      en: Boneless, skinless, unseasoned cooked chicken is a normal source of protein for dogs. Avoid the bones, skin, and any seasoning such as garlic, onion or heavy salt, oil or butter.
+      es: El pollo cocinado, sin huesos, sin piel y sin condimentar es una fuente de proteína habitual para los perros. Evita los huesos, la piel y cualquier condimento como ajo, cebolla o exceso de sal, aceite o mantequilla.
+    signs: []
+    onset_hours: null
+    emergency_actions: []
+  cat:
+    verdict: safe
+    severity: null
+    headline:
+      en: No known risk from plain cooked chicken.
+      es: Sin riesgo conocido con pollo cocinado sin condimentar.
+    summary:
+      en: Plain, boneless cooked chicken — boiled or baked with no seasoning, butter or oil — is a normal part of a cat's diet.
+      es: El pollo cocinado sin huesos ni condimentar —hervido o al horno, sin especias, mantequilla ni aceite— forma parte habitual de la dieta de un gato.
+    signs: []
+    onset_hours: null
+    emergency_actions: []
+sources: []
+review:
+  reviewed_by: "native speaker"
+  reviewed_at: 2026-09-19
+  status: draft
+translations:
+  es:
+    tier_a: approved
+    tier_b: approved
+    translated_by: "Reviewed by native speaker"
+    reviewed_by: "native speaker"
+    reviewed_at: 2026-09-19

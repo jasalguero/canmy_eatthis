@@ -1,0 +1,37 @@
+{
+  "signs": {
+    "vomiting": "Vomiting",
+    "diarrhoea": "Diarrhoea",
+    "lethargy": "Lethargy",
+    "loss_of_appetite": "Loss of appetite",
+    "hypersalivation": "Excessive drooling",
+    "weakness": "Weakness",
+    "ataxia": "Wobbly or uncoordinated movement",
+    "tremors": "Tremors",
+    "seizures": "Seizures",
+    "tachycardia": "Rapid heart rate",
+    "hyperthermia": "Elevated body temperature",
+    "restlessness": "Restlessness",
+    "agitation": "Agitation",
+    "disorientation": "Disorientation",
+    "collapse": "Collapse",
+    "difficulty_breathing": "Difficulty breathing",
+    "pale_gums": "Pale gums",
+    "abdominal_pain": "Abdominal pain",
+    "bloating": "Bloating",
+    "increased_thirst": "Increased thirst",
+    "increased_urination": "Increased urination",
+    "kidney_failure_signs": "Signs of kidney failure",
+    "low_blood_sugar_signs": "Signs of low blood sugar",
+    "panting": "Panting",
+    "coma": "Coma",
+    "blood_in_vomit": "Blood in vomit",
+    "blood_in_stool": "Blood in stool",
+    "jaundice": "Yellowing of the gums, skin or eyes"
+  },
+  "emergency_actions": {
+    "call_vet_now": "Call your vet or an animal poison control line now",
+    "do_not_induce_vomiting": "Do not induce vomiting unless a vet tells you to",
+    "bring_packaging": "Bring the packaging or a sample with you"
+  }
+}

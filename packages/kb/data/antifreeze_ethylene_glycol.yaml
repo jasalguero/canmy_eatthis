@@ -1,0 +1,54 @@
+id: antifreeze_ethylene_glycol
+display_name:
+  en: Antifreeze (ethylene glycol)
+  es: Anticongelante (etilenglicol)
+category: chemical
+aliases:
+  en: [antifreeze, ethylene glycol, car coolant, radiator fluid, engine coolant, windshield de-icer]
+  es: [anticongelante, etilenglicol, refrigerante de coche, líquido refrigerante, líquido anticongelante]
+confusable_with: []
+is_ingredient: false
+high_risk: true
+species:
+  dog:
+    verdict: toxic
+    severity: severe
+    headline:
+      en: Toxic to dogs. Emergency — call your vet now.
+      es: Tóxico para perros. Emergencia — llama ahora a tu veterinario.
+    summary:
+      en: Antifreeze tastes sweet, which is exactly why it's so dangerous — a dog will drink it readily. As little as 3–4 teaspoons can be fatal to a dog, causing kidney failure that becomes irreversible within hours if untreated.
+      es: El anticongelante tiene sabor dulce, y precisamente por eso es tan peligroso — un perro lo bebe sin problema. Tan solo 3-4 cucharaditas pueden ser mortales para un perro, provocando un fallo renal que se vuelve irreversible en horas si no se trata.
+    signs: [vomiting, ataxia, lethargy, increased_thirst, increased_urination, seizures, kidney_failure_signs, coma]
+    onset_hours: { min: 0.5, max: 12 }
+    emergency_actions: [call_vet_now, do_not_induce_vomiting, bring_packaging]
+  cat:
+    verdict: toxic
+    severity: severe
+    headline:
+      en: Toxic to cats. Emergency — call your vet now.
+      es: Tóxico para gatos. Emergencia — llama ahora a tu veterinario.
+    summary:
+      en: Cats are even more sensitive than dogs — as little as 1–2 teaspoons can be fatal. A small puddle of antifreeze dripped from a car is enough to poison a cat that walks through it and grooms its paws.
+      es: Los gatos son todavía más sensibles que los perros — tan solo 1-2 cucharaditas pueden ser mortales. Un pequeño charco de anticongelante goteado de un coche basta para intoxicar a un gato que lo pise y luego se lama las patas.
+    signs: [vomiting, ataxia, lethargy, increased_thirst, increased_urination, seizures, kidney_failure_signs, coma]
+    onset_hours: { min: 0.5, max: 12 }
+    emergency_actions: [call_vet_now, do_not_induce_vomiting, bring_packaging]
+sources:
+  - label: Merck Veterinary Manual — Ethylene Glycol Toxicosis in Animals
+    url: https://www.merckvetmanual.com/toxicology/ethylene-glycol-toxicosis/ethylene-glycol-toxicosis-in-animals
+    accessed: 2026-09-19
+  - label: Michigan State University College of Veterinary Medicine — Pets & Poison Control, Making Your Home Safer
+    url: https://cvm.msu.edu/vdl/client-education/guides-for-pet-owners/pets-poison-control-making-your-home-safer
+    accessed: 2026-09-19
+review:
+  reviewed_by: "native speaker"
+  reviewed_at: 2026-09-19
+  status: draft
+translations:
+  es:
+    tier_a: approved
+    tier_b: approved
+    translated_by: "Reviewed by native speaker"
+    reviewed_by: "native speaker"
+    reviewed_at: 2026-09-19

@@ -1,8 +1,7 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "rootDir": "src",
     "types": ["vitest/globals"]
   },
-  "include": ["src"]
+  "include": ["src", "schema", "fixtures"]
 }

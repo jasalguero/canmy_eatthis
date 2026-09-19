@@ -1,0 +1,54 @@
+id: cheese
+display_name:
+  en: Cheese
+  es: Queso
+category: food
+aliases:
+  en: [cheese, cheddar, mozzarella, cheese slice, cheese cube]
+  es: [queso, queso cheddar, mozzarella, mozarela, taco de queso, loncha de queso]
+confusable_with: []
+is_ingredient: true
+high_risk: false
+species:
+  dog:
+    verdict: caution
+    severity: null
+    headline:
+      en: Fine as an occasional small treat.
+      es: Bien como premio ocasional y en poca cantidad.
+    summary:
+      en: Most adult dogs lose some ability to digest lactose as they grow up, so cheese can cause loose stools, gas or vomiting in larger amounts. A small piece now and then is usually fine; a lot is not.
+      es: La mayoría de los perros adultos pierden parte de su capacidad para digerir la lactosa al crecer, así que el queso en cantidad puede causar heces blandas, gases o vómitos. Un trozo pequeño de vez en cuando suele estar bien; mucha cantidad no.
+    signs: [diarrhoea, vomiting, bloating]
+    onset_hours: { min: 2, max: 12 }
+    emergency_actions: []
+  cat:
+    verdict: caution
+    severity: null
+    headline:
+      en: Best kept to a tiny amount, if any.
+      es: Mejor limitarlo a una cantidad mínima, si acaso.
+    summary:
+      en: Cats lose lactase — the enzyme that digests milk sugar — as kittens grow into adults, and are, if anything, more prone to an upset stomach from dairy than dogs are.
+      es: Los gatos pierden la lactasa —la enzima que digiere el azúcar de la leche— al pasar de gatitos a adultos, y en todo caso son más propensos que los perros a sufrir molestias digestivas por los lácteos.
+    signs: [diarrhoea, vomiting, bloating]
+    onset_hours: { min: 2, max: 12 }
+    emergency_actions: []
+sources:
+  - label: Merck Veterinary Manual — Cutaneous Food Allergy in Animals (dairy as a common trigger)
+    url: https://www.merckvetmanual.com/integumentary-system/food-allergy/cutaneous-food-allergy-in-animals
+    accessed: 2026-09-19
+  - label: Cornell University College of Veterinary Medicine — Feeding Your Cat
+    url: https://www.vet.cornell.edu/departments-centers-and-institutes/cornell-feline-health-center/health-information/feline-health-topics/feeding-your-cat
+    accessed: 2026-09-19
+review:
+  reviewed_by: "native speaker"
+  reviewed_at: 2026-09-19
+  status: draft
+translations:
+  es:
+    tier_a: approved
+    tier_b: approved
+    translated_by: "Reviewed by native speaker"
+    reviewed_by: "native speaker"
+    reviewed_at: 2026-09-19

@@ -1,0 +1,54 @@
+id: chocolate_milk
+display_name:
+  en: Milk chocolate
+  es: Chocolate con leche
+category: food
+aliases:
+  en: [milk chocolate, chocolate bar, chocolate candy, chocolate bunny, chocolate egg]
+  es: [chocolate con leche, chocolate de leche, tableta de chocolate, bombón de chocolate, huevo de chocolate, conejo de chocolate]
+confusable_with: [chocolate_dark]
+is_ingredient: true
+high_risk: true
+species:
+  dog:
+    verdict: toxic
+    severity: mild
+    headline:
+      en: Toxic to dogs. Call your vet.
+      es: Tóxico para perros. Llama a tu veterinario.
+    summary:
+      en: Milk chocolate has much less theobromine than dark chocolate, so a dog usually needs to eat a lot more of it to get seriously ill — but a whole bar or more is still a real risk, especially for a small dog.
+      es: El chocolate con leche tiene mucha menos teobromina que el chocolate negro, así que un perro suele necesitar comer mucho más para enfermar gravemente, pero una tableta entera o más sigue siendo un riesgo real, sobre todo para un perro pequeño.
+    signs: [vomiting, diarrhoea, restlessness, tachycardia, tremors]
+    onset_hours: { min: 6, max: 12 }
+    emergency_actions: [call_vet_now, do_not_induce_vomiting, bring_packaging]
+  cat:
+    verdict: toxic
+    severity: mild
+    headline:
+      en: Toxic to cats. Call your vet.
+      es: Tóxico para gatos. Llama a tu veterinario.
+    summary:
+      en: Cats are sensitive to the same theobromine found in milk chocolate, even though the concentration is lower than in dark chocolate.
+      es: Los gatos son sensibles a la misma teobromina presente en el chocolate con leche, aunque su concentración sea menor que en el chocolate negro.
+    signs: [vomiting, diarrhoea, restlessness, tachycardia, tremors]
+    onset_hours: { min: 6, max: 12 }
+    emergency_actions: [call_vet_now, do_not_induce_vomiting, bring_packaging]
+sources:
+  - label: Merck Veterinary Manual — Chocolate Toxicosis in Animals
+    url: https://www.merckvetmanual.com/toxicology/food-hazards/chocolate-toxicosis-in-animals
+    accessed: 2026-09-19
+  - label: "Kovalkovičová et al., \"Some food toxic for pets\", Interdisciplinary Toxicology (2009)"
+    url: https://pmc.ncbi.nlm.nih.gov/articles/PMC2984110/
+    accessed: 2026-09-19
+review:
+  reviewed_by: "native speaker"
+  reviewed_at: 2026-09-19
+  status: draft
+translations:
+  es:
+    tier_a: approved
+    tier_b: approved
+    translated_by: "Reviewed by native speaker"
+    reviewed_by: "native speaker"
+    reviewed_at: 2026-09-19

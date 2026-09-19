@@ -1,0 +1,54 @@
+id: lily
+display_name:
+  en: Lily
+  es: Lirio
+category: plant
+aliases:
+  en: [lily, lilies, easter lily, tiger lily, stargazer lily, asiatic lily, day lily, daylily, daylilies]
+  es: [lirio, lirios, azucena, azucenas, lilium, lirio atigrado, lirio asiático, hemerocallis]
+confusable_with: []
+is_ingredient: false
+high_risk: true
+species:
+  dog:
+    verdict: caution
+    severity: null
+    headline:
+      en: Best kept away from dogs.
+      es: Mejor mantenerlo alejado de los perros.
+    summary:
+      en: Lilies cause milder stomach upset in dogs than in cats — dogs are not known to develop the severe kidney failure cats do — but it's still worth keeping these plants out of reach and calling your vet if a dog eats a large amount.
+      es: En los perros, los lirios provocan molestias digestivas más leves que en los gatos — no se sabe que los perros desarrollen el fallo renal grave que sufren los gatos —, pero conviene mantener estas plantas fuera de su alcance y llamar al veterinario si un perro come una cantidad grande.
+    signs: [vomiting, diarrhoea, hypersalivation]
+    onset_hours: { min: 0, max: 12 }
+    emergency_actions: []
+  cat:
+    verdict: toxic
+    severity: severe
+    headline:
+      en: Toxic to cats. Call your vet now.
+      es: Tóxico para gatos. Llama ahora a tu veterinario.
+    summary:
+      en: True lilies (Lilium species) and daylilies are severely toxic to cats — even a small bite of leaf or petal, a lick of pollen, or drinking vase water can cause fatal kidney failure. This is one of the most dangerous common houseplants for cats.
+      es: Los lirios verdaderos (género Lilium) y las hemerocallis son gravemente tóxicos para los gatos — incluso un pequeño mordisco de hoja o pétalo, lamer el polen o beber el agua del jarrón pueden causar un fallo renal mortal. Es una de las plantas de interior más peligrosas para los gatos.
+    signs: [lethargy, hypersalivation, vomiting, loss_of_appetite, increased_thirst, increased_urination, kidney_failure_signs]
+    onset_hours: { min: 0, max: 12 }
+    emergency_actions: [call_vet_now, do_not_induce_vomiting, bring_packaging]
+sources:
+  - label: "Langston, \"Acute renal failure caused by lily ingestion in six cats\", J Am Vet Med Assoc (2002) — PubMed"
+    url: https://pubmed.ncbi.nlm.nih.gov/12680447/
+    accessed: 2026-09-19
+  - label: "FDA — Lovely Lilies and Curious Cats: A Dangerous Combination"
+    url: https://www.fda.gov/animal-veterinary/animal-health-literacy/lovely-lilies-and-curious-cats-dangerous-combination
+    accessed: 2026-09-19
+review:
+  reviewed_by: "native speaker"
+  reviewed_at: 2026-09-19
+  status: draft
+translations:
+  es:
+    tier_a: approved
+    tier_b: approved
+    translated_by: "Reviewed by native speaker"
+    reviewed_by: "native speaker"
+    reviewed_at: 2026-09-19

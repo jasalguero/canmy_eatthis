@@ -1,0 +1,54 @@
+id: alcohol
+display_name:
+  en: Alcohol
+  es: Alcohol
+category: food
+aliases:
+  en: [alcohol, beer, wine, spirits, liquor, ethanol, alcoholic drink, cocktail, hand sanitizer, hand sanitiser]
+  es: [alcohol, cerveza, vino, licor, licores, bebida alcohólica, cóctel, gel hidroalcohólico, desinfectante de manos]
+confusable_with: []
+is_ingredient: true
+high_risk: true
+species:
+  dog:
+    verdict: toxic
+    severity: severe
+    headline:
+      en: Toxic to dogs. Call your vet.
+      es: Tóxico para perros. Llama a tu veterinario.
+    summary:
+      en: Dogs are far more sensitive to alcohol than people. Beer, wine, spirits, unbaked dough and even alcohol-based hand sanitiser can cause dangerous drops in body temperature, coordination and breathing.
+      es: Los perros son mucho más sensibles al alcohol que las personas. La cerveza, el vino, los licores, la masa cruda de pan e incluso el gel hidroalcohólico pueden provocar bajadas peligrosas de temperatura corporal, coordinación y respiración.
+    signs: [vomiting, diarrhoea, hypersalivation, ataxia, lethargy, difficulty_breathing, coma]
+    onset_hours: { min: 0.5, max: 1 }
+    emergency_actions: [call_vet_now, do_not_induce_vomiting, bring_packaging]
+  cat:
+    verdict: toxic
+    severity: severe
+    headline:
+      en: Toxic to cats. Call your vet.
+      es: Tóxico para gatos. Llama a tu veterinario.
+    summary:
+      en: Cats are just as sensitive to alcohol as dogs, and their much smaller size means even a small spill or unattended drink is a real risk.
+      es: Los gatos son igual de sensibles al alcohol que los perros, y su tamaño mucho menor hace que incluso un pequeño derrame o una bebida sin vigilar sean un riesgo real.
+    signs: [vomiting, diarrhoea, hypersalivation, ataxia, lethargy, difficulty_breathing, coma]
+    onset_hours: { min: 0.5, max: 1 }
+    emergency_actions: [call_vet_now, do_not_induce_vomiting, bring_packaging]
+sources:
+  - label: Merck Veterinary Manual — Toxicoses From Alcohols in Animals
+    url: https://www.merckvetmanual.com/toxicology/toxicoses-from-household-hazards/toxicoses-from-alcohols-in-animals
+    accessed: 2026-09-19
+  - label: "Kovalkovičová et al., \"Some food toxic for pets\", Interdisciplinary Toxicology (2009)"
+    url: https://pmc.ncbi.nlm.nih.gov/articles/PMC2984110/
+    accessed: 2026-09-19
+review:
+  reviewed_by: "native speaker"
+  reviewed_at: 2026-09-19
+  status: draft
+translations:
+  es:
+    tier_a: approved
+    tier_b: approved
+    translated_by: "Reviewed by native speaker"
+    reviewed_by: "native speaker"
+    reviewed_at: 2026-09-19

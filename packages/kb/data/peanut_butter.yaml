@@ -1,0 +1,54 @@
+id: peanut_butter
+display_name:
+  en: Peanut butter
+  es: Crema de cacahuete
+category: food
+aliases:
+  en: [peanut butter, peanut spread, nut butter]
+  es: [crema de cacahuete, mantequilla de cacahuete, manteca de maní, crema de maní]
+confusable_with: []
+is_ingredient: true
+high_risk: true
+species:
+  dog:
+    verdict: caution
+    severity: null
+    headline:
+      en: Check the label before sharing.
+      es: Revisa la etiqueta antes de dárselo.
+    summary:
+      en: Plain peanut butter is fine in small amounts, but some "sugar-free" or "protein" peanut butters replace sugar with xylitol, which is genuinely dangerous to dogs. Always read the ingredients label — if it lists xylitol or birch sugar, treat it like the xylitol entry, not like peanut butter.
+      es: La crema de cacahuete normal es aceptable en pequeñas cantidades, pero algunas versiones "sin azúcar" o "proteicas" sustituyen el azúcar por xilitol, que es realmente peligroso para los perros. Lee siempre la etiqueta — si aparece xilitol o azúcar de abedul, trátalo como la entrada de xilitol, no como crema de cacahuete normal.
+    signs: []
+    onset_hours: null
+    emergency_actions: []
+  cat:
+    verdict: caution
+    severity: null
+    headline:
+      en: Not a natural food for cats.
+      es: No es un alimento natural para gatos.
+    summary:
+      en: Cats have little reason to eat peanut butter and it offers them no nutritional benefit, but the same xylitol-label check applies if one somehow does.
+      es: Los gatos no tienen ningún motivo para comer crema de cacahuete y no les aporta ningún beneficio nutricional, pero se aplica la misma comprobación de la etiqueta por si acaso.
+    signs: []
+    onset_hours: null
+    emergency_actions: []
+sources:
+  - label: FDA — Paws Off Xylitol; It's Dangerous for Dogs
+    url: https://www.fda.gov/consumers/consumer-updates/paws-xylitol-its-dangerous-dogs
+    accessed: 2026-09-19
+  - label: Merck Veterinary Manual — Xylitol Toxicosis in Dogs
+    url: https://www.merckvetmanual.com/toxicology/food-hazards/xylitol-toxicosis-in-dogs
+    accessed: 2026-09-19
+review:
+  reviewed_by: "native speaker"
+  reviewed_at: 2026-09-19
+  status: draft
+translations:
+  es:
+    tier_a: approved
+    tier_b: approved
+    translated_by: "Reviewed by native speaker"
+    reviewed_by: "native speaker"
+    reviewed_at: 2026-09-19

@@ -1,0 +1,54 @@
+id: avocado
+display_name:
+  en: Avocado
+  es: Aguacate
+category: food
+aliases:
+  en: [avocado, avocados, guacamole, avocado pit, avocado leaves, palta]
+  es: [aguacate, aguacates, palta, paltas, guacamole, hueso de aguacate, semilla de aguacate]
+confusable_with: []
+is_ingredient: true
+high_risk: false
+species:
+  dog:
+    verdict: caution
+    severity: null
+    headline:
+      en: Best avoided for dogs.
+      es: Mejor evitarlo en perros.
+    summary:
+      en: Avocado flesh contains persin, which mostly just upsets a dog's stomach rather than causing serious poisoning. The bigger risk is the pit, which can choke a dog or block its gut, and the fat content can trigger pancreatitis in a large amount.
+      es: La pulpa del aguacate contiene persina, que en los perros suele provocar solo molestias digestivas y no una intoxicación grave. El riesgo mayor es el hueso, que puede atragantar al perro u obstruirle el intestino, y su alto contenido en grasa puede provocar pancreatitis si se come en cantidad.
+    signs: [vomiting, diarrhoea, abdominal_pain]
+    onset_hours: { min: 0, max: 24 }
+    emergency_actions: []
+  cat:
+    verdict: caution
+    severity: null
+    headline:
+      en: Best avoided for cats.
+      es: Mejor evitarlo en gatos.
+    summary:
+      en: Cats are less likely to eat avocado than dogs, and reported effects are similarly mild — mostly stomach upset from the persin and fat content, rather than the severe reactions seen in birds or livestock.
+      es: Los gatos comen aguacate con menos frecuencia que los perros, y los efectos descritos son igual de leves — sobre todo molestias digestivas por la persina y la grasa, no las reacciones graves que se ven en aves o ganado.
+    signs: [vomiting, diarrhoea, abdominal_pain]
+    onset_hours: { min: 0, max: 24 }
+    emergency_actions: []
+sources:
+  - label: Merck Veterinary Manual — Avocado (Persea spp) Toxicosis in Animals
+    url: https://www.merckvetmanual.com/toxicology/food-hazards/avocado-persea-spp-toxicosis-in-animals
+    accessed: 2026-09-19
+  - label: "Kovalkovičová et al., \"Some food toxic for pets\", Interdisciplinary Toxicology (2009)"
+    url: https://pmc.ncbi.nlm.nih.gov/articles/PMC2984110/
+    accessed: 2026-09-19
+review:
+  reviewed_by: "native speaker"
+  reviewed_at: 2026-09-19
+  status: draft
+translations:
+  es:
+    tier_a: approved
+    tier_b: approved
+    translated_by: "Reviewed by native speaker"
+    reviewed_by: "native speaker"
+    reviewed_at: 2026-09-19

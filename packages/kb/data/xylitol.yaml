@@ -1,0 +1,54 @@
+id: xylitol
+display_name:
+  en: Xylitol
+  es: Xilitol
+category: food
+aliases:
+  en: [xylitol, birch sugar, birch sugar sweetener, wood sugar, sugar-free gum, sugar free gum, sugar-free candy, sugar-free mints]
+  es: [xilitol, azúcar de abedul, edulcorante de abedul, chicle sin azúcar, caramelos sin azúcar]
+confusable_with: []
+is_ingredient: true
+high_risk: true
+species:
+  dog:
+    verdict: toxic
+    severity: severe
+    headline:
+      en: Toxic to dogs. Call your vet.
+      es: Tóxico para perros. Llama a tu veterinario.
+    summary:
+      en: Xylitol is harmless to people but triggers a sudden, dangerous drop in blood sugar in dogs, and can also damage the liver. It's hidden in many sugar-free gums, candies and some peanut butters — always check the label.
+      es: El xilitol es inofensivo para las personas, pero en los perros provoca una bajada brusca y peligrosa del azúcar en sangre, y también puede dañar el hígado. Está presente en muchos chicles y caramelos sin azúcar, y en algunas cremas de cacahuete — revisa siempre la etiqueta.
+    signs: [vomiting, weakness, ataxia, lethargy, low_blood_sugar_signs, seizures, coma]
+    onset_hours: { min: 0.5, max: 12 }
+    emergency_actions: [call_vet_now, do_not_induce_vomiting, bring_packaging]
+  cat:
+    verdict: unknown
+    severity: null
+    headline:
+      en: Not sure — cats aren't known to be affected the same way, but ask your vet.
+      es: No estoy seguro — no se sabe que afecte a los gatos igual, pero consulta a tu veterinario.
+    summary:
+      en: Xylitol's danger has mainly been documented in dogs. Cats rarely eat sweets, and there isn't good evidence either way for cats, so treat any ingestion as worth a call to your vet.
+      es: El riesgo del xilitol está documentado sobre todo en perros. Los gatos rara vez comen dulces y no hay buena evidencia sobre su efecto en ellos, así que cualquier ingestión merece una llamada a tu veterinario.
+    signs: []
+    onset_hours: null
+    emergency_actions: []
+sources:
+  - label: Merck Veterinary Manual — Xylitol Toxicosis in Dogs
+    url: https://www.merckvetmanual.com/toxicology/food-hazards/xylitol-toxicosis-in-dogs
+    accessed: 2026-09-19
+  - label: FDA — Paws Off Xylitol; It's Dangerous for Dogs
+    url: https://www.fda.gov/consumers/consumer-updates/paws-xylitol-its-dangerous-dogs
+    accessed: 2026-09-19
+review:
+  reviewed_by: "native speaker"
+  reviewed_at: 2026-09-19
+  status: draft
+translations:
+  es:
+    tier_a: approved
+    tier_b: approved
+    translated_by: "Reviewed by native speaker"
+    reviewed_by: "native speaker"
+    reviewed_at: 2026-09-19
