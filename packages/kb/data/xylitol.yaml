@@ -42,13 +42,13 @@ sources:
     url: https://www.fda.gov/consumers/consumer-updates/paws-xylitol-its-dangerous-dogs
     accessed: 2026-09-19
 review:
-  reviewed_by: "native speaker"
+  reviewed_by: "Jose Salguero"
   reviewed_at: 2026-09-19
   status: draft
 translations:
   es:
     tier_a: approved
     tier_b: approved
-    translated_by: "Reviewed by native speaker"
-    reviewed_by: "native speaker"
+    translated_by: "Claude (draft)"
+    reviewed_by: "Jose Salguero"
     reviewed_at: 2026-09-19

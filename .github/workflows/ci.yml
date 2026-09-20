@@ -28,6 +28,10 @@ jobs:
       - name: Lint
         run: pnpm lint
 
+      # AGENTS.md #3 — "safe" is never a bare claim in user-facing strings.
+      - name: Check for bare "safe" claims
+        run: ./scripts/check-safe-claims.sh
+
       - name: Test
         run: pnpm -r test
 

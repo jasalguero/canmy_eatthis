@@ -18,4 +18,11 @@ export const NEGATIVE_RESOLUTIONS: string[] = [
   'garlic bread',
   'carrot cake',
   'wine gums',
+  // Spanish near-misses (docs/07 Phase 4 acceptance: "including its Spanish near-misses").
+  'perro chocolate', // shares "chocolate" — a breed, not the food
+  'maní', // shares "maní" with the peanut-butter aliases — the nut itself, not the spread
+  'tarta de queso', // shares "queso" — cheesecake, not cheese
+  'pan de ajo', // shares "ajo" — garlic bread, a prepared dish
+  'hueso de pollo', // shares "pollo" — a bone, not cooked plain chicken
+  'tarta de zanahoria', // shares "zanahoria" — carrot cake, not a carrot
 ];

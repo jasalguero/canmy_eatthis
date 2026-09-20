@@ -58,7 +58,14 @@ export function deviceDefaultLanguage(): SupportedLanguage {
 let initialized = false;
 
 export function initI18n(initialLanguage: SupportedLanguage): typeof i18next {
-  if (initialized) return i18next;
+  if (initialized) {
+    // Re-called when the persisted language setting changes — i18next was initialised once,
+    // so a new language takes effect via changeLanguage (and re-renders through the provider).
+    if (i18next.language !== initialLanguage) {
+      void i18next.changeLanguage(initialLanguage);
+    }
+    return i18next;
+  }
   initialized = true;
 
   i18next

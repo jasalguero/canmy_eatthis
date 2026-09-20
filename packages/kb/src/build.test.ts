@@ -9,6 +9,7 @@ import { POSITIVE_RESOLUTIONS } from '../fixtures/resolution.fixtures.js';
 import type { KbEntry } from '../schema/entry.js';
 import {
   BuildError,
+  buildAliasIndex,
   buildCoverageReport,
   loadEntries,
   validateCrossEntry,
@@ -17,19 +18,6 @@ import {
 } from './build.js';
 
 const realEntries = loadEntries().map((l) => l.entry);
-
-/** Builds the same alias -> id index build.ts's main() does, for resolution fixtures. */
-function buildIndex(entries: KbEntry[]): Record<string, string> {
-  const index: Record<string, string> = {};
-  for (const entry of entries) {
-    for (const lang of ['en', 'es'] as const) {
-      for (const alias of [entry.display_name[lang], ...entry.aliases[lang]]) {
-        index[normalise(alias)] = entry.id;
-      }
-    }
-  }
-  return index;
-}
 
 describe('the real authored KB', () => {
   it('has at least the Phase 1 pilot batch and every entry validates', () => {
@@ -66,7 +54,7 @@ describe('the real authored KB', () => {
   });
 
   it('every entry resolves from both its English and Spanish display name', () => {
-    const index = buildIndex(realEntries);
+    const index = buildAliasIndex(realEntries);
     for (const entry of realEntries) {
       expect(index[normalise(entry.display_name.en)]).toBe(entry.id);
       expect(index[normalise(entry.display_name.es)]).toBe(entry.id);
@@ -74,7 +62,7 @@ describe('the real authored KB', () => {
   });
 
   it('every alias resolves to its own entry', () => {
-    const index = buildIndex(realEntries);
+    const index = buildAliasIndex(realEntries);
     for (const entry of realEntries) {
       for (const lang of ['en', 'es'] as const) {
         for (const alias of entry.aliases[lang]) {
@@ -85,14 +73,14 @@ describe('the real authored KB', () => {
   });
 
   it('the positive resolution fixtures resolve to their expected entry', () => {
-    const index = buildIndex(realEntries);
+    const index = buildAliasIndex(realEntries);
     for (const { input, expected } of POSITIVE_RESOLUTIONS) {
       expect(index[normalise(input)]).toBe(expected);
     }
   });
 
   it('the negative fixture set — near-misses — do not resolve to any entry', () => {
-    const index = buildIndex(realEntries);
+    const index = buildAliasIndex(realEntries);
     for (const query of NEGATIVE_RESOLUTIONS) {
       expect(index[normalise(query)]).toBeUndefined();
     }
@@ -166,6 +154,60 @@ describe('validateShippedLanguageApproval — proves the gate fires (docs/02-tec
   it('does not fail a not-yet-shipped language even with draft tiers (the real es today)', () => {
     expect(() =>
       validateShippedLanguageApproval([makeEntry({ tier_a: 'draft', tier_b: 'draft' })], ['en']),
+    ).not.toThrow();
+  });
+});
+
+describe('buildAliasIndex — the index is global, rule 5 uniqueness is per-language', () => {
+  function makeEntry(id: string, enAlias: string, esAlias: string): KbEntry {
+    const localized = { en: `Test ${id}`, es: `Prueba ${id}` };
+    const speciesShape = {
+      verdict: 'safe' as const,
+      severity: null,
+      headline: localized,
+      summary: localized,
+      signs: [],
+      onset_hours: null,
+      emergency_actions: [],
+    };
+    return {
+      id,
+      display_name: localized,
+      category: 'food',
+      aliases: { en: [enAlias], es: [esAlias] },
+      confusable_with: [],
+      is_ingredient: false,
+      high_risk: false,
+      species: { dog: speciesShape, cat: speciesShape },
+      sources: [],
+      review: { reviewed_by: null, reviewed_at: null, status: 'draft' },
+      translations: {
+        es: {
+          tier_a: 'approved',
+          tier_b: 'approved',
+          translated_by: 'x',
+          reviewed_by: null,
+          reviewed_at: null,
+        },
+      },
+    };
+  }
+
+  it('fails when an English alias of one entry normalises to a Spanish alias of another', () => {
+    expect(() =>
+      buildAliasIndex([
+        makeEntry('entry_a', 'xilitol', 'otro'),
+        makeEntry('entry_b', 'different', 'xilitol'),
+      ]),
+    ).toThrow(BuildError);
+  });
+
+  it('passes when the same alias appears in both languages of the SAME entry', () => {
+    expect(() =>
+      buildAliasIndex([
+        makeEntry('entry_a', 'xilitol', 'xilitol'),
+        makeEntry('entry_b', 'different', 'otra'),
+      ]),
     ).not.toThrow();
   });
 });

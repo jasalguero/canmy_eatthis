@@ -66,6 +66,34 @@ function loadVocabCatalogue(lang: Language): {
   return JSON.parse(raw);
 }
 
+/**
+ * Builds the normalised-alias → id index emitted as `kb.index.json`.
+ *
+ * Rule 5 (docs/04 §1) checks alias uniqueness *per language*, but the index is a single
+ * global map shared by every language — so an English alias of one entry and a Spanish alias
+ * of another can still normalise to the same key. That would make one entry silently shadow
+ * the other in resolution, so this function fails the build on any cross-entry collision.
+ */
+export function buildAliasIndex(entries: KbEntry[]): Record<string, string> {
+  const index: Record<string, string> = {};
+  for (const entry of entries) {
+    for (const lang of ALL_LANGUAGES) {
+      for (const alias of [entry.display_name[lang], ...entry.aliases[lang]]) {
+        const key = normalise(alias);
+        const owner = index[key];
+        if (owner !== undefined && owner !== entry.id) {
+          fail(
+            `alias collision across languages: "${alias}" (${lang}) normalises to the same key ` +
+              `"${key}" as an alias of "${owner}"`,
+          );
+        }
+        index[key] = entry.id;
+      }
+    }
+  }
+  return index;
+}
+
 /** docs/04 §1 rules 5–7: cross-entry checks that need the whole KB, not just one entry. */
 export function validateCrossEntry(entries: KbEntry[]): void {
   const idsById = new Map(entries.map((e) => [e.id, e]));
@@ -254,14 +282,8 @@ function main(): void {
   const kb = { version, generatedAt: new Date().toISOString(), entries };
 
   // kb.index.json: normalised alias -> id, across every language (docs/07 Phase 1).
-  const index: Record<string, string> = {};
-  for (const entry of entries) {
-    for (const lang of ALL_LANGUAGES) {
-      for (const alias of [entry.display_name[lang], ...entry.aliases[lang]]) {
-        index[normalise(alias)] = entry.id;
-      }
-    }
-  }
+  // buildAliasIndex fails the build on cross-language collisions (see its doc comment).
+  const index = buildAliasIndex(entries);
 
   mkdirSync(DIST_DIR, { recursive: true });
   const kbStats = writeArtifact('kb.json', kb);

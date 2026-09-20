@@ -7,8 +7,8 @@ The knowledge base: source data, schema, build pipeline and fixtures
 - `schema/entry.ts` — Zod validator for one YAML entry (per-entry rules only; cross-entry rules
   live in `src/build.ts`, which needs the whole KB).
 - `schema/vocab.ts` — the controlled-vocabulary ids for `signs` and `emergency_actions`.
-- `vocab/{en,es}.json` — translations of those ids. **`es.json` is a draft, not yet
-  native-speaker reviewed** — see `vocab/README.md`.
+- `vocab/{en,es}.json` — translations of those ids; both fully approved (`es` reviewed by a
+  native speaker, see `vocab/README.md`).
 - `data/*.yaml` — one file per entry, filename must match the entry's `id`.
 - `src/build.ts` — validates every entry, runs the cross-entry checks (alias uniqueness,
   `confusable_with` resolution, the substring check, vocab coverage), and emits `dist/kb.json`,
@@ -18,5 +18,5 @@ The knowledge base: source data, schema, build pipeline and fixtures
   describes, consumed by this package's and `packages/shared`'s tests.
 
 Run `pnpm --filter @canmyeatthis/kb build` to build. `review.status` and `translations.es` on
-individual entries reflect the hobby-build editorial standard (no vet, no native-speaker review
-yet) — see `docs/02-tech-decisions.md` D17 before changing what the build enforces.
+individual entries reflect the hobby-build editorial standard (no vet; `es` reviewed by a named
+native speaker) — see `docs/02-tech-decisions.md` D17 before changing what the build enforces.

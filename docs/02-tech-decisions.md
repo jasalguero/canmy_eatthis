@@ -232,10 +232,13 @@ because there is no licensed vet available in the hobby build (`docs/10-hobby-sc
    entry ships to production with `review.status !== approved`") is a *release* gate, enforced
    later (Phase 10); Phase 1 entries are authored as `draft` or `needs_review` and that is
    correct, per doc 07 Phase 1's own instruction to author with `review.status: draft`.
-2. **`build.ts` takes a `SHIPPED_LANGUAGES` list (currently `['en']` only) and enforces the
-   Tier A/B approval rules (docs/04 §1 rules 8–9, docs/09 §5 rules 1–2) only for languages in
-   that list.** `es` content in Phase 1 is authored by Claude (not a native speaker) and is
-   marked `tier_a: draft` / `tier_b: draft` honestly rather than self-certified as `approved`.
-   Flipping `es` into `SHIPPED_LANGUAGES` is the concrete signal that native-speaker review
-   (docs/09 §4 rule 1) has happened — until then the build must not require `es` to be approved,
-   or the only way to keep the build green would be to lie about review status.
+2. **`build.ts` takes a `SHIPPED_LANGUAGES` list and enforces the Tier A/B approval rules
+   (docs/04 §1 rules 8–9, docs/09 §5 rules 1–2) only for languages in that list.** Flipping a
+   language into `SHIPPED_LANGUAGES` is the concrete signal that native-speaker review
+   (docs/09 §4 rule 1) has happened — the build must never require a language to be approved
+   before that review, or the only way to keep it green would be to lie about review status.
+   **Resolved 2026-09-19:** the Phase 1 pilot batch's `es` content (Claude-drafted, recorded as
+   such in each entry's `translations.es.translated_by`) was reviewed by a native Spanish
+   speaker (Jose Salguero, recorded in `reviewed_by`), so `es` is now in `SHIPPED_LANGUAGES`
+   and its entries carry `tier_a: approved` / `tier_b: approved`. New entries or languages
+   re-enter through the same gate: draft status until a named native reviewer signs off.

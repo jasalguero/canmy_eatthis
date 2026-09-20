@@ -16,3 +16,4 @@ android/
 packages/kb/dist/
 apps/mobile/.expo/
 .pnpm-store/
+.vscode/
