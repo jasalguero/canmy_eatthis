@@ -1,4 +1,18 @@
 {
   "title": "¿Qué quieres comprobar?",
-  "photoCount": "{count, plural, one {# foto} other {# fotos}}"
+  "speciesA11yLabel": "¿Sobre qué animal preguntas?",
+  "speciesA11yHint": "Cambia entre perro y gato. La respuesta depende del animal.",
+  "photosLabel": "Fotos",
+  "addPhoto": "Añadir una foto",
+  "addAnotherPhoto": "Añadir otra foto",
+  "removePhoto": "Quitar esta foto",
+  "photoCount": "{count, plural, one {# foto} other {# fotos}}",
+  "photoLimitReached": "Puedes añadir hasta {max, plural, one {# foto} other {# fotos}}.",
+  "descriptionLabel": "O descríbelo",
+  "descriptionPlaceholder": "Por ejemplo: chocolate negro, un puñado de uvas, las flores blancas de la ventana",
+  "charCount": "{count} de {max} caracteres",
+  "check": "Comprobar",
+  "checkDisabledReason": "Añade una foto o escribe al menos 2 caracteres.",
+  "openHistory": "Consultas recientes",
+  "openSettings": "Ajustes"
 }

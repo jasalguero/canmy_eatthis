@@ -1,4 +1,5 @@
 const { getDefaultConfig } = require('expo/metro-config');
+const { withNativeWind } = require('nativewind/metro');
 const path = require('node:path');
 
 const projectRoot = __dirname;
@@ -22,4 +23,6 @@ config.watchFolders = [workspaceRoot];
 config.resolver.unstable_enableSymlinks = true;
 config.resolver.unstable_enablePackageExports = true;
 
-module.exports = config;
+// NativeWind v4 (docs/02-tech-decisions.md D4): compiles global.css with the
+// project's tailwind.config.js (default palette removed — see that file).
+module.exports = withNativeWind(config, { input: './global.css' });

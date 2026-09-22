@@ -1,3 +1,14 @@
 {
-  "aiConsentTitle": "Photos are analysed by AI"
+  "welcomeTitle": "Before you use this",
+  "welcomeBody": "Thirty seconds, once. It matters what this app is and is not.",
+  "whatItIsTitle": "What this is",
+  "whatItIsBody": "A fast way to look up what published veterinary authorities say about a food, plant or product — and to reach someone who can actually help.",
+  "whatItIsNotTitle": "What this is not",
+  "whatItIsNotBody": "It is not a vet, not a diagnosis and not an emergency service. Every answer shows where it came from, and every serious answer points you to a professional.",
+  "aiConsentTitle": "Photos are analysed by AI",
+  "aiConsentBody": "If you add a photo, it is sent to an AI service to work out what is in it. The AI never decides whether something is harmful — that comes from our reviewed list. Photos are not stored by us and are not used to train the model.",
+  "aiConsentAccept": "Allow photo identification",
+  "aiConsentDecline": "Use typed lookups only",
+  "aiConsentDeclineNote": "Declining leaves a fully working app: typed lookups, every verdict and every emergency number. You can change this later in Settings.",
+  "continueCta": "Continue"
 }

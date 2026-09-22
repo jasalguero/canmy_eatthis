@@ -1,0 +1,10 @@
+{
+  "title": "Looking at your photo",
+  "titleTextOnly": "Checking",
+  "stage_preparing": "Preparing your photo",
+  "stage_uploading": "Sending it for identification",
+  "stage_identifying": "Working out what this is",
+  "stage_matching": "Matching it against the knowledge base",
+  "cancel": "Cancel",
+  "a11yBusy": "Working. This usually takes a few seconds."
+}

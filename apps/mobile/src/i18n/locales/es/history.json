@@ -1,0 +1,14 @@
+{
+  "title": "Consultas recientes",
+  "searchPlaceholder": "Busca en tus consultas",
+  "emptyTitle": "Todavía no has consultado nada",
+  "emptyBody": "Las consultas que hagas se guardan en este dispositivo para que puedas volver a encontrarlas — también sin conexión.",
+  "emptyCta": "Comprobar algo",
+  "noResultsTitle": "Sin coincidencias",
+  "noResultsBody": "Nada en tu historial coincide con «{query}».",
+  "delete": "Eliminar",
+  "deleteA11yHint": "Quita esta consulta de tu historial",
+  "checkedAt": "{date, date, medium}",
+  "kbStamp": "Respondido con la base de conocimiento {version}",
+  "itemA11yLabel": "{item}, {verdictWord}, {species, select, dog {perro} other {gato}}"
+}

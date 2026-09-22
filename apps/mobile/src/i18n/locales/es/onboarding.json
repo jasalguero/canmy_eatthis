@@ -1,3 +1,14 @@
 {
-  "aiConsentTitle": "Las fotos se analizan con IA"
+  "welcomeTitle": "Antes de empezar",
+  "welcomeBody": "Treinta segundos, una sola vez. Importa qué es esta app y qué no es.",
+  "whatItIsTitle": "Qué es",
+  "whatItIsBody": "Una forma rápida de consultar qué dicen las autoridades veterinarias publicadas sobre un alimento, una planta o un producto — y de contactar con alguien que pueda ayudarte de verdad.",
+  "whatItIsNotTitle": "Qué no es",
+  "whatItIsNotBody": "No es un veterinario, ni un diagnóstico, ni un servicio de urgencias. Cada respuesta muestra de dónde viene, y toda respuesta seria te deriva a un profesional.",
+  "aiConsentTitle": "Las fotos se analizan con IA",
+  "aiConsentBody": "Si añades una foto, se envía a un servicio de IA para averiguar qué contiene. La IA nunca decide si algo es peligroso — eso sale de nuestra lista revisada. No guardamos las fotos ni se usan para entrenar el modelo.",
+  "aiConsentAccept": "Permitir identificación por foto",
+  "aiConsentDecline": "Solo búsquedas escritas",
+  "aiConsentDeclineNote": "Si lo rechazas, la app sigue funcionando por completo: búsquedas escritas, todos los resultados y todos los teléfonos de urgencia. Puedes cambiarlo más tarde en Ajustes.",
+  "continueCta": "Continuar"
 }

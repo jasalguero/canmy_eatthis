@@ -1,0 +1,21 @@
+{
+  "title": "Ajustes",
+  "languageLabel": "Idioma",
+  "language_en": "English",
+  "language_es": "Español",
+  "regionLabel": "Región",
+  "regionHint": "La región determina tus teléfonos de urgencia y la cobertura de alimentos locales. Es independiente del idioma a propósito: quien habla español en Estados Unidos necesita texto en español y números de allí.",
+  "appearanceLabel": "Apariencia",
+  "appearance_system": "Según el dispositivo",
+  "appearance_light": "Claro",
+  "appearance_dark": "Oscuro",
+  "photoIdLabel": "Identificación por foto",
+  "photoIdHint": "Si está desactivada, la app nunca envía ninguna foto. Las búsquedas escritas no se ven afectadas.",
+  "aboutSection": "Acerca de",
+  "legalSection": "Legal",
+  "version": "Versión {version}",
+  "kbVersion": "Base de conocimiento {version}",
+  "reportWrongAnswer": "Informar de una respuesta incorrecta",
+  "devSection": "Desarrollo",
+  "openGallery": "Galería de componentes"
+}

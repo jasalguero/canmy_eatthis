@@ -1,0 +1,13 @@
+{
+  "title": "Is this what you meant?",
+  "body": "We check the answer against a curated list, so the name has to be right.",
+  "confidence_high": "fairly sure",
+  "confidence_medium": "not certain",
+  "confidence_low": "really not certain",
+  "alternatesTitle": "Or did you mean",
+  "somethingElse": "Something else…",
+  "somethingElsePlaceholder": "Type what it is",
+  "confirmCta": "Yes, that's it",
+  "plantWarning": "Identifying plants from photos is unreliable. Confirm with a vet before acting on this.",
+  "a11ySelected": "Selected"
+}

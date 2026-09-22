@@ -1,4 +1,18 @@
 {
   "title": "What are you checking?",
-  "photoCount": "{count, plural, one {# photo} other {# photos}}"
+  "speciesA11yLabel": "Which animal are you asking about?",
+  "speciesA11yHint": "Switches between dog and cat. The answer changes with the animal.",
+  "photosLabel": "Photos",
+  "addPhoto": "Add a photo",
+  "addAnotherPhoto": "Add another photo",
+  "removePhoto": "Remove this photo",
+  "photoCount": "{count, plural, one {# photo} other {# photos}}",
+  "photoLimitReached": "You can add up to {max, plural, one {# photo} other {# photos}}.",
+  "descriptionLabel": "Or describe it",
+  "descriptionPlaceholder": "For example: dark chocolate, a handful of grapes, the white flowers on the windowsill",
+  "charCount": "{count} of {max} characters",
+  "check": "Check",
+  "checkDisabledReason": "Add a photo, or type at least 2 characters.",
+  "openHistory": "Recent checks",
+  "openSettings": "Settings"
 }

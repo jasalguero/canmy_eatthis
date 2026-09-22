@@ -1,3 +1,9 @@
 {
-  "disclaimer": "This is general information, not veterinary advice."
+  "disclaimer": "This is general information, not veterinary advice.",
+  "disclaimerLong": "This app summarises published veterinary sources. It does not examine your animal, it cannot account for their size, age or health, and it is not a substitute for a veterinary professional. If you think your pet has eaten something harmful, call a vet or a poison control line — do not wait to see what happens.",
+  "disclaimerA11yLabel": "Disclaimer",
+  "termsTitle": "Terms of service",
+  "privacyTitle": "Privacy policy",
+  "sourcesPolicyTitle": "How entries are sourced",
+  "sourcesPolicyBody": "Every entry cites at least two independent authoritative sources. Where good sources disagree, or coverage is thin, we leave the entry out rather than guess — which is why you will sometimes get \"Not sure\"."
 }

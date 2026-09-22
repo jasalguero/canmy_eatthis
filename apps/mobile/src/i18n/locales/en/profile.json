@@ -1,0 +1,12 @@
+{
+  "title": "Your pet",
+  "body": "Optional. The name is only used to make answers read less like a database.",
+  "nameLabel": "Name",
+  "namePlaceholder": "Your pet's name",
+  "speciesLabel": "Species",
+  "emptyTitle": "No pet set up",
+  "emptyBody": "Answers work exactly the same without this.",
+  "save": "Save",
+  "clear": "Remove pet",
+  "noWeightNote": "We do not ask for weight. Answers here never depend on dose, and a number we cannot interpret responsibly is worse than no number."
+}

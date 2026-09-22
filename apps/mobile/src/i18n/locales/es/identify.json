@@ -1,0 +1,10 @@
+{
+  "title": "Mirando tu foto",
+  "titleTextOnly": "Comprobando",
+  "stage_preparing": "Preparando tu foto",
+  "stage_uploading": "Enviándola para identificarla",
+  "stage_identifying": "Averiguando qué es",
+  "stage_matching": "Buscándolo en la base de conocimiento",
+  "cancel": "Cancelar",
+  "a11yBusy": "Trabajando. Suele tardar unos segundos."
+}

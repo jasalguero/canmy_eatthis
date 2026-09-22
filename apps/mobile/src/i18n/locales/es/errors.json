@@ -1,3 +1,26 @@
 {
-  "offline": "Estás sin conexión. Las búsquedas escritas siguen funcionando."
+  "offline": "Estás sin conexión. Las búsquedas escritas siguen funcionando.",
+  "offline_title": "Sin conexión",
+  "offline_body": "Identificar por foto necesita conexión. Las búsquedas escritas funcionan sin conexión y dan las mismas respuestas.",
+  "INVALID_REQUEST_title": "Hubo un problema con esa petición",
+  "INVALID_REQUEST_body": "No pudimos leer lo que se envió. Inténtalo de nuevo o escribe el nombre.",
+  "UNAUTHENTICATED_title": "La sesión ha caducado",
+  "UNAUTHENTICATED_body": "No pudimos iniciar una sesión. Inténtalo en un momento — las búsquedas escritas funcionan igualmente.",
+  "ATTESTATION_FAILED_title": "No pudimos verificar este dispositivo",
+  "ATTESTATION_FAILED_body": "Identificar por foto no está disponible en este dispositivo ahora mismo. Las búsquedas escritas siguen funcionando.",
+  "SPEND_CAP_EXCEEDED_title": "Las consultas con foto están pausadas por hoy",
+  "SPEND_CAP_EXCEEDED_body": "Esta app es gratuita y tiene un límite diario de identificación por foto; el de hoy se ha agotado. Las búsquedas escritas, los resultados y los teléfonos de urgencia siguen funcionando.",
+  "RATE_LIMITED_title": "Demasiadas consultas seguidas",
+  "RATE_LIMITED_body": "Espera un minuto y vuelve a intentarlo. Las búsquedas escritas no tienen límite.",
+  "IMAGE_UNUSABLE_title": "Esa foto es difícil de interpretar",
+  "IMAGE_UNUSABLE_body": "Prueba con más luz, más cerca o con el objeto sobre un fondo liso. También puedes escribir qué es.",
+  "NO_SUBJECT_FOUND_title": "No encontramos nada que identificar",
+  "NO_SUBJECT_FOUND_body": "Puede que haya demasiadas cosas en la imagen. Prueba con una foto del objeto solo, o escribe qué es.",
+  "PROVIDER_UNAVAILABLE_title": "La identificación por foto no funciona",
+  "PROVIDER_UNAVAILABLE_body": "El problema es nuestro, no tuyo. Las búsquedas escritas funcionan con normalidad y dan las mismas respuestas.",
+  "INTERNAL_title": "Algo ha salido mal",
+  "INTERNAL_body": "Lo hemos registrado. Las búsquedas escritas siguen funcionando y los teléfonos de urgencia están siempre disponibles.",
+  "actionTypeInstead": "Escribir el nombre",
+  "actionRetry": "Reintentar",
+  "actionHotlines": "Teléfonos de urgencia"
 }

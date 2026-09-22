@@ -1,0 +1,12 @@
+{
+  "title": "Tu mascota",
+  "body": "Opcional. El nombre solo se usa para que las respuestas no suenen a base de datos.",
+  "nameLabel": "Nombre",
+  "namePlaceholder": "El nombre de tu mascota",
+  "speciesLabel": "Especie",
+  "emptyTitle": "No has configurado ninguna mascota",
+  "emptyBody": "Las respuestas funcionan exactamente igual sin esto.",
+  "save": "Guardar",
+  "clear": "Quitar mascota",
+  "noWeightNote": "No te pedimos el peso. Las respuestas nunca dependen de la dosis, y un número que no podemos interpretar con responsabilidad es peor que ningún número."
+}

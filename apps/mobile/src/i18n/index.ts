@@ -4,35 +4,58 @@ import ICU from 'i18next-icu';
 import { initReactI18next } from 'react-i18next';
 
 import enCommon from './locales/en/common.json';
+import enConfirm from './locales/en/confirm.json';
 import enErrors from './locales/en/errors.json';
+import enHistory from './locales/en/history.json';
 import enHome from './locales/en/home.json';
+import enIdentify from './locales/en/identify.json';
 import enLegal from './locales/en/legal.json';
 import enOnboarding from './locales/en/onboarding.json';
+import enProfile from './locales/en/profile.json';
 import enResult from './locales/en/result.json';
+import enSettings from './locales/en/settings.json';
 import esCommon from './locales/es/common.json';
+import esConfirm from './locales/es/confirm.json';
 import esErrors from './locales/es/errors.json';
+import esHistory from './locales/es/history.json';
 import esHome from './locales/es/home.json';
+import esIdentify from './locales/es/identify.json';
 import esLegal from './locales/es/legal.json';
 import esOnboarding from './locales/es/onboarding.json';
+import esProfile from './locales/es/profile.json';
 import esResult from './locales/es/result.json';
+import esSettings from './locales/es/settings.json';
 import { NAMESPACES, SUPPORTED_LANGUAGES, type SupportedLanguage } from './namespaces';
 import { PSEUDO_LOCALE, pseudoLocalizeCatalogue } from './pseudoLocale';
+import { vocabEn, vocabEs } from './vocab';
 
-const en = {
+export const en = {
   common: enCommon,
   home: enHome,
+  identify: enIdentify,
+  confirm: enConfirm,
   result: enResult,
   errors: enErrors,
   onboarding: enOnboarding,
   legal: enLegal,
+  history: enHistory,
+  profile: enProfile,
+  settings: enSettings,
+  vocab: vocabEn,
 };
-const es = {
+export const es = {
   common: esCommon,
   home: esHome,
+  identify: esIdentify,
+  confirm: esConfirm,
   result: esResult,
   errors: esErrors,
   onboarding: esOnboarding,
   legal: esLegal,
+  history: esHistory,
+  profile: esProfile,
+  settings: esSettings,
+  vocab: vocabEs,
 };
 
 const resources: Record<string, typeof en> = { en, es };

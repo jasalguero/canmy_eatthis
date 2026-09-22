@@ -1,0 +1,14 @@
+{
+  "title": "Recent checks",
+  "searchPlaceholder": "Search your checks",
+  "emptyTitle": "Nothing checked yet",
+  "emptyBody": "Checks you make are kept on this device so you can find them again — including offline.",
+  "emptyCta": "Check something",
+  "noResultsTitle": "No matches",
+  "noResultsBody": "Nothing in your history matches \"{query}\".",
+  "delete": "Delete",
+  "deleteA11yHint": "Removes this check from your history",
+  "checkedAt": "{date, date, medium}",
+  "kbStamp": "Answered with knowledge base {version}",
+  "itemA11yLabel": "{item}, {verdictWord}, {species, select, dog {dog} other {cat}}"
+}

@@ -1,0 +1,13 @@
+{
+  "title": "¿Es esto lo que querías decir?",
+  "body": "Comprobamos la respuesta en una lista revisada, así que el nombre tiene que ser el correcto.",
+  "confidence_high": "bastante seguros",
+  "confidence_medium": "no del todo seguros",
+  "confidence_low": "nada seguros",
+  "alternatesTitle": "¿O querías decir",
+  "somethingElse": "Otra cosa…",
+  "somethingElsePlaceholder": "Escribe qué es",
+  "confirmCta": "Sí, es eso",
+  "plantWarning": "Identificar plantas a partir de fotos no es fiable. Confírmalo con tu veterinario antes de actuar.",
+  "a11ySelected": "Seleccionado"
+}

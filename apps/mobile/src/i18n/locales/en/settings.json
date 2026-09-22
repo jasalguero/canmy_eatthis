@@ -1,0 +1,21 @@
+{
+  "title": "Settings",
+  "languageLabel": "Language",
+  "language_en": "English",
+  "language_es": "Español",
+  "regionLabel": "Region",
+  "regionHint": "Region picks your emergency numbers and regional food coverage. It is separate from language on purpose — a Spanish speaker in the United States needs Spanish text and US numbers.",
+  "appearanceLabel": "Appearance",
+  "appearance_system": "Match device",
+  "appearance_light": "Light",
+  "appearance_dark": "Dark",
+  "photoIdLabel": "Photo identification",
+  "photoIdHint": "When off, the app never sends a photo anywhere. Typed lookups are unaffected.",
+  "aboutSection": "About",
+  "legalSection": "Legal",
+  "version": "Version {version}",
+  "kbVersion": "Knowledge base {version}",
+  "reportWrongAnswer": "Report a wrong answer",
+  "devSection": "Developer",
+  "openGallery": "Component gallery"
+}

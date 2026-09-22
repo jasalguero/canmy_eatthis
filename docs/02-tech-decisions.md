@@ -242,3 +242,32 @@ because there is no licensed vet available in the hobby build (`docs/10-hobby-sc
    speaker (Jose Salguero, recorded in `reviewed_by`), so `es` is now in `SHIPPED_LANGUAGES`
    and its entries carry `tier_a: approved` / `tier_b: approved`. New entries or languages
    re-enter through the same gate: draft status until a named native reviewer signs off.
+
+## D18 — Phase 2: `accent` is a fill colour, and two `on*` tokens were added to the palette
+
+Implementing Phase 2, the contrast check written alongside the tokens (`scripts/check-contrast.mjs`)
+failed seven of its own assertions against the palette `docs/06-ui-design-system.md` §1 fixes by
+value. Three changes resolve that without repainting a design doc:
+
+1. **`accent` is never a meaning-carrying foreground.** Doc 06 §1 pins the light accents
+   (`safe #14A06B`, `caution #E0A800`, …) and they are mid-tone: `caution.accent` on
+   `caution.surface` is 1.94:1, nowhere near the 3:1 a non-text signal needs. Rather than change
+   values the design doc states literally, the *usage* is narrowed: `accent` is a fill and a
+   decorative tint only. The verdict glyph — which doc 06 §1 requires as a non-colour signal —
+   renders in `onBg` on the banner and in `fg` on a tinted surface, both CI-checked ≥4.5:1. The
+   accent-as-foreground assertions are removed from the check with that reasoning recorded in its
+   header; nothing in the app may reintroduce the pattern.
+2. **Two tokens added: `verdict.*.onAccent` and `brand.onPrimary`.** Doc 06 §4 puts a
+   `toxic.accent` fill under the `EmergencyCallButton`, and doc 06 §1 gives no label colour for a
+   fill. The polarity is not constant — white reaches 4.69:1 on light `toxic.accent` but only
+   2.48:1 on the dark one, and the dark `brand.primary` mint takes 2.79:1 with white — so the
+   label colour cannot be a hardcoded white and has to be a per-theme token. Both are CI-checked
+   ≥4.5:1 against their fill. (This extends the four-key verdict shape in doc 06 §1 the same way
+   `onBg` already did.)
+3. **Borders are checked for ordering, not for a ratio.** The check asserted
+   `border.default` ≥3:1 on `surface.base`, which no theme passes (1.42:1 light, 1.90:1 dark) and
+   which its own header already said was the wrong rule: borders here are decorative separators,
+   not non-text UI components, and WCAG's 3:1 does not apply to them. Focus visibility comes from
+   `brand.primary`, which is checked. The implemented rule is now the one the header described —
+   `subtle < default < strong`, ordered by contrast against `surface.base` so it means the same
+   thing in both themes, where the polarity flips.

@@ -1,3 +1,9 @@
 {
-  "disclaimer": "Esta es información general, no un consejo veterinario."
+  "disclaimer": "Esta es información general, no un consejo veterinario.",
+  "disclaimerLong": "Esta app resume fuentes veterinarias publicadas. No examina a tu animal, no puede tener en cuenta su tamaño, su edad ni su estado de salud, y no sustituye a un profesional veterinario. Si crees que tu mascota ha comido algo peligroso, llama a un veterinario o a un teléfono de toxicología — no esperes a ver qué pasa.",
+  "disclaimerA11yLabel": "Aviso legal",
+  "termsTitle": "Términos del servicio",
+  "privacyTitle": "Política de privacidad",
+  "sourcesPolicyTitle": "Cómo se documentan las entradas",
+  "sourcesPolicyBody": "Cada entrada cita al menos dos fuentes independientes y acreditadas. Cuando las buenas fuentes no coinciden, o la información es escasa, dejamos la entrada fuera en vez de adivinar — por eso a veces la respuesta es «No lo sabemos»."
 }

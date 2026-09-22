@@ -1,3 +1,26 @@
 {
-  "offline": "You're offline. Typed lookups still work."
+  "offline": "You're offline. Typed lookups still work.",
+  "offline_title": "No connection",
+  "offline_body": "Photo identification needs a connection. Typed lookups work offline and give the same answers.",
+  "INVALID_REQUEST_title": "Something was wrong with that request",
+  "INVALID_REQUEST_body": "We could not read what was sent. Try again, or type the name instead.",
+  "UNAUTHENTICATED_title": "Session expired",
+  "UNAUTHENTICATED_body": "We could not start a session. Try again in a moment — typed lookups keep working either way.",
+  "ATTESTATION_FAILED_title": "We could not verify this device",
+  "ATTESTATION_FAILED_body": "Photo identification is unavailable on this device right now. Typed lookups still work.",
+  "SPEND_CAP_EXCEEDED_title": "Photo checks are paused for today",
+  "SPEND_CAP_EXCEEDED_body": "This is a free app with a daily limit on photo identification, and today's is used up. Typed lookups, verdicts and emergency numbers all still work.",
+  "RATE_LIMITED_title": "Too many checks just now",
+  "RATE_LIMITED_body": "Give it a minute and try again. Typed lookups are not limited.",
+  "IMAGE_UNUSABLE_title": "That photo is hard to read",
+  "IMAGE_UNUSABLE_body": "Try again in better light, closer in, or with the item on a plain background. You can also just type what it is.",
+  "NO_SUBJECT_FOUND_title": "We could not find anything to identify",
+  "NO_SUBJECT_FOUND_body": "There may be too much in the frame. Try a photo of the single item, or type what it is.",
+  "PROVIDER_UNAVAILABLE_title": "Photo identification is down",
+  "PROVIDER_UNAVAILABLE_body": "This is on our side, not yours. Typed lookups work as normal and give the same answers.",
+  "INTERNAL_title": "Something went wrong",
+  "INTERNAL_body": "We logged it. Typed lookups still work, and emergency numbers are always available.",
+  "actionTypeInstead": "Type the name instead",
+  "actionRetry": "Try again",
+  "actionHotlines": "Emergency numbers"
 }

@@ -1,3 +1,12 @@
 {
-  "appName": "CanMy*EatThis"
+  "appName": "CanMy*EatThis",
+  "species_dog": "Perro",
+  "species_cat": "Gato",
+  "cancel": "Cancelar",
+  "back": "Atrás",
+  "close": "Cerrar",
+  "retry": "Reintentar",
+  "done": "Hecho",
+  "notNow": "Ahora no",
+  "loading": "Cargando"
 }
