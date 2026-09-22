@@ -1,11 +1,13 @@
 import { useEffect } from 'react';
-import Animated, {
+import {
   useAnimatedStyle,
   useReducedMotion,
   useSharedValue,
   withRepeat,
   withTiming,
 } from 'react-native-reanimated';
+
+import { AnimatedView } from '@/theme/animated';
 
 import { motion } from '@/theme/tokens';
 
@@ -41,7 +43,7 @@ export function Skeleton({ height, className }: SkeletonProps) {
   const style = useAnimatedStyle(() => ({ opacity: progress.value }));
 
   return (
-    <Animated.View
+    <AnimatedView
       accessible
       accessibilityRole="progressbar"
       accessibilityState={{ busy: true }}

@@ -3,13 +3,15 @@ import * as Haptics from 'expo-haptics';
 import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { type LayoutChangeEvent, Pressable, View } from 'react-native';
-import Animated, {
+import {
   useAnimatedStyle,
   useReducedMotion,
   useSharedValue,
   withSpring,
   withTiming,
 } from 'react-native-reanimated';
+
+import { AnimatedView } from '@/theme/animated';
 
 import { Text } from '@/components/primitives';
 import { motion, sizes } from '@/theme/tokens';
@@ -83,7 +85,7 @@ export function SpeciesToggle({ value, onChange, className }: SpeciesToggleProps
         .join(' ')}
     >
       {/* The sliding pill, behind the labels. Decorative — state lives on the radios. */}
-      <Animated.View
+      <AnimatedView
         accessibilityElementsHidden
         importantForAccessibility="no-hide-descendants"
         style={[

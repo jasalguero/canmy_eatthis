@@ -2,13 +2,15 @@ import type { Species, Verdict } from '@canmyeatthis/shared';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { AccessibilityInfo, View } from 'react-native';
-import Animated, {
+import {
   useAnimatedStyle,
   useReducedMotion,
   useSharedValue,
   withSpring,
   withTiming,
 } from 'react-native-reanimated';
+
+import { AnimatedView } from '@/theme/animated';
 
 import { Text } from '@/components/primitives';
 import { motion } from '@/theme/tokens';
@@ -80,7 +82,7 @@ export function VerdictBanner({
   const glyphStyle = useAnimatedStyle(() => ({ transform: [{ scale: glyphScale.value }] }));
 
   return (
-    <Animated.View style={washStyle} className={`w-full px-5 pb-6 pt-5 ${classes.bannerBg}`}>
+    <AnimatedView style={washStyle} className={`w-full px-5 pb-6 pt-5 ${classes.bannerBg}`}>
       <View
         // One accessibility node, read in one breath, verdict word first.
         accessible
@@ -93,7 +95,7 @@ export function VerdictBanner({
         })}
         className="gap-1"
       >
-        <Animated.View style={glyphStyle} className="self-start">
+        <AnimatedView style={glyphStyle} className="self-start">
           <Text
             variant="display"
             className={classes.onBgText}
@@ -102,7 +104,7 @@ export function VerdictBanner({
           >
             {VERDICT_GLYPH[verdict]}
           </Text>
-        </Animated.View>
+        </AnimatedView>
         <Text variant="display" className={classes.onBgText}>
           {verdictWord}
         </Text>
@@ -113,6 +115,6 @@ export function VerdictBanner({
           {subject}
         </Text>
       </View>
-    </Animated.View>
+    </AnimatedView>
   );
 }

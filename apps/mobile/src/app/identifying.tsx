@@ -2,7 +2,7 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
-import Animated, {
+import {
   Easing,
   useAnimatedStyle,
   useReducedMotion,
@@ -10,6 +10,8 @@ import Animated, {
   withRepeat,
   withTiming,
 } from 'react-native-reanimated';
+
+import { AnimatedView } from '@/theme/animated';
 
 import { Screen } from '@/components/layout';
 import { Button, Text } from '@/components/primitives';
@@ -90,7 +92,7 @@ export default function Identifying() {
               importantForAccessibility="no-hide-descendants"
             />
             {reducedMotion ? null : (
-              <Animated.View
+              <AnimatedView
                 accessibilityElementsHidden
                 importantForAccessibility="no-hide-descendants"
                 style={shimmerStyle}

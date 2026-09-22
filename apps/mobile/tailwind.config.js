@@ -92,7 +92,11 @@ module.exports = {
   // `dark:` follows the system colour scheme; colours themselves are theme-agnostic via CSS
   // variables (see header), so `dark:` is only ever needed for non-colour tweaks.
   darkMode: 'media',
-  // No `content` here on purpose: NativeWind's Metro plugin scans the source itself.
+  // Tailwind only emits a class it has seen in a scanned file. NativeWind's Metro integration
+  // does NOT supply this for us — without it Tailwind finds no content, generates no utilities,
+  // and the app renders completely unstyled while still compiling and passing every type check.
+  // It is the one piece of this config whose absence is invisible until you look at a screen.
+  content: ['./src/**/*.{ts,tsx}'],
   theme: {
     // NOTE: `theme` (not `extend`) — this REPLACES Tailwind's defaults for these groups, which
     // is what removes the default palette. `bg-red-500` does not resolve.
