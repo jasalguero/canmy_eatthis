@@ -32,6 +32,16 @@ jobs:
       - name: Check for bare "safe" claims
         run: ./scripts/check-safe-claims.sh
 
+      # docs/06 §1 — every verdict token pair passes WCAG AA, computed from the token file.
+      # "Add a CI check that computes contrast ratios; do not eyeball it."
+      - name: Check colour contrast
+        run: node scripts/check-contrast.mjs
+
+      # docs/06 §1–§2 — no colour literals outside theme/, no default-palette classes,
+      # logical layout properties only.
+      - name: Check UI hygiene
+        run: ./scripts/check-ui-hygiene.sh
+
       - name: Test
         run: pnpm -r test
 
