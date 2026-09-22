@@ -24,12 +24,15 @@ components, the same tokens and the same mock data as the native app. That makes
 check of **layout, colour, contrast, wrapping, copy and information order**.
 
 They are **not** a substitute for a device pass. Four things in Phase 2 exist only natively and
-are verified on a simulator or device, not here:
+**still need to be checked on a simulator or device — that pass has not been done yet**:
 
 - haptics on the verdict reveal and the species toggle (`expo-haptics`)
 - the feel of the reveal animation and the scanning shimmer
 - VoiceOver / TalkBack focus order and the live-region announcement
 - the platform's own Dynamic Type / font-scale behaviour
+
+Until that pass happens, treat those four as implemented-but-unverified. Everything else in the
+table below is mechanically checked.
 
 Two capture details are worth knowing when reading the images:
 
@@ -54,7 +57,7 @@ Two capture details are worth knowing when reading the images:
 | CI contrast check ≥4.5:1 for every verdict token pair | `scripts/check-contrast.mjs`, run in CI |
 | Grayscale: all four verdicts still distinguishable | `grayscale/`, and `src/theme/verdict.test.ts` — see the note below |
 | 200% font scale: no clipping or overlap | `es-200/` (the harder case; `en` at 200% is strictly shorter) |
-| VoiceOver reads the verdict word first | `VerdictBanner` announces it via `announceForAccessibility` and exposes the banner as one node with the word first; confirmed on device |
+| VoiceOver reads the verdict word first | **Implemented, not yet verified on a device.** `VerdictBanner` announces it via `announceForAccessibility` and exposes the banner as a single node whose label starts with the verdict word. The web capture cannot confirm VoiceOver/TalkBack focus order — see the device pass below |
 | No colour literals outside `theme/` | `scripts/check-ui-hygiene.sh`, run in CI |
 | Every screen at `es` + 200% font scale | `es-200/` |
 | A pseudo-locale run surfaces zero hardcoded strings | Asserted by `scripts/screenshots.mjs` — it runs every screen in the pseudo-locale and fails on any unmarked visible string |
