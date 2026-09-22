@@ -42,6 +42,13 @@ jobs:
       - name: Check UI hygiene
         run: ./scripts/check-ui-hygiene.sh
 
+      # Native package versions must match what the installed Expo SDK expects. A mismatch does
+      # not fail typecheck, lint, tests or the web build — but it breaks the app on device: a
+      # react-native-worklets outside react-native-reanimated's peer range made every route throw
+      # "undefined is not a function" at import on iOS while web ran perfectly.
+      - name: Check Expo SDK dependency versions
+        run: pnpm --filter @canmyeatthis/mobile run check:deps
+
       - name: Test
         run: pnpm -r test
 
