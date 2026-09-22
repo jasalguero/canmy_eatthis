@@ -36,15 +36,34 @@ import { Image } from 'react-native';
  * request lifecycle; the presentation does not change.
  */
 
-const STAGE_KEYS = [
+/**
+ * The stages differ by input, and not only for polish.
+ *
+ * A typed check never sends anything: it resolves against the bundled knowledge base, on device
+ * and offline (H3). Showing "Preparing your photo" and "Sending it for identification" for a
+ * text lookup would be telling the user their data left the device when it did not — which, in
+ * an app whose privacy position is "we collect nothing" (docs/10 §5), is the one thing the
+ * loading copy must not get wrong.
+ */
+const PHOTO_STAGE_KEYS = [
   'identify:stage_preparing',
   'identify:stage_uploading',
   'identify:stage_identifying',
   'identify:stage_matching',
 ] as const;
 
+const TEXT_STAGE_KEYS = ['identify:stage_reading', 'identify:stage_matching'] as const;
+
 /** Long enough to read, short enough not to feel stuck. */
 const STAGE_MS = 900;
+
+/**
+ * Which mock result a typed check lands on. Fixed and arbitrary: Phase 2 does not read the
+ * description, because matching text to an entry is resolution logic and belongs in
+ * `packages/shared` (AGENTS.md #5), arriving in H3. The gallery is the way to reach the other
+ * verdicts and severities.
+ */
+const MOCK_TEXT_RESULT_CASE = 'toxic-moderate-dog';
 
 export default function Identifying() {
   const { t } = useTranslation();
@@ -52,6 +71,7 @@ export default function Identifying() {
   const hasPhoto = params.hasPhoto === '1';
   const reducedMotion = useReducedMotion();
   const [stage, setStage] = useState(0);
+  const stageKeys = hasPhoto ? PHOTO_STAGE_KEYS : TEXT_STAGE_KEYS;
 
   const shimmer = useSharedValue(0);
 
@@ -65,10 +85,30 @@ export default function Identifying() {
   }, [reducedMotion, hasPhoto, shimmer]);
 
   useEffect(() => {
-    if (stage >= STAGE_KEYS.length - 1) return;
-    const id = setTimeout(() => setStage((s) => s + 1), STAGE_MS);
+    if (stage < stageKeys.length - 1) {
+      const id = setTimeout(() => setStage((s) => s + 1), STAGE_MS);
+      return () => clearTimeout(id);
+    }
+
+    // Last stage: hand off, rather than sitting on a finished progress list forever.
+    //
+    // Where it goes is decided here by the *input*, not by an answer — Phase 2 has no network
+    // and no knowledge base, and this screen must not grow resolution logic of its own
+    // (AGENTS.md #5: that lives only in packages/shared). H3 replaces this timeout with real
+    // local resolution and H5 with the real request; the two destinations stay the same.
+    //
+    // A photo-derived identification always goes through Confirm. The model produces candidates,
+    // never verdicts (AGENTS.md #1), so a verdict from a photo is only as good as the user
+    // agreeing with what was recognised. Typed input skips it: the user already said what it is.
+    const id = setTimeout(() => {
+      if (hasPhoto) {
+        router.replace('/confirm');
+      } else {
+        router.replace({ pathname: '/result', params: { case: MOCK_TEXT_RESULT_CASE } });
+      }
+    }, STAGE_MS);
     return () => clearTimeout(id);
-  }, [stage]);
+  }, [stage, hasPhoto, stageKeys.length]);
 
   const shimmerStyle = useAnimatedStyle(() => ({
     opacity: 0.15 + shimmer.value * 0.25,
@@ -109,7 +149,7 @@ export default function Identifying() {
           accessibilityState={{ busy: true }}
           className="gap-2"
         >
-          {STAGE_KEYS.map((key, i) => (
+          {stageKeys.map((key, i) => (
             <Text
               key={key}
               variant="body"

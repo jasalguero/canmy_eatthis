@@ -95,6 +95,8 @@ function kbStrings() {
 const SCREENS = [
   { name: '01-home', path: '/' },
   { name: '02-identifying', path: '/identifying?hasPhoto=1' },
+  // Text-only: different stages, because a typed check resolves on device and sends nothing.
+  { name: '02b-identifying-text', path: '/identifying?hasPhoto=0' },
   { name: '03-confirm', path: '/confirm' },
   { name: '04-confirm-plant', path: '/confirm?plant=1' },
   { name: '05-result-safe', path: '/result?case=safe-dog&still=1', verdict: true },

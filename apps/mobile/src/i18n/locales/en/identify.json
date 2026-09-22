@@ -1,6 +1,7 @@
 {
   "title": "Looking at your photo",
   "titleTextOnly": "Checking",
+  "stage_reading": "Reading what you typed",
   "stage_preparing": "Preparing your photo",
   "stage_uploading": "Sending it for identification",
   "stage_identifying": "Working out what this is",
