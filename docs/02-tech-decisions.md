@@ -269,5 +269,34 @@ value. Three changes resolve that without repainting a design doc:
    which its own header already said was the wrong rule: borders here are decorative separators,
    not non-text UI components, and WCAG's 3:1 does not apply to them. Focus visibility comes from
    `brand.primary`, which is checked. The implemented rule is now the one the header described —
-   `subtle < default < strong`, ordered by contrast against `surface.base` so it means the same
-   thing in both themes, where the polarity flips.
+    `subtle < default < strong`, ordered by contrast against `surface.base` so it means the same
+    thing in both themes, where the polarity flips.
+
+## D19 — TypeScript 7 (the native compiler), pinned to `^7.0.2`
+
+**Decided 2026-09-22.** D2 fixed the *shape* of our TypeScript use — `strict: true`, Zod-inferred
+types, one shared schema source — but never pinned a major version, and the workspace sat on 5.x
+(`^5.7.3`, resolving to 5.9.3). All five `package.json`s (root + the four workspace packages) now
+declare `^7.0.2`.
+
+**Why 7 and not 6.** TypeScript 7 is the Go-based native compiler (`tsgo`), now the stable `latest`
+on npm. It is a drop-in `tsc` replacement that is materially faster, and it is the line the project
+is heading for regardless: 6.0 is the last JS-based release and exists mainly as a bridge. Going
+straight to 7 skips the bridge. Concretely, options deprecated in 6.0 are *removed* in 7.0 —
+`baseUrl` among them — so 7 forces the clean `paths`-relative-to-tsconfig form rather than letting us
+keep a deprecated option silenced with `ignoreDeprecations`. (The mobile tsconfig's `baseUrl` was
+already migrated off as part of the same effort.)
+
+**Alternatives:** stay on 5.x (defers the migration and keeps surfacing 6.0 deprecation warnings in
+editors that run a newer bundled compiler); step to 6.0 first (an extra hop with no upside — 6.0 is
+the bridge, not the destination).
+
+**Verified:** all four packages `tsc --noEmit` clean and the full test suite green on 7.0.2; every
+package's `tsc` resolves to 7.0.2.
+
+**One caveat to know about:** `i18next` and `react-i18next` declare `typescript@^5` as a peer
+dependency, so `pnpm install` now reports unmet peers for them. This is cosmetic, not a breakage —
+the range records which major the libraries were *tested* against, and their types check and their
+behaviour is unchanged under 7 (typecheck + tests green). If a future release of either still pins
+`^5` and we want the warning gone, the lever is upgrading those libraries, not downgrading the
+compiler.
