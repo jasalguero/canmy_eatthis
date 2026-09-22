@@ -39,6 +39,16 @@ describe('tailwind palette', () => {
     expect(literals).toEqual([]);
   });
 
+  it("keeps darkMode on the 'class' strategy", () => {
+    // Not a style preference — `media` breaks the web build. css-interop's web colour-scheme
+    // runtime reads this flag at module load, and when the stylesheet arrives later (the
+    // dev-server case) its own MutationObserver calls `colorScheme.set(...)`, which its own
+    // guard rejects under `media`: "Cannot manually set color scheme, as dark mode is type
+    // 'media'". It also means a `dark:` variant could never follow the in-app Appearance
+    // override. See the comment in tailwind.config.js.
+    expect(tailwindConfig.darkMode).toBe('class');
+  });
+
   it('exposes a label colour for every fill', () => {
     // Every fill needs a CI-checked label token (docs/02 D18) — a missing `on-*` here is how a
     // component ends up hardcoding white on a mint background at 2.8:1.

@@ -1,6 +1,6 @@
-import { useColorScheme, vars } from 'nativewind';
-import { type ReactNode, createContext, useContext, useMemo } from 'react';
-import { View } from 'react-native';
+import { colorScheme as nativewindColorScheme, vars } from 'nativewind';
+import { type ReactNode, createContext, useContext, useEffect, useMemo } from 'react';
+import { type ColorSchemeName, View, useColorScheme } from 'react-native';
 
 import { type ThemeName, tokens } from './tokens';
 
@@ -9,11 +9,10 @@ import { type ThemeName, tokens } from './tokens';
  * dark, and by a future appearance setting) wins; otherwise the system colour scheme decides.
  * docs/06-ui-design-system.md §1: "Dark mode is not optional — this app is used at 2 a.m."
  */
-export function resolveTheme(
-  override: ThemeName | undefined,
-  system: 'light' | 'dark' | null | undefined,
-): ThemeName {
+export function resolveTheme(override: ThemeName | undefined, system: ColorSchemeName): ThemeName {
   if (override) return override;
+  // `ColorSchemeName` also admits `null`, `undefined` and `'unspecified'` — each of which means
+  // "the device did not tell us", and light is the right answer for all of them.
   return system === 'dark' ? 'dark' : 'light';
 }
 
@@ -52,6 +51,14 @@ interface ThemeContextValue {
 const ThemeContext = createContext<ThemeContextValue>({ theme: 'light' });
 
 /**
+ * True inside an existing ThemeProvider. Only the outermost one syncs NativeWind's colour
+ * scheme: the dev gallery renders two nested providers side by side (forced light and forced
+ * dark) so components can be compared, and if each of those pushed its theme to the global
+ * NativeWind scheme they would fight over it and whichever rendered last would win.
+ */
+const ThemeNestingContext = createContext(false);
+
+/**
  * Sets the design-token CSS variables at the root of the tree so every Tailwind colour class
  * (`bg-surface-base`, `text-ink-primary`, `bg-verdict-toxic-bg`, …) resolves to the active
  * theme's values. Class names stay theme-agnostic — there is exactly one place a theme value
@@ -70,16 +77,31 @@ export function ThemeProvider({
   /** Force a theme regardless of the system scheme (dev gallery, future appearance setting). */
   theme?: ThemeName;
 }) {
-  const { colorScheme } = useColorScheme();
+  // React Native's own hook, not NativeWind's: all this needs is the device colour scheme, and
+  // going direct keeps the theme independent of NativeWind's colour-scheme machinery (which is
+  // what produced the `darkMode: 'media'` crash described in tailwind.config.js).
+  const colorScheme = useColorScheme();
   const resolved = resolveTheme(theme, colorScheme);
+  const isNested = useContext(ThemeNestingContext);
+
+  // Keep NativeWind's notion of dark mode aligned with the theme actually in effect, so a
+  // `dark:` variant — if one is ever added — agrees with the token colours around it, including
+  // when the user has overridden Appearance in Settings. Requires `darkMode: 'class'`; under
+  // `'media'` this call throws by design.
+  useEffect(() => {
+    if (isNested) return;
+    nativewindColorScheme.set(resolved);
+  }, [isNested, resolved]);
 
   const variableStyle = useMemo(() => vars(themeToVariables(resolved)), [resolved]);
 
   return (
     <ThemeContext.Provider value={{ theme: resolved }}>
-      <View style={variableStyle} className="flex-1 bg-surface-base">
-        {children}
-      </View>
+      <ThemeNestingContext.Provider value={true}>
+        <View style={variableStyle} className="flex-1 bg-surface-base">
+          {children}
+        </View>
+      </ThemeNestingContext.Provider>
     </ThemeContext.Provider>
   );
 }

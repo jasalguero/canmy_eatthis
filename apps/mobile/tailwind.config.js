@@ -89,9 +89,25 @@ module.exports = {
   // the preset's `colors`, `fontSize` and `spacing` wholesale. `bg-red-500` still does not
   // resolve; there is a test asserting exactly that.
   presets: [require('nativewind/preset')],
-  // `dark:` follows the system colour scheme; colours themselves are theme-agnostic via CSS
-  // variables (see header), so `dark:` is only ever needed for non-colour tweaks.
-  darkMode: 'media',
+  // `class`, not `media`, for two reasons.
+  //
+  // 1. **`media` crashes the web build.** react-native-css-interop's web colour-scheme runtime
+  //    reads the `darkMode` flag at module load; when the stylesheet has not arrived yet (the
+  //    dev-server case) it installs a MutationObserver on `<head>` and, once the CSS lands,
+  //    calls `colorScheme.set(...)` — which its own guard rejects when the flag is `media`,
+  //    throwing "Cannot manually set color scheme, as dark mode is type 'media'". That is an
+  //    upstream bug (css-interop 0.2.7) in a code path we never call. `class` makes the same
+  //    call legal, so the observer resolves to `system` instead of throwing.
+  // 2. **`media` cannot see the in-app Appearance setting.** Settings lets the user force light
+  //    or dark independently of the device (src/lib/settings.ts). Under `media` a `dark:`
+  //    variant would follow the OS and disagree with the colours around it; under `class` it
+  //    follows whatever ThemeProvider resolved, override included.
+  //
+  // This changes nothing about the app's colours: those are CSS variables set by ThemeProvider
+  // (see header) and there is not a single `dark:` variant in the codebase. The strategy only
+  // governs how a `dark:` variant would resolve if one were ever added — and ThemeProvider keeps
+  // NativeWind's colour scheme in sync so that it would resolve correctly on both platforms.
+  darkMode: 'class',
   // Tailwind only emits a class it has seen in a scanned file. NativeWind's Metro integration
   // does NOT supply this for us — without it Tailwind finds no content, generates no utilities,
   // and the app renders completely unstyled while still compiling and passing every type check.
