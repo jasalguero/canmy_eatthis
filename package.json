@@ -12,7 +12,8 @@
     "format": "biome format --write .",
     "test": "pnpm -r --if-present run test",
     "build": "pnpm -r --if-present run build",
-    "prepare": "husky"
+    "prepare": "husky",
+    "mock:kb": "node scripts/generate-mock-kb.mjs"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
