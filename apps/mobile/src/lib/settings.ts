@@ -14,6 +14,13 @@ import { SUPPORTED_LANGUAGES, type SupportedLanguage } from '@/i18n/namespaces';
  */
 export type RegionCode = string;
 
+/**
+ * Appearance is a third independent setting. `system` (the default) follows the device; the
+ * explicit values exist because this app is used at 2 a.m. (docs/06 §1) and a user who keeps
+ * their phone in light mode may still want the app dark in the dark.
+ */
+export type Appearance = 'system' | 'light' | 'dark';
+
 function deviceDefaultRegion(): RegionCode {
   return Localization.getLocales()[0]?.regionCode ?? 'US';
 }
@@ -21,10 +28,23 @@ function deviceDefaultRegion(): RegionCode {
 interface SettingsState {
   language: SupportedLanguage;
   region: RegionCode;
+  appearance: Appearance;
+  /**
+   * AI-processing consent (Apple 5.1.2, docs/10 §5). Defaults to `false`: consent is something
+   * the user gives at first run, never something the app assumes. While it is false the app
+   * never sends a photo anywhere, and — the point of docs/07 Phase 7 — everything else still
+   * works: typed lookups, every verdict, every emergency number.
+   */
+  photoIdConsent: boolean;
+  /** Whether the first-run flow has been completed. */
+  onboarded: boolean;
   /** Sets language only. Never touches region — see the module doc comment. */
   setLanguage: (language: SupportedLanguage) => void;
   /** Sets region only. Never touches language — see the module doc comment. */
   setRegion: (region: RegionCode) => void;
+  setAppearance: (appearance: Appearance) => void;
+  setPhotoIdConsent: (consent: boolean) => void;
+  setOnboarded: (onboarded: boolean) => void;
 }
 
 export const useSettingsStore = create<SettingsState>()(
@@ -32,13 +52,25 @@ export const useSettingsStore = create<SettingsState>()(
     (set) => ({
       language: deviceDefaultLanguage(),
       region: deviceDefaultRegion(),
+      appearance: 'system',
+      photoIdConsent: false,
+      onboarded: false,
       setLanguage: (language) => set({ language }),
       setRegion: (region) => set({ region }),
+      setAppearance: (appearance) => set({ appearance }),
+      setPhotoIdConsent: (photoIdConsent) => set({ photoIdConsent }),
+      setOnboarded: (onboarded) => set({ onboarded }),
     }),
     {
       name: 'canmyeatthis.settings.v1',
       storage: createJSONStorage(() => AsyncStorage),
-      partialize: (state) => ({ language: state.language, region: state.region }),
+      partialize: (state) => ({
+        language: state.language,
+        region: state.region,
+        appearance: state.appearance,
+        photoIdConsent: state.photoIdConsent,
+        onboarded: state.onboarded,
+      }),
     },
   ),
 );

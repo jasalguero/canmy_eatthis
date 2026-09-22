@@ -83,6 +83,12 @@ const elevationPlugin = plugin(({ addUtilities }) => {
 });
 
 module.exports = {
+  // Required by NativeWind v4: the preset supplies the React Native platform config (which core
+  // plugins exist, how styles are emitted). It also brings Tailwind's default theme with it —
+  // which is fine, because `theme` below is `theme`, not `theme.extend`, and therefore REPLACES
+  // the preset's `colors`, `fontSize` and `spacing` wholesale. `bg-red-500` still does not
+  // resolve; there is a test asserting exactly that.
+  presets: [require('nativewind/preset')],
   // `dark:` follows the system colour scheme; colours themselves are theme-agnostic via CSS
   // variables (see header), so `dark:` is only ever needed for non-colour tweaks.
   darkMode: 'media',

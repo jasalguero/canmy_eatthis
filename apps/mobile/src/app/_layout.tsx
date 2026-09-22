@@ -20,12 +20,16 @@ function RootLayout() {
   // Settings (language + region) are persisted independently and each defaults from the
   // device on first launch — docs/07-implementation-plan.md Phase 0, AGENTS.md #12.
   const language = useSettingsStore((state) => state.language);
+  const appearance = useSettingsStore((state) => state.appearance);
   const i18n = useMemo(() => initI18n(language), [language]);
+
+  // `system` means "no override", which is what ThemeProvider's undefined `theme` prop means.
+  const themeOverride = appearance === 'system' ? undefined : appearance;
 
   return (
     <SafeAreaProvider>
       <I18nextProvider i18n={i18n}>
-        <ThemeProvider>
+        <ThemeProvider theme={themeOverride}>
           {/* Inside the provider so useTheme() resolves the real theme, not the context default. */}
           <StatusBarThemer>
             <Stack screenOptions={{ headerShown: false }} />
