@@ -80,15 +80,19 @@ export function deviceDefaultLanguage(): SupportedLanguage {
 
 let initialized = false;
 
+/**
+ * Initialises the i18next singleton, once. Safe to call on every render: after the first call it
+ * returns the existing instance and does nothing else.
+ *
+ * It deliberately does **not** switch language when called again with a different one.
+ * `changeLanguage` makes i18next notify every `useTranslation` subscriber, so calling it from
+ * here — which runs inside a `useMemo`, during render — set state on other components mid-render
+ * and produced React's "Cannot update a component while rendering a different component"
+ * warning. Switching language is a side effect and belongs in an effect: see the one in
+ * `src/app/_layout.tsx` that owns it.
+ */
 export function initI18n(initialLanguage: SupportedLanguage): typeof i18next {
-  if (initialized) {
-    // Re-called when the persisted language setting changes — i18next was initialised once,
-    // so a new language takes effect via changeLanguage (and re-renders through the provider).
-    if (i18next.language !== initialLanguage) {
-      void i18next.changeLanguage(initialLanguage);
-    }
-    return i18next;
-  }
+  if (initialized) return i18next;
   initialized = true;
 
   i18next

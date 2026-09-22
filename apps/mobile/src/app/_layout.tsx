@@ -2,7 +2,7 @@ import '../../global.css';
 
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { I18nextProvider } from 'react-i18next';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
@@ -21,7 +21,19 @@ function RootLayout() {
   // device on first launch — docs/07-implementation-plan.md Phase 0, AGENTS.md #12.
   const language = useSettingsStore((state) => state.language);
   const appearance = useSettingsStore((state) => state.appearance);
+  // Initialisation only — `language` here is just the value i18next starts with. Switching
+  // language afterwards happens in the effect below, never during render.
   const i18n = useMemo(() => initI18n(language), [language]);
+
+  // i18next notifies every `useTranslation` subscriber when the language changes, which is a
+  // state update in other components. Doing that during render (it used to happen inside the
+  // `useMemo` above) triggers React's "Cannot update a component while rendering a different
+  // component" warning and updates subscribers mid-render, so it is an effect.
+  useEffect(() => {
+    if (i18n.language !== language) {
+      void i18n.changeLanguage(language);
+    }
+  }, [i18n, language]);
 
   // `system` means "no override", which is what ThemeProvider's undefined `theme` prop means.
   const themeOverride = appearance === 'system' ? undefined : appearance;

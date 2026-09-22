@@ -1,4 +1,4 @@
-import { en, es } from './index';
+import { en, es, initI18n } from './index';
 import { AUTHORED_NAMESPACES, NAMESPACES } from './namespaces';
 
 /**
@@ -79,6 +79,21 @@ function icuArguments(message: string): Set<string> {
   if (i !== message.length) throw new Error(`unbalanced braces in: ${message}`);
   return args;
 }
+
+describe('initI18n', () => {
+  it('initialises once and never switches language on a later call', () => {
+    // Regression guard. `initI18n` is called from a `useMemo` in the root layout, i.e. during
+    // render. It used to call `changeLanguage` when the language prop differed, and because
+    // i18next notifies every `useTranslation` subscriber, that set state on other components
+    // mid-render — React's "Cannot update a component while rendering a different component".
+    // Switching language is an effect's job (see src/app/_layout.tsx); this function must stay
+    // inert on re-entry.
+    const first = initI18n('en');
+    const second = initI18n('es');
+    expect(second).toBe(first);
+    expect(first.language).toBe('en');
+  });
+});
 
 describe('i18n catalogues', () => {
   it('registers every namespace in both languages', () => {
