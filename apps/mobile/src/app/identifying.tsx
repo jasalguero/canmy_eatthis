@@ -1,39 +1,31 @@
 import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { View } from 'react-native';
-import {
-  Easing,
-  useAnimatedStyle,
-  useReducedMotion,
-  useSharedValue,
-  withRepeat,
-  withTiming,
-} from 'react-native-reanimated';
-
-import { AnimatedView } from '@/theme/animated';
+import { Image, View } from 'react-native';
 
 import { Screen } from '@/components/layout';
 import { Button, Text } from '@/components/primitives';
+import { useDraftStore } from '@/lib/draft';
+import { resolveOffline } from '@/lib/offlineKb';
 import { MOCK_PHOTO_URI } from '@/mock/photos';
-import { motion } from '@/theme/tokens';
-import { Image } from 'react-native';
 
 /**
  * Signature interaction #2 (docs/06 §2): the scanning state.
  *
- * Not a spinner. The user's photo stays on screen with a diagonal shimmer sweeping over it and a
- * status line stepping through real stages, which makes a couple of seconds read as feedback
- * rather than as waiting.
+ * Not a spinner. The user's photo stays on screen with a status line stepping through real
+ * stages, which makes a couple of seconds read as feedback rather than as waiting.
  *
- * Two things are load-bearing rather than decorative:
- *  - The stage line is an `accessibilityLiveRegion`, so a screen-reader user gets the same
- *    progress information the shimmer conveys visually.
- *  - `useReducedMotion()` removes the shimmer entirely and leaves the stages, which is the part
- *    that actually carries the information.
+ * The stage line is an `accessibilityLiveRegion`, so a screen-reader user gets the same progress
+ * information a sighted user gets from the stage list — that text list is what carries the
+ * information. There used to also be a shimmer sweeping over the photo; it is gone
+ * (docs/02-tech-decisions.md D23) — the `react-native-reanimated`-driven animation did not
+ * reliably render on a real device, the same failure found in `SpeciesToggle`/`VerdictBanner`,
+ * and it was purely decorative, so it is removed rather than fixed.
  *
- * Phase 2 has no network, so the stages advance on a timer. H5 replaces the timer with the real
- * request lifecycle; the presentation does not change.
+ * The stages still advance on a fixed timer — for a typed query the real, synchronous on-device
+ * resolution (H3) finishes well under `STAGE_MS`, so the timer is what keeps the moment readable
+ * rather than a flash. The photo path still has no network call to time against (H4); H5
+ * replaces its timer with the real request lifecycle, and the presentation does not change.
  */
 
 /**
@@ -57,32 +49,15 @@ const TEXT_STAGE_KEYS = ['identify:stage_reading', 'identify:stage_matching'] as
 /** Long enough to read, short enough not to feel stuck. */
 const STAGE_MS = 900;
 
-/**
- * Which mock result a typed check lands on. Fixed and arbitrary: Phase 2 does not read the
- * description, because matching text to an entry is resolution logic and belongs in
- * `packages/shared` (AGENTS.md #5), arriving in H3. The gallery is the way to reach the other
- * verdicts and severities.
- */
-const MOCK_TEXT_RESULT_CASE = 'toxic-moderate-dog';
-
 export default function Identifying() {
   const { t } = useTranslation();
   const params = useLocalSearchParams<{ species?: string; hasPhoto?: string }>();
   const hasPhoto = params.hasPhoto === '1';
-  const reducedMotion = useReducedMotion();
   const [stage, setStage] = useState(0);
   const stageKeys = hasPhoto ? PHOTO_STAGE_KEYS : TEXT_STAGE_KEYS;
-
-  const shimmer = useSharedValue(0);
-
-  useEffect(() => {
-    if (reducedMotion || !hasPhoto) return;
-    shimmer.value = withRepeat(
-      withTiming(1, { duration: motion.durationSlow * 3, easing: Easing.linear }),
-      -1,
-      false,
-    );
-  }, [reducedMotion, hasPhoto, shimmer]);
+  const description = useDraftStore((state) => state.description);
+  const draftPhotos = useDraftStore((state) => state.photos);
+  const previewUri = draftPhotos[0] ?? MOCK_PHOTO_URI;
 
   useEffect(() => {
     if (stage < stageKeys.length - 1) {
@@ -92,28 +67,40 @@ export default function Identifying() {
 
     // Last stage: hand off, rather than sitting on a finished progress list forever.
     //
-    // Where it goes is decided here by the *input*, not by an answer — Phase 2 has no network
-    // and no knowledge base, and this screen must not grow resolution logic of its own
-    // (AGENTS.md #5: that lives only in packages/shared). H3 replaces this timeout with real
-    // local resolution and H5 with the real request; the two destinations stay the same.
+    // A photo-derived identification always goes through Confirm — real photo *identification*
+    // needs a vision model that doesn't exist until H4, so this still hands off to Confirm's
+    // mock candidates (AGENTS.md #1: the model produces candidates, never verdicts, so this was
+    // always going through a confirmation step regardless).
     //
-    // A photo-derived identification always goes through Confirm. The model produces candidates,
-    // never verdicts (AGENTS.md #1), so a verdict from a photo is only as good as the user
-    // agreeing with what was recognised. Typed input skips it: the user already said what it is.
+    // Typed input is real as of H3: `resolveOffline` runs the on-device exact/alias/fuzzy
+    // resolver from `packages/shared` (AGENTS.md #5) against the bundled KB. An exact match
+    // skips Confirm — nothing to confirm when the user typed the exact name — a fuzzy match
+    // goes to Confirm with that one real candidate, and no match is a real `unknown`, not a mock.
     const id = setTimeout(() => {
       if (hasPhoto) {
         router.replace('/confirm');
+        return;
+      }
+      const resolution = resolveOffline(description);
+      if (resolution.type === 'exact' && resolution.kbId) {
+        router.replace({
+          pathname: '/result',
+          params: { kbId: resolution.kbId, species: params.species ?? 'dog' },
+        });
+      } else if (resolution.type === 'fuzzy' && resolution.kbId) {
+        router.replace({
+          pathname: '/confirm',
+          params: { kbId: resolution.kbId, species: params.species ?? 'dog' },
+        });
       } else {
-        router.replace({ pathname: '/result', params: { case: MOCK_TEXT_RESULT_CASE } });
+        router.replace({
+          pathname: '/result',
+          params: { unknown: '1', species: params.species ?? 'dog', query: description },
+        });
       }
     }, STAGE_MS);
     return () => clearTimeout(id);
-  }, [stage, hasPhoto, stageKeys.length]);
-
-  const shimmerStyle = useAnimatedStyle(() => ({
-    opacity: 0.15 + shimmer.value * 0.25,
-    transform: [{ translateY: -200 + shimmer.value * 400 }, { rotate: '-20deg' }],
-  }));
+  }, [stage, hasPhoto, stageKeys.length, description, params.species]);
 
   return (
     <Screen className="justify-between px-4 py-6">
@@ -125,20 +112,12 @@ export default function Identifying() {
         {hasPhoto ? (
           <View className="aspect-[3/2] w-full overflow-hidden rounded-md bg-surface-sunken">
             <Image
-              source={{ uri: MOCK_PHOTO_URI }}
+              source={{ uri: previewUri }}
               resizeMode="cover"
               className="h-full w-full"
               accessibilityElementsHidden
               importantForAccessibility="no-hide-descendants"
             />
-            {reducedMotion ? null : (
-              <AnimatedView
-                accessibilityElementsHidden
-                importantForAccessibility="no-hide-descendants"
-                style={shimmerStyle}
-                className="absolute h-40 w-full bg-surface-raised"
-              />
-            )}
           </View>
         ) : null}
 

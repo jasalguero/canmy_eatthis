@@ -3,6 +3,7 @@ import i18next from 'i18next';
 import ICU from 'i18next-icu';
 import { initReactI18next } from 'react-i18next';
 
+import enCamera from './locales/en/camera.json';
 import enCommon from './locales/en/common.json';
 import enConfirm from './locales/en/confirm.json';
 import enErrors from './locales/en/errors.json';
@@ -14,6 +15,7 @@ import enOnboarding from './locales/en/onboarding.json';
 import enProfile from './locales/en/profile.json';
 import enResult from './locales/en/result.json';
 import enSettings from './locales/en/settings.json';
+import esCamera from './locales/es/camera.json';
 import esCommon from './locales/es/common.json';
 import esConfirm from './locales/es/confirm.json';
 import esErrors from './locales/es/errors.json';
@@ -41,6 +43,7 @@ export const en = {
   history: enHistory,
   profile: enProfile,
   settings: enSettings,
+  camera: enCamera,
   vocab: vocabEn,
 };
 export const es = {
@@ -55,6 +58,7 @@ export const es = {
   history: esHistory,
   profile: esProfile,
   settings: esSettings,
+  camera: esCamera,
   vocab: vocabEs,
 };
 

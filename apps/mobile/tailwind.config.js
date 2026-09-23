@@ -63,6 +63,13 @@ function palette() {
       inverse: v('ink-inverse'),
     },
     line: { subtle: v('line-subtle'), default: v('line-default'), strong: v('line-strong') },
+    // Fixed regardless of theme (see tokens.ts's `camera` doc comment) — still CSS variables,
+    // like every other colour here; `ThemeProvider` just sets the same value for both themes.
+    camera: {
+      chrome: v('camera-chrome'),
+      scrim: v('camera-scrim'),
+      'on-chrome': v('camera-on-chrome'),
+    },
   };
 }
 

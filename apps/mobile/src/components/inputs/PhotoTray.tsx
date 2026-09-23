@@ -9,18 +9,20 @@ import { PhotoThumb } from './PhotoThumb';
  * The photo strip (docs/06 §4 Home). Empty state is a single dashed 3:2 tile; populated state is
  * a horizontal scroller of 88×88 thumbs with a trailing [+] tile.
  *
- * Capture itself is Phase 3 — this component takes URIs and reports intent, so the screen above
- * it can be wired to `expo-camera` later without this changing.
+ * This component only takes URIs and reports intent (`onAdd`/`onRemove`/`onPressPhoto`) — Home
+ * wires `onAdd` to `PhotoSourceSheet` (camera/library/barcode), so this stays unaware of capture.
  */
 export interface PhotoTrayProps {
   uris: readonly string[];
   max: number;
   onAdd: () => void;
   onRemove: (index: number) => void;
+  /** Opens the full-screen preview (docs/00-product-spec.md: "Tap a thumb → full screen, with Remove"). */
+  onPressPhoto: (index: number) => void;
   className?: string;
 }
 
-export function PhotoTray({ uris, max, onAdd, onRemove, className }: PhotoTrayProps) {
+export function PhotoTray({ uris, max, onAdd, onRemove, onPressPhoto, className }: PhotoTrayProps) {
   const { t } = useTranslation();
   const atLimit = uris.length >= max;
 
@@ -58,6 +60,7 @@ export function PhotoTray({ uris, max, onAdd, onRemove, className }: PhotoTrayPr
               index={i + 1}
               total={uris.length}
               onRemove={() => onRemove(i)}
+              onPress={() => onPressPhoto(i)}
             />
           ))}
           {atLimit ? null : (

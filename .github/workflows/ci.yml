@@ -54,3 +54,11 @@ jobs:
 
       - name: Build
         run: pnpm -r build
+
+      # docs/02-tech-decisions.md D21 — the bundled KB is a committed snapshot, not fetched OTA.
+      # Re-running the sync and diffing catches an author editing packages/kb/data without
+      # re-running `pnpm --filter kb run sync:mobile`, which would otherwise ship a stale KB.
+      - name: Check bundled KB snapshot is up to date
+        run: |
+          pnpm --filter @canmyeatthis/kb run sync:mobile
+          git diff --exit-code apps/mobile/assets/kb

@@ -39,7 +39,8 @@ export function Sheet({ visible, onClose, title, closeLabel, children }: SheetPr
           <View
             accessibilityElementsHidden
             importantForAccessibility="no-hide-descendants"
-            className="mb-4 h-1 w-12 self-center rounded-full bg-line-default"
+            style={{ width: 48 }}
+            className="mb-4 h-1 self-center rounded-full bg-line-default"
           />
           <Text variant="title" tone="primary" accessibilityRole="header" className="mb-3">
             {title}

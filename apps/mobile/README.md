@@ -2,13 +2,11 @@
 
 Expo SDK 57 / RN 0.86, New Architecture, expo-router, TypeScript `strict: true`.
 
-Phase 0 scaffold only — one placeholder screen (`src/app/index.tsx`) that proves the app boots,
-i18n resolves (en/es + a dev-only pseudo-locale), and settings persist. Phase 2
-(`docs/07-implementation-plan.md`) replaces the screen with the real design system.
-
-This repo's sandbox had no package-registry network access while this scaffold was authored, so
-`node_modules` has never been installed here — see the repo root README section this phase's
-handoff notes added, or just run:
+Through H3 (`docs/10-hobby-scope.md` §7): the full design system on real screens, camera/library/
+barcode capture with the resize+EXIF-strip image pipeline, and offline text resolution (exact,
+alias and fuzzy match) against the bundled knowledge base — a typed check works end to end with
+zero network. Photo *identification* still needs the Worker (H4), so a captured photo still hands
+off to Confirm's placeholder candidates until then.
 
 ```
 corepack enable

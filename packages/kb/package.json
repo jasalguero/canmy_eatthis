@@ -8,7 +8,8 @@
   "scripts": {
     "typecheck": "tsc --noEmit",
     "test": "vitest run --passWithNoTests",
-    "build": "tsx src/build.ts"
+    "build": "tsx src/build.ts",
+    "sync:mobile": "node scripts/sync-mobile-assets.mjs"
   },
   "dependencies": {
     "@canmyeatthis/shared": "workspace:*",

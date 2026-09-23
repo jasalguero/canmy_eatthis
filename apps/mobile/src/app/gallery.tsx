@@ -103,7 +103,7 @@ export default function Gallery() {
   }
 
   return (
-    <ScrollScreen contentClassName="gap-6 px-4 pb-10 pt-2">
+    <ScrollScreen contentClassName="gap-6 px-4 pb-8 pt-2">
       <Text variant="title" tone="primary" accessibilityRole="header">
         {t('settings:openGallery')}
       </Text>
@@ -200,12 +200,13 @@ export default function Gallery() {
 
       <BothThemes title="Inputs">
         <SpeciesToggle value={species} onChange={setSpecies} />
-        <PhotoTray uris={[]} max={4} onAdd={() => {}} onRemove={() => {}} />
+        <PhotoTray uris={[]} max={4} onAdd={() => {}} onRemove={() => {}} onPressPhoto={() => {}} />
         <PhotoTray
           uris={photos}
           max={4}
           onAdd={() => setPhotos((p) => [...p, `${MOCK_PHOTO_URI}#${p.length + 1}`])}
           onRemove={(i) => setPhotos((p) => p.filter((_, index) => index !== i))}
+          onPressPhoto={() => {}}
         />
         <DescriptionInput value={description} onChangeText={setDescription} />
         <CheckButton photoCount={0} description="" onPress={() => {}} />

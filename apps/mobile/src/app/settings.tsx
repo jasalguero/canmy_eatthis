@@ -71,9 +71,30 @@ export default function Settings() {
 
   return (
     <ScrollScreen contentClassName="gap-5 px-4 pb-6 pt-2">
-      <Text variant="title" tone="primary" accessibilityRole="header">
-        {t('settings:title')}
-      </Text>
+      <View className="flex-row items-center gap-3">
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel={t('common:back')}
+          onPress={() => router.back()}
+          style={{ minHeight: sizes.touchTarget }}
+          className="flex-row items-center gap-1 self-start rounded-full border border-line-default bg-surface-raised px-3 active:bg-surface-sunken"
+        >
+          <Text
+            variant="label"
+            tone="primary"
+            accessibilityElementsHidden
+            importantForAccessibility="no-hide-descendants"
+          >
+            ‹
+          </Text>
+          <Text variant="label" tone="primary">
+            {t('common:back')}
+          </Text>
+        </Pressable>
+        <Text variant="title" tone="primary" accessibilityRole="header" className="flex-1">
+          {t('settings:title')}
+        </Text>
+      </View>
 
       <Section title={t('settings:languageLabel')}>
         <View accessibilityRole="radiogroup">

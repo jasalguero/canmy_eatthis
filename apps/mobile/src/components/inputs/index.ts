@@ -4,6 +4,7 @@ export {
   DescriptionInput,
   type DescriptionInputProps,
 } from './DescriptionInput';
+export { PhotoSourceSheet, type PhotoSourceSheetProps } from './PhotoSourceSheet';
 export { PhotoThumb, type PhotoThumbProps } from './PhotoThumb';
 export { PhotoTray, type PhotoTrayProps } from './PhotoTray';
 export { SpeciesToggle, type SpeciesToggleProps } from './SpeciesToggle';

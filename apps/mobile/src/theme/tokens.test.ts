@@ -20,7 +20,14 @@ describe('tailwind palette', () => {
     for (const defaultGroup of ['red', 'green', 'blue', 'gray', 'slate', 'amber', 'yellow']) {
       expect(colors).not.toHaveProperty(defaultGroup);
     }
-    expect(Object.keys(colors).sort()).toEqual(['brand', 'ink', 'line', 'surface', 'verdict']);
+    expect(Object.keys(colors).sort()).toEqual([
+      'brand',
+      'camera',
+      'ink',
+      'line',
+      'surface',
+      'verdict',
+    ]);
   });
 
   it('resolves every colour to a CSS variable, never to a literal', () => {

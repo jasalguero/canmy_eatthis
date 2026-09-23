@@ -300,3 +300,180 @@ the range records which major the libraries were *tested* against, and their typ
 behaviour is unchanged under 7 (typecheck + tests green). If a future release of either still pins
 `^5` and we want the warning gone, the lever is upgrading those libraries, not downgrading the
 compiler.
+
+**A second caveat, found during H3 (2026-09-23):** on Node 20.9.0, every package's `tsc` script
+(`tsc --noEmit` / `tsc -p tsconfig.build.json`) fails with
+`ERR_UNKNOWN_FILE_EXTENSION` on `typescript/bin/tsc` — that file is a `#!/usr/bin/env node`
+shebang script with no extension, and pnpm's generated `node_modules/.bin/tsc` shim invokes it via
+an explicit `node <path>` rather than executing it directly, which makes Node's ESM loader treat
+the extensionless file as an entry module under this package's `"type": "module"` and reject it.
+Running the same file directly (`node .../typescript/lib/tsc.js`, bypassing the shim) works and
+produces correct output — the compiler itself is fine; only the `.bin` shim's invocation path
+breaks. `pnpm --filter <pkg> run typecheck` / `build` therefore fail in-place. CI pins
+`actions/setup-node@v4` to `node-version: 20`, which resolves to a current 20.x patch — this may
+already be new enough to avoid it (the `expo install` tooling in this same repo separately warns
+it wants `>=20.19.4`), but a local Node under that version will hit this. Until either Node or
+this TypeScript build is updated to close the gap, work around it locally by invoking
+`node node_modules/.pnpm/typescript@7.0.2/node_modules/typescript/lib/tsc.js` directly in place of
+`tsc`.
+
+## D20 — H3 draft persistence: zustand + AsyncStorage, not MMKV
+
+D10 specified MMKV for drafts and preferences. `lib/settings.ts` (H0/H2) already used zustand's
+`persist` middleware over `@react-native-async-storage/async-storage` instead, without an ADR
+recording the change — this entry closes that gap for both call sites at once rather than adding
+a second, inconsistent storage engine for the H3 draft store (`lib/draft.ts`: species,
+description, in-progress photo URIs).
+
+**Why AsyncStorage over MMKV here:** MMKV is a native module — adopting it means a config-plugin
+change and a fresh dev-client build, for a payload that is a handful of short strings written on
+every keystroke of a multiline text field and read once at startup. AsyncStorage already ships
+with Expo, zustand's `persist` already debounces/batches writes to it, and nothing about this
+app's draft or settings data is large or write-frequent enough to hit AsyncStorage's actual
+weak point (many small keys at high frequency under heavy concurrent load). MMKV is the right
+call for `history` in a later phase (`docs/02` D10 keeps SQLite there, unaffected by this entry) —
+just not for two small key-value blobs.
+
+**Verified:** `lib/draft.ts`'s unit tests pass, and a manual run confirmed a value written to the
+draft store survives a full page reload (the web target's equivalent of a backgrounding) by
+reading `localStorage['canmyeatthis.draft.v1']` directly.
+
+## D21 — Bundled KB ships as a committed static asset, not fetched OTA
+
+docs/01-architecture.md's diagram calls the on-device KB "OTA updatable"; docs/07 Phase 8 is where
+that update *mechanism* (a versioned manifest, a background fetch, a diff against the running
+app's copy) actually gets built — well past H3. H3 only needs the KB usable fully offline from
+first launch, so `apps/mobile/assets/kb/{kb.en,kb.es,kb.index}.json` is a plain committed asset,
+synced from `packages/kb/dist` by `pnpm --filter kb run sync:mobile`
+(`packages/kb/scripts/sync-mobile-assets.mjs`) and imported with a static `import` in
+`lib/offlineKb.ts` — Metro bundles it like any other asset, so it is in memory the instant the
+module loads, no filesystem read and no async gap before the resolver works.
+
+The risk this creates — the shipped snapshot silently drifting from the KB source after a content
+edit — is closed by a CI step (`.github/workflows/ci.yml`) that re-runs the build and the sync and
+`git diff --exit-code`s the asset folder, the same style of guardrail the repo already uses for
+safe-claims/contrast/UI-hygiene. Whoever edits `packages/kb/data` and forgets to re-sync gets a
+failing PR, not a silently stale app.
+
+**Alternatives considered:** fetching the KB from the Worker on first launch (rejected — H3 has no
+Worker yet, and doc10 §7's H3 checkpoint is explicitly "no server, no API key, no spend"); bundling
+the JSON straight into the JS bundle via a package import from `@canmyeatthis/kb`'s own `dist`
+(rejected — that directory is build output, gitignored and ephemeral, and Metro resolving across
+a workspace package's gitignored `dist` is exactly the kind of implicit cross-package coupling
+`packages/kb`'s own doc comments already avoid elsewhere).
+
+## D22 — Fuzzy text resolution lives in `packages/shared`, with a length-ratio guard beyond Fuse's own threshold
+
+The tier-1 fuzzy matcher docs/01 §"resolution tiers" and docs/02 D9 call for
+(`resolveText`/`buildAliasSearchIndex`, `packages/shared/src/resolveText.ts`, using `fuse.js`)
+lives in `packages/shared`, not in `apps/mobile`, even though only the app calls it in H3. AGENTS.md
+#5 is about verdict resolution disagreeing between the app and the Worker, but the same argument
+applies one step earlier: H4's Worker will need to map a model's free-text candidate label onto a
+KB id, and that is the same alias-matching problem a typed query solves offline. Fuse.js has no
+native or Node-only dependencies, so the identical function will run unmodified in the Worker's V8
+isolate later — duplicating this logic there instead would be exactly the "app and Worker
+disagree" failure AGENTS.md #5 exists to prevent, just one layer removed from `resolveVerdict`.
+
+Two things worth recording about tuning it, both found empirically against the real KB (see
+`packages/kb/src/resolveText.test.ts` and `packages/kb/fixtures/fuzzy-resolutions.ts`), not
+guessed:
+
+1. **Fuse's own `threshold` constructor option does not reliably bound the score of what it
+   returns.** A Fuse instance built with a *looser* threshold can still return hits scored above
+   it (empirically: `threshold: 0.25` returned a hit scored `0.2662`). `resolveText` therefore
+   builds Fuse with a loose threshold purely so it does not discard candidates internally, and
+   applies the real, conservative cutoff (`FUZZY_THRESHOLD = 0.25`) itself against `hit.score`.
+2. **A length-ratio guard is required in addition to the score, or short words falsely match long
+   aliases.** `"peanut"` scores `~0.008` against the alias `"peanut butter"` — a *better* score
+   than a genuine typo like `"onyon"` gets against `"onion"` (`~0.2`) — because Fuse's
+   `ignoreLocation` substring-style match doesn't penalise a query that is simply a strict prefix
+   of a longer alias. No score threshold can separate the two cases, because the false positive
+   scores better. `resolveText` additionally requires
+   `min(len(query), len(alias)) / max(len(query), len(alias)) ≥ 0.7`, which keeps every real typo
+   in the fixture set while rejecting `"peanut"`/`"maní"` resolving to `peanut_butter` — a
+   distinction that matters here specifically, since a raw peanut and peanut butter are a
+   different safety question, not just a different string.
+
+Also recorded: an ambiguous fuzzy match — the best two scoring hits map to two *different* KB ids
+within a small margin of each other (e.g. bare `"chocolate"` between `chocolate_dark` and
+`chocolate_milk`) — resolves to no match, not a guess. This is D9's "prefer falling through over a
+marginal match" applied literally, and it means doc07 Phase 4's acceptance list (written against
+the funded 500-entry KB) does not transfer literally: `"chocolate"` alone is not expected to
+resolve in this KB, because two real, differently-verdicted entries both plausibly own it.
+
+**Verified:** `packages/shared/src/resolveText.test.ts` (synthetic index, including the ambiguity
+and length-ratio cases) and `packages/kb/src/resolveText.test.ts` (the real built KB — every
+`POSITIVE_RESOLUTIONS` and `FUZZY_POSITIVE_RESOLUTIONS` fixture resolves, every
+`NEGATIVE_RESOLUTIONS` and `FUZZY_FALSE_FRIENDS` fixture does not) both pass.
+
+## D23 — `SpeciesToggle`'s pill dropped `react-native-reanimated`, undiagnosed
+
+**Decided 2026-09-23**, from a bug report during H3 device testing, not from a design review.
+
+`SpeciesToggle`'s sliding pill (docs/06 §2 signature interaction #1) was built on
+`react-native-reanimated` (`useSharedValue`/`useAnimatedStyle`/`withSpring`) from H2 onward. On a
+real device (iPhone, Expo Go, SDK 57 — the app's first ever real-device test; H0–H2 were built
+and reviewed without one) the pill rendered with **no colour and no position at all**, in both
+themes, with no error or warning surfaced anywhere. Two rounds of fixes narrowed this down without
+resolving it:
+
+1. First hypothesis: NativeWind's `cssInterop` registration for `Animated.View`
+   (`theme/animated.ts`) wasn't reliably applying a *colour class* on device — plausible, since
+   this exact codebase has hit that class of bug once before (see that file's own doc comment).
+   Fix: read the colour from `tokens` directly and set it via `style` instead of `className`.
+   Result: no change.
+2. Second hypothesis: the pill had zero size (`halfWidth` never set), making the colour moot. An
+   on-device debug readout (a temporary `<Text>` printing the live values) ruled this out
+   conclusively: `halfWidth=175`, `theme=light`, `color=#2F6F62` — every JS-computed value feeding
+   the animated style was correct. The style still never reached the native view, not even the
+   *initial*, non-animated position.
+
+At that point the only remaining explanation is that `useAnimatedStyle`'s output isn't being
+committed to this native view at all — a Reanimated/Fabric interop failure with no reproduction
+on web (react-native-web's Reanimated shim doesn't go through the same native pipeline) and no
+device available to this project's agents to debug it further (no Xcode/Simulator in this
+environment; the user's phone is the only real device in the loop, and probing it is limited to
+what can be read off a screenshot).
+
+**The fix ships without a diagnosis.** `SpeciesToggle` no longer imports
+`react-native-reanimated` at all: `halfWidth` and the selected species already live in React
+state, so the pill's `transform`/`backgroundColor`/`borderRadius` are computed from that state and
+applied to a plain `View`. This cannot fail the way the animated version did, because it does not
+go through Reanimated's worklet/UI-thread pipeline. The cost is real: the pill now snaps instead
+of sliding with a spring. That is an acceptable trade for a control docs/07 Phase 3 itself calls
+"a safety control as much as a piece of chrome" — correctness beats polish here without
+question, and AGENTS.md's own tie-breaker (favour the animal over the flourish) says the same
+thing.
+
+**Update, same day:** the verdict banner was reported with the identical symptom — no colour at
+all, on the real device that had just shown the fixed toggle working. That makes it two for two,
+not a `SpeciesToggle`-specific quirk, so the same fix was applied everywhere `Animated.View`
+carried anything load-bearing rather than waiting for a third report:
+
+- **`VerdictBanner`** — the wash-in and glyph spring are gone; the banner is a plain `View` with
+  `backgroundColor` from `tokens`, unconditionally. This is the single highest-stakes colour in
+  the app (AGENTS.md #2), so it was converted the moment the banner-specific report came in.
+- **`identifying.tsx`'s photo shimmer** — removed outright rather than reimplemented without
+  Reanimated. It was always decorative (the doc comment already said the stage text list, not the
+  shimmer, carries the information), and a `withRepeat` loop has no cheap non-Reanimated
+  equivalent worth building for a purely cosmetic effect.
+- **`Skeleton`** — the pulse is gone; it is a plain static placeholder. Not currently reachable by
+  a real user (only the `__dev__` gallery uses it today), converted anyway so it isn't the next
+  landmine when it is wired into a real loading state.
+- **`theme/animated.ts`** (the `cssInterop(Animated.View, ...)` registration module) — deleted.
+  Once all four usages above were converted, nothing in the app imported it any more, and keeping
+  a utility that exists to work around a library that does not reliably render on-device is not a
+  utility worth keeping around unused.
+
+**Still left open:** *why*. This is a Reanimated/Fabric interop failure with no reproduction on
+web (react-native-web's Reanimated shim doesn't go through the same native pipeline), no crash, no
+warning, and no device available to this project's agents to debug it further (no Xcode/Simulator
+in this environment — the user's phone is the only real device in the loop, and probing it was
+limited to what could be read off an on-device debug `<Text>` and a screenshot). `react-native-
+reanimated` remains a dependency — `expo-router`'s drawer navigation and other Expo internals
+require it as a peer regardless of whether this app's own code uses it — so it has not been
+removed from `package.json`, only from every place this app's own components relied on its
+animated-style output actually reaching the screen. If a future agent wants to reintroduce an
+animation here, do not reach for `cssInterop`/inline-`style` tweaks as a first response (both were
+tried against this exact failure and did not work) — first establish, on a real device, that
+`useAnimatedStyle`'s output visibly reaches a plain test view at all.

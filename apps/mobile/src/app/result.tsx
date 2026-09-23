@@ -1,3 +1,4 @@
+import type { Species } from '@canmyeatthis/shared';
 import * as Haptics from 'expo-haptics';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect } from 'react';
@@ -14,7 +15,9 @@ import {
 } from '@/components/feedback';
 import { Collapsible, Section, StickyFooter } from '@/components/layout';
 import { Button, Text } from '@/components/primitives';
+import { useDraftStore } from '@/lib/draft';
 import { useSettingsStore } from '@/lib/settings';
+import { buildRealVerdict, buildUnknownVerdict } from '@/lib/verdict';
 import { MOCK_CASES, MOCK_HOTLINE, findMockCase, mockVerdict } from '@/mock/cases';
 import type { MockLanguage } from '@/mock/kbEntries';
 import { VERDICT_CLASSES } from '@/theme/verdict';
@@ -48,14 +51,43 @@ const REVEAL_HAPTIC = {
 
 export default function Result() {
   const { t, i18n } = useTranslation();
-  const params = useLocalSearchParams<{ case?: string; still?: string }>();
+  const params = useLocalSearchParams<{
+    case?: string;
+    still?: string;
+    kbId?: string;
+    unknown?: string;
+    species?: string;
+    query?: string;
+  }>();
   const language = useSettingsStore((state) => state.language);
+  const resetDraft = useDraftStore((state) => state.reset);
   const reducedMotion = useReducedMotion();
 
   // `still` freezes the entrance animation and the haptic for the gallery and for screenshots.
   const still = params.still === '1';
-  const mockCase = findMockCase(params.case ?? '') ?? MOCK_CASES[0];
-  const payload = mockVerdict(mockCase, language as MockLanguage, t('legal:disclaimer'));
+  const species: Species = params.species === 'cat' ? 'cat' : 'dog';
+  const disclaimer = t('legal:disclaimer');
+
+  // H3: a real on-device resolution (exact or fuzzy match, or a genuine no-match) takes
+  // priority over the mock cases, which stay in place for the `__dev__` gallery's fixed
+  // scenarios (docs/07 Phase 2) — `resolveVerdict()` (AGENTS.md #5) is the same function either
+  // way, called here against the bundled KB instead of the mock entries (`mock/cases.ts`).
+  const payload = params.kbId
+    ? buildRealVerdict({ kbId: params.kbId, species, language, disclaimer })
+    : params.unknown === '1'
+      ? buildUnknownVerdict({
+          query: params.query ?? '',
+          species,
+          language,
+          disclaimer,
+          headline: t('result:unknownHeadline'),
+          summary: t('result:unknownBody'),
+        })
+      : mockVerdict(
+          findMockCase(params.case ?? '') ?? MOCK_CASES[0],
+          language as MockLanguage,
+          disclaimer,
+        );
 
   const classes = VERDICT_CLASSES[payload.verdict];
   const isToxic = payload.verdict === 'toxic';
@@ -192,7 +224,10 @@ export default function Result() {
             <Button
               label={t('result:checkSomethingElse')}
               variant="secondary"
-              onPress={() => router.dismissTo('/')}
+              onPress={() => {
+                resetDraft();
+                router.dismissTo('/');
+              }}
             />
           </View>
         </ScrollView>

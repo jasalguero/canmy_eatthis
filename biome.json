@@ -13,6 +13,7 @@
       "**/node_modules/**",
       "**/kb.json",
       "**/kb.index.json",
+      "apps/mobile/assets/kb/**",
       "**/*.gz",
       ".pnpm-store/**"
     ]

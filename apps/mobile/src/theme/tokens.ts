@@ -177,6 +177,18 @@ export const elevation = {
   },
 } as const;
 
+/**
+ * The camera capture screen's own chrome (docs/07 Phase 3). Fixed independent of the app theme
+ * — a viewfinder overlay reads the same in light and dark mode, the way a real camera app's
+ * shutter UI does not follow the system appearance. `elevation`'s shadow colours above are the
+ * same kind of theme-invariant literal, which is why this lives here rather than in `tokens`.
+ */
+export const camera = {
+  chrome: '#000000',
+  scrim: 'rgba(0, 0, 0, 0.45)',
+  onChrome: '#FFFFFF',
+} as const;
+
 /** Motion (docs/06 §1): durations fast/base/slow; spring for finger-driven things. */
 export const motion = {
   durationFast: 150,
@@ -218,4 +230,14 @@ export const sizes = {
   checkButtonHeight: 56,
   /** Result banner glyph (docs/06 §4 Result). */
   verdictGlyph: 64,
+  /**
+   * Camera shutter (docs/07 Phase 3). Explicit, not a Tailwind `h-20`/`w-20` class: this
+   * project's `spacing` scale (see `tailwind.config.js`) is fully replaced with the 0–9 index
+   * above, so any numeric sizing class outside that range (`h-20`, `pt-14`, `pb-10`, …) silently
+   * resolves to nothing rather than erroring — `tokens.test.ts` guards the palette this way but
+   * nothing catches a stray sizing class, which is exactly how the camera screen's shutter and
+   * top/bottom bars ended up with no size or safe-area padding at all on a real device.
+   */
+  shutterOuter: 80,
+  shutterInner: 64,
 } as const;

@@ -1,34 +1,57 @@
-import type { Species } from '@canmyeatthis/shared';
+import * as ImagePicker from 'expo-image-picker';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { KeyboardAvoidingView, Platform, ScrollView, View } from 'react-native';
 
-import { CheckButton, DescriptionInput, PhotoTray, SpeciesToggle } from '@/components/inputs';
+import {
+  CheckButton,
+  DescriptionInput,
+  PhotoSourceSheet,
+  PhotoTray,
+  SpeciesToggle,
+} from '@/components/inputs';
 import { Screen, StickyFooter } from '@/components/layout';
 import { Button, Text } from '@/components/primitives';
-import { MOCK_PHOTO_URI } from '@/mock/photos';
+import { MAX_PHOTOS, useDraftStore } from '@/lib/draft';
+import { processImage } from '@/lib/imagePipeline';
 
 /**
  * Home (docs/06 §4).
  *
- * Phase 2: no network and no camera. "Add a photo" appends a placeholder URI so the populated
- * tray, the remove affordance and the photo limit are all reviewable; `expo-camera` and
- * `expo-image-picker` replace that one handler in H3 and nothing else on this screen changes.
- *
- * The Check button lives in a `StickyFooter` inside a `KeyboardAvoidingView` so it rises above
- * the keyboard (docs/06 §4) rather than being covered by it — which on a screen whose main input
- * is a multiline field is the difference between usable and not.
+ * The input is the persisted draft store (`lib/draft.ts`), not local state — that is what makes
+ * it survive a backgrounding (docs/07 Phase 3). `[+]` opens `PhotoSourceSheet`; camera and
+ * barcode capture happen on the `/camera` screen, the library picker runs in place (it is
+ * already its own system modal, not a screen this app owns) — both paths end at
+ * `processImage()` before a URI ever reaches the draft.
  */
-
-/** docs/03 `IdentifyRequest.images`: at most four. */
-const MAX_PHOTOS = 4;
-
 export default function Home() {
   const { t } = useTranslation();
-  const [species, setSpecies] = useState<Species>('dog');
-  const [photos, setPhotos] = useState<string[]>([]);
-  const [description, setDescription] = useState('');
+  const species = useDraftStore((state) => state.species);
+  const setSpecies = useDraftStore((state) => state.setSpecies);
+  const photos = useDraftStore((state) => state.photos);
+  const addPhoto = useDraftStore((state) => state.addPhoto);
+  const removePhoto = useDraftStore((state) => state.removePhoto);
+  const description = useDraftStore((state) => state.description);
+  const setDescription = useDraftStore((state) => state.setDescription);
+
+  const [sourceSheetVisible, setSourceSheetVisible] = useState(false);
+
+  async function pickFromLibrary() {
+    const remaining = MAX_PHOTOS - photos.length;
+    if (remaining <= 0) return;
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: 'images',
+      allowsMultipleSelection: true,
+      selectionLimit: remaining,
+      quality: 1,
+    });
+    if (result.canceled) return;
+    for (const asset of result.assets) {
+      const processed = await processImage(asset.uri);
+      addPhoto(processed.uri);
+    }
+  }
 
   return (
     <Screen>
@@ -62,14 +85,11 @@ export default function Home() {
               <PhotoTray
                 uris={photos}
                 max={MAX_PHOTOS}
-                onAdd={() =>
-                  setPhotos((current) =>
-                    current.length >= MAX_PHOTOS
-                      ? current
-                      : [...current, `${MOCK_PHOTO_URI}#${current.length + 1}`],
-                  )
+                onAdd={() => setSourceSheetVisible(true)}
+                onRemove={removePhoto}
+                onPressPhoto={(index) =>
+                  router.push({ pathname: '/photo-preview', params: { index } })
                 }
-                onRemove={(index) => setPhotos((current) => current.filter((_, i) => i !== index))}
               />
             </View>
 
@@ -97,6 +117,14 @@ export default function Home() {
           />
         </StickyFooter>
       </KeyboardAvoidingView>
+
+      <PhotoSourceSheet
+        visible={sourceSheetVisible}
+        onClose={() => setSourceSheetVisible(false)}
+        onSelectCamera={() => router.push('/camera')}
+        onSelectLibrary={() => void pickFromLibrary()}
+        onSelectBarcode={() => router.push({ pathname: '/camera', params: { mode: 'barcode' } })}
+      />
     </Screen>
   );
 }

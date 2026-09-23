@@ -1,13 +1,16 @@
-import type { Candidate } from '@canmyeatthis/shared';
+import type { Candidate, Species } from '@canmyeatthis/shared';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Image, Pressable, View } from 'react-native';
+import { Image, KeyboardAvoidingView, Platform, Pressable, View } from 'react-native';
 
 import { ConfidencePill } from '@/components/feedback';
 import { DescriptionInput } from '@/components/inputs';
 import { ScrollScreen, Section, StickyFooter } from '@/components/layout';
 import { Button, Card, Text } from '@/components/primitives';
+import { useDraftStore } from '@/lib/draft';
+import { getKbEntry } from '@/lib/offlineKb';
+import { useSettingsStore } from '@/lib/settings';
 import { MOCK_ALTERNATES, MOCK_CANDIDATES, MOCK_PLANT_CANDIDATE } from '@/mock/cases';
 import { MOCK_PHOTO_URI } from '@/mock/photos';
 import { sizes } from '@/theme/tokens';
@@ -22,21 +25,47 @@ import { sizes } from '@/theme/tokens';
  *
  * `?plant=1` renders the plant case: photo-identified plants are always low confidence and
  * always carry the "confirm with a vet" notice regardless of what the model said (docs/10 §4).
+ *
+ * `?kbId=...` (H3) is the real path: `identifying.tsx`'s fuzzy-match branch landed here with one
+ * real on-device candidate, no alternates (the fuzzy resolver returns one match or none — there
+ * is nothing else to offer), and no photo, since this only happens for a typed query.
  */
 export default function Confirm() {
   const { t } = useTranslation();
-  const params = useLocalSearchParams<{ plant?: string }>();
+  const params = useLocalSearchParams<{ plant?: string; kbId?: string; species?: string }>();
   const isPlant = params.plant === '1';
+  const isReal = Boolean(params.kbId);
+  const language = useSettingsStore((state) => state.language);
+  const draftPhotos = useDraftStore((state) => state.photos);
 
-  const primary: Candidate = isPlant ? MOCK_PLANT_CANDIDATE : MOCK_CANDIDATES[0];
-  const alternates = isPlant ? [] : MOCK_ALTERNATES;
+  const realEntry = params.kbId ? getKbEntry(params.kbId, language) : undefined;
+  const realCandidate: Candidate | null = realEntry
+    ? {
+        id: realEntry.id,
+        label: realEntry.displayName,
+        kbId: realEntry.id,
+        confidence: 0.6,
+        confidenceBand: 'medium',
+      }
+    : null;
+
+  const primary: Candidate = realCandidate ?? (isPlant ? MOCK_PLANT_CANDIDATE : MOCK_CANDIDATES[0]);
+  const alternates = isReal || isPlant ? [] : MOCK_ALTERNATES;
+  const photoUri = isReal ? null : (draftPhotos[0] ?? MOCK_PHOTO_URI);
 
   const [selected, setSelected] = useState<string>(primary.id);
   const [otherText, setOtherText] = useState('');
   const choosingOther = selected === 'other';
 
   return (
-    <>
+    // Same keyboard-avoidance as Home (index.tsx): without it, focusing "Something else"'s
+    // `DescriptionInput` leaves the confirm CTA and the field itself behind the keyboard, with
+    // nothing to push either back into view — this Section is otherwise the one place on this
+    // screen the keyboard ever opens.
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      className="flex-1"
+    >
       <ScrollScreen contentClassName="gap-5 px-4 pb-6 pt-2">
         <Text variant="title" tone="primary" accessibilityRole="header">
           {t('confirm:title')}
@@ -47,14 +76,16 @@ export default function Confirm() {
 
         <Card className="gap-3">
           <View className="flex-row items-center gap-3">
-            <Image
-              source={{ uri: MOCK_PHOTO_URI }}
-              resizeMode="cover"
-              style={{ width: sizes.photoThumb, height: sizes.photoThumb }}
-              className="rounded-md bg-surface-sunken"
-              accessibilityElementsHidden
-              importantForAccessibility="no-hide-descendants"
-            />
+            {photoUri ? (
+              <Image
+                source={{ uri: photoUri }}
+                resizeMode="cover"
+                style={{ width: sizes.photoThumb, height: sizes.photoThumb }}
+                className="rounded-md bg-surface-sunken"
+                accessibilityElementsHidden
+                importantForAccessibility="no-hide-descendants"
+              />
+            ) : null}
             <View className="flex-1 gap-2">
               <Text variant="title" tone="primary">
                 {primary.label}
@@ -122,14 +153,19 @@ export default function Confirm() {
         <Button
           label={t('confirm:confirmCta')}
           size="large"
-          onPress={() =>
+          onPress={() => {
+            if (isReal && realEntry) {
+              const species: Species = params.species === 'cat' ? 'cat' : 'dog';
+              router.push({ pathname: '/result', params: { kbId: realEntry.id, species } });
+              return;
+            }
             router.push({
               pathname: '/result',
               params: { case: isPlant ? 'toxic-severe-cat' : 'toxic-moderate-dog' },
-            })
-          }
+            });
+          }}
         />
       </StickyFooter>
-    </>
+    </KeyboardAvoidingView>
   );
 }

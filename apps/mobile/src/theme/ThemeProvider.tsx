@@ -2,7 +2,7 @@ import { colorScheme as nativewindColorScheme, vars } from 'nativewind';
 import { type ReactNode, createContext, useContext, useEffect, useMemo } from 'react';
 import { type ColorSchemeName, View, useColorScheme } from 'react-native';
 
-import { type ThemeName, tokens } from './tokens';
+import { type ThemeName, camera, tokens } from './tokens';
 
 /**
  * Resolves the active theme. An explicit `theme` prop (used by the dev gallery to force light or
@@ -40,6 +40,9 @@ export function themeToVariables(theme: ThemeName): Record<string, string> {
   for (const [key, value] of Object.entries(t.surface)) out[`--surface-${kebab(key)}`] = value;
   for (const [key, value] of Object.entries(t.text)) out[`--ink-${kebab(key)}`] = value;
   for (const [key, value] of Object.entries(t.border)) out[`--line-${kebab(key)}`] = value;
+  // Fixed regardless of `theme` — see tokens.ts's `camera` doc comment — but still routed
+  // through a CSS variable like everything else, so nothing here has to special-case it.
+  for (const [key, value] of Object.entries(camera)) out[`--camera-${kebab(key)}`] = value;
   return out;
 }
 

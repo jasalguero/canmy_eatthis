@@ -17,6 +17,7 @@ export const NAMESPACES = [
   'history',
   'profile',
   'settings',
+  'camera',
   'vocab',
 ] as const;
 export type Namespace = (typeof NAMESPACES)[number];
