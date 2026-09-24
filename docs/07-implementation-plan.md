@@ -190,19 +190,30 @@ P0 ──► P1 ──┬──► P2 (UI)        ──┐
 - Structured logging: requestId, prompt version, KB version, provider, latency, cache hit,
   **normalised query only — never raw text, never image bytes**
 
-**Acceptance**
-- [ ] Contract tests pass against recorded provider fixtures — CI makes zero live model calls
-- [ ] Cache hit returns in <100 ms; p95 uncached under 3 s
-- [ ] `grep -r` finds no API key in any committed file; `wrangler secret list` is the only source
-- [ ] Every error code in `docs/03-api-contract.md` is reachable and correctly shaped
-- [ ] Invariant test: no response path can emit `verdict: "safe"` with `resolvedBy: "model_fallback"`
-- [ ] Malformed model output (truncated JSON, wrong schema) degrades to `unknown`, never crashes
-- [ ] **Forcing the global daily counter past its threshold refuses the vision path and leaves the
-      offline KB, verdicts and hotline fully working**
-- [ ] Flipping the KV kill switch disables the vision path within one request, no deploy
-- [ ] A KV write failure degrades to "not cached", never to an error
-- [ ] The configured provider is the paid tier; the free tier is used only in development
-- [ ] Nightly live-provider job exists and reports drift against the image fixture set
+**Acceptance** — H4 status, 2026-09-24 (evidence: `services/api/test/`, D24)
+- [x] Contract tests pass against provider fixtures, and CI makes zero live model calls. `fetch`
+      is stubbed and any unexpected URL fails the test. Fixtures follow Gemini's documented
+      response shape but were authored by hand, not recorded (no key was available)
+- [ ] Cache hit returns in <100 ms (**met**, asserted in `identify.test.ts`). p95 uncached under
+      3 s: **not yet measured**, needs a live key
+- [x] `grep -r` finds no API key in any committed file: `scripts/check-no-secrets.sh`, run in CI
+- [x] Every error code in `docs/03-api-contract.md` is reachable and correctly shaped, except
+      `ATTESTATION_FAILED`, which is unreachable by design until attestation exists (D24)
+- [x] Invariant test: no response path can emit `verdict: "safe"` with `resolvedBy: "model_fallback"`
+- [x] Malformed model output (truncated JSON, wrong schema) degrades to `unknown`, never crashes
+      (7 fixtures)
+- [x] **Forcing the global daily counter past its threshold refuses the vision path and leaves the
+      offline KB and verdicts fully working.** The hotline CTA is an in-app `tel:` link with no
+      server dependency
+- [x] Flipping the KV kill switch disables the vision path within one request, no deploy. Tested,
+      and smoke-tested under `wrangler dev`
+- [x] A KV write failure degrades to "not cached", never to an error
+- [ ] The configured provider is the paid tier; the free tier is used only in development. This
+      is a Google Cloud console step (`services/api/README.md` setup) and cannot be checked from
+      the repo
+- [ ] Nightly live-provider job exists and reports drift against the image fixture set. The job
+      exists (`.github/workflows/live-eval.yml`), but it needs the `GEMINI_API_KEY_EVAL` secret
+      and real photos in `services/api/eval/images/`
 
 ---
 

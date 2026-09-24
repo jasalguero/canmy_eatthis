@@ -17,10 +17,10 @@ The knowledge base: source data, schema, build pipeline and fixtures
 - `fixtures/` — the resolution and verdict fixture suites `docs/04-knowledge-base.md` §6
   describes (plus `fixtures/fuzzy-resolutions.ts` for the H3 fuzzy tier), consumed by this
   package's and `packages/shared`'s tests.
-- `scripts/sync-mobile-assets.mjs` — copies `dist/{kb.en,kb.es,kb.index}.json` into
-  `apps/mobile/assets/kb/`, the app's committed offline KB snapshot (`docs/02-tech-decisions.md`
-  D21). Run `pnpm --filter @canmyeatthis/kb run sync:mobile` after any content change and commit
-  the result — CI diffs it and fails if it's stale.
+- `scripts/sync-assets.mjs` — copies `dist/{kb.en,kb.es,kb.index}.json` into every consumer that
+  ships a committed offline KB snapshot: `apps/mobile/assets/kb/` and `services/api/src/kb-data/`
+  (`docs/02-tech-decisions.md` D21). Run `pnpm --filter @canmyeatthis/kb run sync:assets` after any
+  content change and commit the result — CI diffs both targets and fails if either is stale.
 
 Run `pnpm --filter @canmyeatthis/kb build` to build. `review.status` and `translations.es` on
 individual entries reflect the hobby-build editorial standard (no vet; `es` reviewed by a named

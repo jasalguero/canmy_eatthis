@@ -1,0 +1,27 @@
+name: Live provider eval
+
+# docs/07 Phase 5: a nightly job that calls the real vision provider against the eval set and
+# reports drift. The main CI never makes a live model call; this is the only workflow that does.
+# Needs the repository secret GEMINI_API_KEY_EVAL (a paid-tier key — docs/10 §2.1). Without it
+# the script skips and exits 0.
+on:
+  schedule:
+    - cron: '17 4 * * *'
+  workflow_dispatch:
+
+jobs:
+  eval:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Enable corepack
+        run: corepack enable
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Run live eval
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY_EVAL }}
+        run: pnpm --filter @canmyeatthis/api run eval:live

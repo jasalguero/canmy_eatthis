@@ -17,3 +17,4 @@ packages/kb/dist/
 apps/mobile/.expo/
 .pnpm-store/
 .vscode/
+.dev.vars

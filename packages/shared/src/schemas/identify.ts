@@ -2,7 +2,19 @@ import { z } from 'zod';
 import { SpeciesSchema } from './species.js';
 import { VerdictPayloadSchema } from './verdict.js';
 
-export const ResolvedBySchema = z.enum(['kb_exact', 'barcode', 'cache', 'model', 'model_fallback']);
+/**
+ * `kb_fuzzy` is an addition to docs/03's list (docs/02-tech-decisions.md D24): a conservative
+ * fuzzy text match is still a guess about what the user meant, so it must go through the confirm
+ * gate — and labelling it `kb_exact` to get there would misreport what happened in the log.
+ */
+export const ResolvedBySchema = z.enum([
+  'kb_exact',
+  'kb_fuzzy',
+  'barcode',
+  'cache',
+  'model',
+  'model_fallback',
+]);
 export type ResolvedBy = z.infer<typeof ResolvedBySchema>;
 
 export const ImageInputSchema = z.object({
