@@ -108,5 +108,8 @@ export type VerdictPayload = z.infer<typeof VerdictPayloadSchema>;
 export const VerdictRequestSchema = z.object({
   kbId: z.string().min(1),
   species: SpeciesSchema,
+  // BCP 47, same as `IdentifyRequest.locale`. Picks the KB language only (AGENTS.md #12 —
+  // never the region). Optional so an older client still gets an English verdict, not a 400.
+  locale: z.string().min(2).optional(),
 });
 export type VerdictRequest = z.infer<typeof VerdictRequestSchema>;

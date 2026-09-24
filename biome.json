@@ -14,6 +14,7 @@
       "**/kb.json",
       "**/kb.index.json",
       "apps/mobile/assets/kb/**",
+      "services/api/src/kb-data/**",
       "**/*.gz",
       ".pnpm-store/**"
     ]

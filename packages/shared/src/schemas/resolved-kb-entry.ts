@@ -31,3 +31,17 @@ export const ResolvedKbEntrySchema = z.object({
   sources: z.array(SourceSchema.extend({ accessed: z.string().optional() })),
 });
 export type ResolvedKbEntry = z.infer<typeof ResolvedKbEntrySchema>;
+
+/**
+ * The same artefact entry with the metadata fields `kb.<lang>.json` also carries
+ * (`packages/kb/src/build.ts` `projectLanguage`). The Worker needs them — `confusableWith` for the
+ * confirm screen's `alternates`, `highRisk` for model escalation — while `resolveVerdict` and the
+ * app's mock entries do not, so they extend the base shape rather than widening it.
+ */
+export const ResolvedKbEntryWithMetaSchema = ResolvedKbEntrySchema.extend({
+  category: z.string().min(1),
+  confusableWith: z.array(z.string().min(1)),
+  isIngredient: z.boolean(),
+  highRisk: z.boolean(),
+});
+export type ResolvedKbEntryWithMeta = z.infer<typeof ResolvedKbEntryWithMetaSchema>;

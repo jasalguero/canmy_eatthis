@@ -510,3 +510,53 @@ animated-style output actually reaching the screen. If a future agent wants to r
 animation here, do not reach for `cssInterop`/inline-`style` tweaks as a first response (both were
 tried against this exact failure and did not work) — first establish, on a real device, that
 `useAnimatedStyle`'s output visibly reaches a plain test view at all.
+
+## D24 — H4 Worker: no sessions, one provider, exact-only matching for machine-read text
+
+**Decided 2026-09-24**, implementing H4 (`services/api`). This records where the Worker differs
+from `docs/03-api-contract.md` and docs/07 Phase 5, and why.
+
+1. **No `/v1/session`, no JWT. Callers send an `X-Device-Id` UUID instead.** In the funded plan,
+   sessions wrap attestation. Attestation is deferred (docs/10 §3, D11), and without it a session
+   token is just a signed copy of an id the client picked, so it adds no security. The device id
+   only keys the per-device rate limit, and the global daily cap is what bounds spend. A missing
+   or malformed id is `UNAUTHENTICATED` (401). `ATTESTATION_FAILED` stays in the error enum but
+   nothing returns it until attestation is built. `DEV_SESSION_TOKENS_ENABLED` is removed.
+2. **One provider: Gemini, paid tier.** docs/10 §7's H4 row overrides D7's "at least two
+   implementations". The `VisionProvider` seam in `src/providers/` stays, so adding a second
+   provider means one new file and a config value. Escalation (docs/07 Phase 5) uses a stronger
+   model from the same provider. Each escalation call reserves its own slot against the daily cap.
+3. **Model labels and barcode ingredient lines resolve by exact alias only, never fuzzy.** D22's
+   fuzzy tier is tuned for a person typing, who then sees what it matched. Text the Worker reads
+   by machine is already spelled correctly, so fuzzy matching there only adds false positives, and
+   an ingredient list gives it thirty chances per scan. Found in testing: fuzzy maps the
+   ingredient "salt" to the Spanish alias "palta", which is avocado. The model is also asked for a
+   generic `commonName` ("dark chocolate" for a branded bar), so exact matching still lands on
+   real products. A miss renders `unknown`.
+4. **A barcode result always needs confirmation.** docs/03 lets a single barcode match skip the
+   confirm gate, but a KB match is one *ingredient* of the product. A "carrot" verdict is not a
+   verdict for the soup it was in.
+5. **`resolvedBy: "kb_fuzzy"` added.** A server-side fuzzy text match goes through the confirm
+   gate. Labelling it `kb_exact` to get there would misreport it in the log.
+6. **Server-computed image hashes.** The client's `hash` field is ignored. The hash feeds a
+   shared cache key, so trusting the client's value would let one caller poison another user's
+   answer. The cache key also includes the prompt version and KB version.
+7. **The kill switch is checked before the cache**, so it also stops cached model answers. It
+   exists for the day those answers turn out to be the problem.
+8. **Server-side verdicts carry the app's disclaimer text verbatim.** `src/strings.ts` holds a
+   copy, and a test diffs it against `apps/mobile/src/i18n/locales/*/legal.json`. `POST
+   /v1/verdict` takes an optional `locale` (language only, per AGENTS.md #12).
+9. **`/v1/hotlines` is not served by the Worker.** Hotlines must work offline (AGENTS.md #4), so
+   they ship bundled in the app. The registry needs human-verified numbers and is H5 work.
+10. **KB manifest is per language** (`?lang=`). `sha256` and `sizeBytes` describe the exact bytes
+    `GET /v1/kb/:lang` serves. Signing and the on-device swap remain Phase 8 (D21). The KB sync
+    script is now `sync:assets` (was `sync:mobile`) and writes to both the app and the Worker.
+
+**Known limit:** KV counters are read-modify-write and eventually consistent, so a concurrent
+burst can overshoot the daily cap slightly. The provider-side quota cap (docs/10 §3 layer 3,
+`services/api/README.md`) is the hard backstop. Free-plan KV's 1,000 writes a day caps real use at
+about 300 paid calls a day. When writes fail, the daily cap fails closed.
+
+**Verified:** `services/api/test/` (hermetic, `fetch` stubbed) covers every acceptance item that
+can be checked in code. I also smoke-tested under `wrangler dev` (workerd): exact match, verdict,
+manifest, no-key `PROVIDER_UNAVAILABLE`, and the kill switch flipped in local KV with no restart.

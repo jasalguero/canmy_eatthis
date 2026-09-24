@@ -1,0 +1,18 @@
+{
+  "$comment": "Live-provider drift set (docs/07 Phase 5). Text cases are phrased so the offline KB tiers would NOT resolve them — they exist to exercise the model. Image cases live in eval/images/ named <expectedKbId>__<anything>.jpg (<=1024px, JPEG); use `null__...` for items that must not map to any KB entry.",
+  "text": [
+    { "text": "a handful of sultanas from a trail mix", "expected": "grapes_raisins" },
+    { "text": "70% cacao baking bar", "expected": "chocolate_dark" },
+    { "text": "sugar-free peppermint chewing gum", "expected": "xylitol" },
+    { "text": "blue pellets from a rodent bait station", "expected": "rodenticide" },
+    {
+      "text": "green radiator coolant that leaked in the garage",
+      "expected": "antifreeze_ethylene_glycol"
+    },
+    { "text": "a stargazer bouquet from the florist", "expected": "lily" },
+    { "text": "half a glass of red wine", "expected": "alcohol" },
+    { "text": "unbaked pizza base left to prove", "expected": "raw_yeast_dough" },
+    { "text": "a slice of dragon fruit", "expected": null },
+    { "text": "cebolla frita crujiente", "expected": "alliums" }
+  ]
+}

@@ -16,7 +16,7 @@ import kbIndexArtifact from '../../assets/kb/kb.index.json';
 
 /**
  * The bundled KB (docs/07 Phase 4, docs/02-tech-decisions.md D21): a static asset snapshot
- * synced from `packages/kb/dist` by `pnpm --filter kb run sync:mobile` and committed to the
+ * synced from `packages/kb/dist` by `pnpm --filter kb run sync:assets` and committed to the
  * repo, not fetched OTA. Metro (and Jest, via jest-expo) bundle JSON imports directly, so this
  * is in memory the moment the module loads — no filesystem read, no async gap before the
  * resolver is usable, which is what keeps startup-to-interactive inside the <2 s budget.
