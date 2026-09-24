@@ -28,6 +28,9 @@ export const FUZZY_POSITIVE_RESOLUTIONS: { input: string; expected: string }[] =
   { input: 'raticid', expected: 'rodenticide' },
   { input: 'rodentisida', expected: 'rodenticide' }, // Spanish "raticida" typo
   { input: 'espreso', expected: 'caffeine' },
+  { input: 'expresso', expected: 'caffeine' },
+  { input: 'avocato', expected: 'avocado' },
+  { input: 'mozarella', expected: 'cheese' },
 ];
 
 /**
@@ -38,4 +41,34 @@ export const FUZZY_POSITIVE_RESOLUTIONS: { input: string; expected: string }[] =
  * `NEGATIVE_RESOLUTIONS` — it is a case fuzzy matching would get *more* confidently wrong than a
  * real typo, because "peanut" is scored as a near-perfect (unpenalised) prefix of "peanut butter".
  */
-export const FUZZY_FALSE_FRIENDS: string[] = ['peanut', 'peanuts', 'maní'];
+export const FUZZY_FALSE_FRIENDS: string[] = [
+  'peanut',
+  'peanuts',
+  'maní',
+  // Short real words one edit away from a *different* entry's alias, scoring as well as a genuine
+  // typo (0.17–0.25). Found by sweeping common English/Spanish food words against the built
+  // `kb.index.json` — see D22's addendum in docs/02-tech-decisions.md and `SHORT_QUERY_MAX_LENGTH`
+  // in `packages/shared/src/resolveText.ts`. Target alias (entry) in each comment.
+  'salt', // palta (avocado)
+  'salts', // normalises to "salt"
+  'sal', // Spanish "salt"
+  'hueso', // queso (cheese) — "bone"; the same score as the real typo "kueso"
+  'masa', // pasa (grapes_raisins) — "dough", which is itself a *different* entry
+  'papa', // pasa (grapes_raisins) — "potato"
+  'pino', // vino (alcohol) — "pine"
+  'pine', // wine (alcohol)
+  'beef', // beer (alcohol)
+  'beet', // beer (alcohol)
+  'lime', // lilie (lily)
+  'cake', // cafe (caffeine)
+  'chip', // chive (alliums)
+  'chips', // chive (alliums)
+  'chile', // chive (alliums)
+  'curry', // currant (grapes_raisins)
+  'perro', // puerro (alliums) — "dog"
+  'bollo', // cebolla (alliums) — "bun"
+  'arroz', // carrot — "rice"
+  'corn', // licor (alcohol)
+  'cereza', // cerveza (alcohol) — "cherry"; the same score as the real typo "garlik"
+  'licorice', // licore (alcohol) — the one long false friend, caught by the Fuse score cutoff
+];

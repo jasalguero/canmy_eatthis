@@ -21,6 +21,11 @@ export interface TextResolution {
  */
 export interface AliasSearchIndex {
   fuse: Fuse<AliasSearchItem>;
+  /**
+   * `phoneticKey(alias)` → KB id, or `null` when two different entries share a key (ambiguous,
+   * never resolved). Only consulted for short queries — see `SHORT_QUERY_MAX_LENGTH`.
+   */
+  phonetic: Map<string, string | null>;
 }
 
 interface AliasSearchItem {
@@ -35,8 +40,10 @@ interface AliasSearchItem {
  * this can still return hits scored above it), so it is only used to avoid discarding candidates
  * too early internally, and this constant is what actually decides a match. Tuned against
  * `packages/kb/fixtures`: positive typos resolve, the full negative near-miss set still doesn't.
+ * Was 0.25 until "licorice" (→ "licore", alcohol) was found sitting exactly on it; every
+ * positive typo that still takes the Fuse path scores ≤ 0.182.
  */
-const FUZZY_THRESHOLD = 0.25;
+const FUZZY_THRESHOLD = 0.2;
 
 /** Looser than `FUZZY_THRESHOLD` on purpose — see the comment above. */
 const FUSE_SEARCH_THRESHOLD = 0.6;
@@ -60,6 +67,33 @@ const AMBIGUITY_SCORE_DELTA = 0.05;
  */
 const MIN_LENGTH_RATIO = 0.7;
 
+/**
+ * Queries this short (after `normalise`) never go through Fuse. In a short word a single edit
+ * lands on a *different real word* far too often: sweeping common food words against the real KB
+ * found "salt"→palta (avocado), "hueso"→queso (cheese), "masa"/"papa"→pasa (raisins),
+ * "pino"→vino, "beef"→beer, "lime"→lilies, "cake"→café, "perro"→puerro, "cereza"→cerveza…
+ * scoring 0.17–0.25, i.e. *exactly* what the genuine short typos score ("kueso"→queso and
+ * "hueso"→queso are both 0.200; "garlik"→garlic and "cereza"→cerveza both 0.167). No score
+ * threshold, length ratio or first-letter rule separates them (first-letter would also break
+ * "kueso", "sebolla", "silitol", "zylitol"). What does is that the real short typos spell the
+ * *same sound* differently. So a short query resolves only if its `phoneticKey` equals an
+ * alias's exactly. See D22's addendum in docs/02-tech-decisions.md.
+ */
+const SHORT_QUERY_MAX_LENGTH = 6;
+
+/**
+ * Deliberately minimal: only the spelling-for-the-same-sound pairs the typo fixtures
+ * (`packages/kb/fixtures/fuzzy-resolutions.ts`) actually need — "qu"≈"ku" ("kueso"), hard
+ * "c"≈"k" ("garlik") and "y"≈"i" ("onyon"). Every pair added here widens what a short query can
+ * match, so each one needs a fixture justifying it and a re-run of the false-friends sweep.
+ */
+function phoneticKey(normalised: string): string {
+  return normalised
+    .replace(/qu/gu, 'ku')
+    .replace(/c(?![ei])/gu, 'k')
+    .replace(/y/gu, 'i');
+}
+
 export function buildAliasSearchIndex(index: AliasIndex): AliasSearchIndex {
   const items: AliasSearchItem[] = Object.keys(index).map((alias) => ({ alias }));
   const fuse = new Fuse(items, {
@@ -69,7 +103,13 @@ export function buildAliasSearchIndex(index: AliasIndex): AliasSearchIndex {
     ignoreLocation: true,
     distance: 100,
   });
-  return { fuse };
+  const phonetic = new Map<string, string | null>();
+  for (const [alias, id] of Object.entries(index)) {
+    const key = phoneticKey(alias);
+    const existing = phonetic.get(key);
+    phonetic.set(key, existing === undefined || existing === id ? id : null);
+  }
+  return { fuse, phonetic };
 }
 
 /**
@@ -87,6 +127,11 @@ export function resolveText(
 
   const exact = index[key];
   if (exact) return { type: 'exact', kbId: exact };
+
+  if (key.length <= SHORT_QUERY_MAX_LENGTH) {
+    const kbId = searchIndex.phonetic.get(phoneticKey(key));
+    return kbId ? { type: 'fuzzy', kbId } : { type: 'none', kbId: null };
+  }
 
   const hits = searchIndex.fuse.search(key).filter((hit) => {
     if ((hit.score ?? 1) > FUZZY_THRESHOLD) return false;

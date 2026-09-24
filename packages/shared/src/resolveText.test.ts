@@ -17,6 +17,9 @@ const INDEX: AliasIndex = {
   'milk chocolate': 'chocolate_milk',
   'chocolate bar': 'chocolate_milk',
   carrot: 'carrot',
+  queso: 'cheese',
+  palta: 'avocado',
+  vino: 'alcohol',
   'peanut butter': 'peanut_butter',
   'peanut spread': 'peanut_butter',
 };
@@ -50,6 +53,15 @@ describe('resolveText', () => {
     // peanut and peanut butter are a different safety question, so this must stay `none`.
     expect(resolve('peanut')).toEqual({ type: 'none', kbId: null });
     expect(resolve('peanuts')).toEqual({ type: 'none', kbId: null });
+  });
+
+  it('only resolves a short query via a same-sound spelling, never a one-letter-off real word', () => {
+    // "kueso"→queso and "hueso"→queso score identically in Fuse; only the first is a typo.
+    expect(resolve('kueso')).toEqual({ type: 'fuzzy', kbId: 'cheese' });
+    expect(resolve('hueso')).toEqual({ type: 'none', kbId: null });
+    // "salt" is one letter from "palta" (avocado) — the bug that prompted this rule.
+    expect(resolve('salt')).toEqual({ type: 'none', kbId: null });
+    expect(resolve('pino')).toEqual({ type: 'none', kbId: null });
   });
 
   it('refuses to guess when a typo is equally close to two different entries', () => {

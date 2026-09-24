@@ -406,6 +406,39 @@ and length-ratio cases) and `packages/kb/src/resolveText.test.ts` (the real buil
 `POSITIVE_RESOLUTIONS` and `FUZZY_POSITIVE_RESOLUTIONS` fixture resolves, every
 `NEGATIVE_RESOLUTIONS` and `FUZZY_FALSE_FRIENDS` fixture does not) both pass.
 
+### D22 addendum — short queries resolve only by same-sound spelling, not by Fuse (2026-09-24)
+
+**Bug:** typing `"salt"` showed the **avocado** verdict. `"salt"` is one substitution from the
+Spanish alias `"palta"`, scoring `0.250` with length ratio `0.8`, so it passed both guards above.
+Sweeping ~400 common English/Spanish food words against the built `kb.index.json` found about 20
+more cases, nearly all 4–6 letters: `hueso`→queso (cheese), `masa`/`papa`→pasa (raisins),
+`pino`/`pine`→vino/wine, `beef`/`beet`→beer, `corn`→licor (alcohol), `lime`→lilies,
+`cake`→café, `chip`/`chile`→chive, `perro`/`bollo`→puerro/cebolla (alliums), `arroz`→carrot,
+`curry`→currant, `cereza`→cerveza, and one longer word, `licorice`→licore. All of them are now in
+`FUZZY_FALSE_FRIENDS`.
+
+**Why no threshold fixes it:** in a word this short, one edit usually lands on a different real
+word, and that scores exactly like a real typo. `"hueso"`→queso and the positive fixture
+`"kueso"`→queso both score `0.200`. `"cereza"`→cerveza and the positive `"garlik"`→garlic both
+score `0.167`. The other candidates were checked against the fixtures and rejected:
+- *First character must match:* this breaks the positives `kueso`, `sebolla`, `silitol` and `zylitol`.
+- *Same-language aliases only:* `hueso` and `queso` are both Spanish, so this does not help, and
+  `kb.index.json` does not record an alias's language anyway.
+
+**Change** (`packages/shared/src/resolveText.ts`):
+1. Queries of **≤6 normalised characters no longer go through Fuse.** They resolve only when their
+   `phoneticKey` exactly equals an alias's key. The key covers only three spelling pairs, one for
+   each short positive fixture: `qu`≈`ku` (`kueso`), hard `c`≈`k` (`garlik`) and `y`≈`i`
+   (`onyon`). Aliases whose keys collide across two entries are treated as ambiguous and never
+   resolve. Adding a new pair needs a fixture that justifies it and a re-run of the sweep.
+2. **`FUZZY_THRESHOLD` goes from 0.25 to 0.2** for the Fuse path (7+ characters). `licorice`
+   scored exactly 0.250. Every positive still on the Fuse path scores ≤0.182.
+
+**Cost:** short typos that are not same-sound spellings now return `none` instead of a match
+(for example `coffe` or `chedar`). This is D9 working as intended: an honest "not found" is better
+than a confident wrong verdict. services/api is unaffected, because D24 already keeps model labels
+and ingredient lists off the fuzzy tier.
+
 ## D23 — `SpeciesToggle`'s pill dropped `react-native-reanimated`, undiagnosed
 
 **Decided 2026-09-23**, from a bug report during H3 device testing, not from a design review.
