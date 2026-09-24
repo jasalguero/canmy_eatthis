@@ -86,8 +86,8 @@ export function resolveOffline(query: string): TextResolution {
  * than a person typing: model candidate labels and product ingredient lists. Both are already
  * correctly spelled, so the fuzzy tier adds nothing but false positives, and there are many
  * more chances for one: a single barcode runs every line of an ingredient list through the
- * resolver. Found the hard way — fuzzy maps the ingredient "salt" onto the alias "palta"
- * (avocado). A miss here renders `unknown` (AGENTS.md #10); a false hit renders the wrong
+ * resolver. Found the hard way — fuzzy used to map the ingredient "salt" onto the alias "palta"
+ * (avocado); D22's addendum fixed that case, but the next false friend is why this stays exact. A miss here renders `unknown` (AGENTS.md #10); a false hit renders the wrong
  * entry's verdict.
  *
  * Still the shared `resolveText`'s own exact tier, not a re-implementation (AGENTS.md #5): it

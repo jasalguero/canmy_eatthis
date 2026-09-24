@@ -33,11 +33,15 @@ describe('server-side KB (mirrors apps/mobile/src/lib/offlineKb.ts — AGENTS.md
   });
 
   it('never fuzzy-matches text the Worker reads (labels, ingredient lines)', () => {
-    // The fuzzy tier maps "salt" onto the Spanish alias "palta" (avocado). Fine-ish for a typed
-    // query the user then sees; wrong for the 30 lines of an ingredient list.
-    expect(resolveOffline('salt').type).toBe('fuzzy');
-    expect(resolveExact('salt')).toBeNull();
+    // The fuzzy tier is for typos a person makes; a label or ingredient line is already spelled
+    // correctly, so any fuzzy hit there can only be a false friend. "onyon" proves the tier is
+    // live and that `resolveExact` still refuses it.
+    expect(resolveOffline('onyon')).toEqual({ type: 'fuzzy', kbId: 'alliums' });
     expect(resolveExact('onyon')).toBeNull();
+    // "salt" once fuzzy-matched "palta" (avocado); D22's addendum closed that on the typed path
+    // too, but the Worker must not depend on it.
+    expect(resolveOffline('salt').type).toBe('none');
+    expect(resolveExact('salt')).toBeNull();
     expect(resolveCandidateLabel('Salt', 'salt')).toBeNull();
   });
 
