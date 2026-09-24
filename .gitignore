@@ -18,3 +18,4 @@ apps/mobile/.expo/
 .pnpm-store/
 .vscode/
 .dev.vars
+apps/mobile/expo-env.d.ts
