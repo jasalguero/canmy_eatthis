@@ -3,7 +3,8 @@ import { useTranslation } from 'react-i18next';
 import { Linking, Pressable } from 'react-native';
 
 import { Text } from '@/components/primitives';
-import { sizes } from '@/theme/tokens';
+import { useTheme } from '@/theme/ThemeProvider';
+import { hardShadow, sizes } from '@/theme/tokens';
 
 /**
  * The app's actual claim, and a primary UI element rather than a footnote (docs/10 §4).
@@ -27,6 +28,7 @@ export interface SourceCiteProps {
 
 export function SourceCite({ source, itemName, verdict, species, className }: SourceCiteProps) {
   const { t } = useTranslation();
+  const { theme } = useTheme();
   const sentence = t('result:sourceCite', {
     source: source.label,
     item: itemName,
@@ -42,9 +44,9 @@ export function SourceCite({ source, itemName, verdict, species, className }: So
       onPress={() => {
         void Linking.openURL(source.url);
       }}
-      style={{ minHeight: sizes.touchTarget }}
+      style={[{ minHeight: sizes.touchTarget }, hardShadow[1][theme]]}
       className={[
-        'justify-center rounded-md border border-line-default bg-surface-raised p-3 active:bg-surface-sunken',
+        'justify-center rounded-md border-[3px] border-line-strong bg-surface-raised p-3 active:bg-surface-sunken',
         className ?? '',
       ]
         .filter(Boolean)

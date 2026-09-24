@@ -1,8 +1,14 @@
 import { View, type ViewProps } from 'react-native';
 
+import { useTheme } from '@/theme/ThemeProvider';
+import { hardShadow } from '@/theme/tokens';
+
 /**
- * A raised container. Elevation is one of exactly two levels (docs/06 §1) — `elevation-1` for
- * resting cards, `elevation-2` reserved for things that float above content (sheets).
+ * A raised container. Bold Ink (docs/02-tech-decisions.md D25) draws it as a thick ink outline
+ * with a flat offset "sticker" shadow, not a soft blurred one — `hardShadow` in `tokens.ts`,
+ * applied as an inline style because `shadowColor` isn't something a CSS variable can carry on
+ * native. `flat` (on-`surface.sunken` lists, where a shadow would be noise) keeps a plain
+ * thin border and drops the shadow.
  */
 export interface CardProps extends ViewProps {
   className?: string;
@@ -10,12 +16,14 @@ export interface CardProps extends ViewProps {
   flat?: boolean;
 }
 
-export function Card({ className, flat = false, ...rest }: CardProps) {
+export function Card({ className, flat = false, style, ...rest }: CardProps) {
+  const { theme } = useTheme();
   return (
     <View
+      style={[flat ? undefined : hardShadow[1][theme], style]}
       className={[
         'rounded-md bg-surface-raised p-4',
-        flat ? 'border border-line-subtle' : 'elevation-1',
+        flat ? 'border border-line-subtle' : 'border-[3px] border-line-strong',
         className ?? '',
       ]
         .filter(Boolean)

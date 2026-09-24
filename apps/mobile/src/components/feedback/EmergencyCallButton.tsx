@@ -2,7 +2,8 @@ import { useTranslation } from 'react-i18next';
 import { Linking, Pressable } from 'react-native';
 
 import { Text } from '@/components/primitives';
-import { sizes } from '@/theme/tokens';
+import { useTheme } from '@/theme/ThemeProvider';
+import { hardShadow, sizes } from '@/theme/tokens';
 import { VERDICT_CLASSES } from '@/theme/verdict';
 
 /**
@@ -11,7 +12,9 @@ import { VERDICT_CLASSES } from '@/theme/verdict';
  * state it could be wrong about. There is no code path here that can fail to render.
  *
  * Filled with `toxic.accent` (docs/06 §4) and labelled with `toxic.onAccent`, which is a token
- * because white on the dark theme's accent is 2.5:1 (docs/02 D18).
+ * because white on the dark theme's accent is 2.5:1 (docs/02 D18). The thick ink border and flat
+ * shadow are Bold Ink's button treatment (docs/02 D25) — the colours and reachability guarantees
+ * below are unchanged from before that.
  *
  * Reachability: docs/06 §5 requires this to be within two moves of a toxic result for keyboard
  * and switch control. It is rendered in a sticky footer, so it is the last focusable element on
@@ -25,6 +28,7 @@ export interface EmergencyCallButtonProps {
 
 export function EmergencyCallButton({ phoneNumber, className }: EmergencyCallButtonProps) {
   const { t } = useTranslation();
+  const { theme } = useTheme();
   const classes = VERDICT_CLASSES.toxic;
 
   return (
@@ -35,9 +39,9 @@ export function EmergencyCallButton({ phoneNumber, className }: EmergencyCallBut
       onPress={() => {
         void Linking.openURL(`tel:${phoneNumber}`);
       }}
-      style={{ minHeight: sizes.checkButtonHeight }}
+      style={[{ minHeight: sizes.checkButtonHeight }, hardShadow[1][theme]]}
       className={[
-        'items-center justify-center rounded-lg px-5 py-3',
+        'items-center justify-center rounded-lg border-[3px] border-line-strong px-5 py-3',
         classes.accentFill,
         className ?? '',
       ]

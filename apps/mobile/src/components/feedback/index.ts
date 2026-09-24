@@ -7,3 +7,4 @@ export { Mascot, type MascotProps } from './Mascot';
 export { SourceCite, type SourceCiteProps } from './SourceCite';
 export { VerdictBanner, type VerdictBannerProps } from './VerdictBanner';
 export { VerdictCard, type VerdictCardProps } from './VerdictCard';
+export { Wordmark } from './Wordmark';

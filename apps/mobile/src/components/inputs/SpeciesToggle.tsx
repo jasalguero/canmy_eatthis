@@ -15,7 +15,7 @@ import { useReducedMotion } from 'react-native-reanimated';
 import { Mascot } from '@/components/feedback';
 import { Text } from '@/components/primitives';
 import { useTheme } from '@/theme/ThemeProvider';
-import { motion, radius, sizes, tokens } from '@/theme/tokens';
+import { hardShadow, motion, radius, sizes, tokens } from '@/theme/tokens';
 
 // Android needs this opted into explicitly, same as `Collapsible` — without it LayoutAnimation
 // is a silent no-op there rather than an instant jump, which would look identical to before this
@@ -102,6 +102,12 @@ export function SpeciesToggle({ value, onChange, className }: SpeciesToggleProps
   );
 
   const pillStart = TRACK_PADDING + (value === 'dog' ? 0 : halfWidth);
+  // Per-species pill colour (docs/02 D25, matching docs/06 §2's original "warm ochre for dog,
+  // cool slate for cat" brief) — the pill was flat brand-blue for both species until a design
+  // review caught it. The label colour does NOT change with selection (see doc comment): both
+  // tints pass >=4.5:1 with plain `text.primary` ink in both themes (CI-checked), so there is no
+  // separate "on-tint" token to pick.
+  const pillTint = value === 'dog' ? tokens[theme].brand.tintDog : tokens[theme].brand.tintCat;
 
   return (
     <View
@@ -109,8 +115,11 @@ export function SpeciesToggle({ value, onChange, className }: SpeciesToggleProps
       accessibilityLabel={t('home:speciesA11yLabel')}
       accessibilityHint={t('home:speciesA11yHint')}
       onLayout={onTrackLayout}
-      style={{ minHeight: sizes.speciesToggleHeight }}
-      className={['flex-row rounded-full bg-surface-sunken p-1', className ?? '']
+      style={[{ minHeight: sizes.speciesToggleHeight }, hardShadow[1][theme]]}
+      className={[
+        'flex-row rounded-full border-[3px] border-line-strong bg-surface-sunken p-1',
+        className ?? '',
+      ]
         .filter(Boolean)
         .join(' ')}
     >
@@ -124,8 +133,10 @@ export function SpeciesToggle({ value, onChange, className }: SpeciesToggleProps
           bottom: TRACK_PADDING,
           insetInlineStart: pillStart,
           width: halfWidth,
-          backgroundColor: tokens[theme].brand.primary,
+          backgroundColor: pillTint,
           borderRadius: radius.full,
+          borderWidth: 2.5,
+          borderColor: tokens[theme].border.strong,
         }}
       />
       {OPTIONS.map((species) => {
@@ -141,10 +152,7 @@ export function SpeciesToggle({ value, onChange, className }: SpeciesToggleProps
             className="flex-1 flex-row items-center justify-center gap-2 rounded-full px-3"
           >
             <Mascot species={species} pose="head" size={sizes.mascotToggle} />
-            <Text
-              variant="label"
-              className={selected ? 'text-brand-on-primary' : 'text-ink-secondary'}
-            >
+            <Text variant="label" className="text-ink-primary">
               {t(`common:species_${species}`)}
             </Text>
           </Pressable>

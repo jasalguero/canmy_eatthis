@@ -58,6 +58,12 @@ export interface ThemeTokens {
      *  other). `link` is the separate, darker blue for anywhere brand colour is text. CI-checked
      *  ≥4.5:1 on both `surface.base` and `surface.raised`. */
     link: string;
+    /** The species toggle's selected-pill fill (docs/02 D25, matching docs/06 §2's original
+     *  "warm ochre for dog, cool slate for cat" brief) — never used for anything but that pill.
+     *  Plain `text.primary`/`text.inverse` ink passes ≥4.5:1 on both, in both themes
+     *  (CI-checked), which is why the toggle's label colour doesn't change with selection. */
+    tintDog: string;
+    tintCat: string;
   };
   surface: { base: string; raised: string; sunken: string; overlay: string };
   text: { primary: string; secondary: string; tertiary: string; inverse: string };
@@ -110,6 +116,8 @@ export const tokens: Record<ThemeName, ThemeTokens> = {
       tint: '#DCEEFF',
       onPrimary: '#22170F',
       link: '#0B5FC4',
+      tintDog: '#FFC9A3',
+      tintCat: '#C4D2FF',
     },
     surface: { base: '#FFF3DC', raised: '#FFFFFF', sunken: '#F7E3BE', overlay: '#FFFFFF' },
     text: { primary: '#22170F', secondary: '#5E4838', tertiary: '#78604C', inverse: '#FFFFFF' },
@@ -162,6 +170,8 @@ export const tokens: Record<ThemeName, ThemeTokens> = {
       tint: '#16324D',
       onPrimary: '#140D09',
       link: '#8CC4FF',
+      tintDog: '#8A5A3C',
+      tintCat: '#4C5C92',
     },
     surface: { base: '#1C1411', raised: '#2B201A', sunken: '#130D0A', overlay: '#332619' },
     text: { primary: '#FFF3DC', secondary: '#D9C4AA', tertiary: '#B39A80', inverse: '#140D09' },
@@ -264,6 +274,19 @@ export const camera = {
 } as const;
 
 /**
+ * The verdict banner's glyph badge (docs/02-tech-decisions.md D25) — a white circular "sticker"
+ * behind the verdict glyph. Theme-invariant, the same reasoning as `camera` above: this is a
+ * fixed design choice (white circle, dark-ink glyph, in BOTH themes — the whole banner is a
+ * saturated badge regardless of theme, and this is the badge-on-the-badge), not chrome that
+ * should follow the theme. `border`/`ink` are the same value on purpose — one colour, two roles.
+ */
+export const verdictBadge = {
+  bg: '#FFFFFF',
+  border: '#22170F',
+  ink: '#22170F',
+} as const;
+
+/**
  * Motion (docs/06 §1): durations fast/base/slow.
  *
  * **`spring` is not wired to any animation (docs/02-tech-decisions.md D23, D25).** `SpeciesToggle`
@@ -318,6 +341,9 @@ export const sizes = {
   verdictGlyph: 64,
   /** The mascot art next to the verdict banner text (docs/02 D25). */
   mascotBanner: 96,
+  /** The verdict banner's glyph badge — a minimum, not a fixed size, so it can grow rather than
+   *  clip the glyph at 200% font scale (docs/06 §5, docs/02 D25). */
+  verdictBadge: 58,
   /** The mascot art on the species toggle segment (docs/02 D25). */
   mascotToggle: 28,
   /** The mascot art on the Identifying screen (docs/02 D25). */

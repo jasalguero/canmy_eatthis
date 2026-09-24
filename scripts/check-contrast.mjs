@@ -122,6 +122,18 @@ for (const theme of ['light', 'dark']) {
     contrast(t.brand.link, t.surface.raised),
     4.5,
   );
+  // The species toggle's selected-pill label is plain `text.primary` ink, not a dedicated
+  // on-tint token (docs/02 D25) — both tints are light/mid enough in both themes to pass.
+  check(
+    `${theme} text.primary on brand.tintDog (toggle label)`,
+    contrast(t.text.primary, t.brand.tintDog),
+    4.5,
+  );
+  check(
+    `${theme} text.primary on brand.tintCat (toggle label)`,
+    contrast(t.text.primary, t.brand.tintCat),
+    4.5,
+  );
   check(
     `${theme} Check-button label (brand.onPrimary on brand.primary)`,
     contrast(t.brand.onPrimary, t.brand.primary),

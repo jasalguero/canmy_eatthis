@@ -7,7 +7,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Text } from '@/components/primitives';
 import { useTheme } from '@/theme/ThemeProvider';
 import { VERDICT_MASCOT_MOOD } from '@/theme/mascot';
-import { sizes, tokens } from '@/theme/tokens';
+import { hardShadow, radius, sizes, tokens, verdictBadge } from '@/theme/tokens';
 import { VERDICT_CLASSES, VERDICT_GLYPH, verdictWordKey } from '@/theme/verdict';
 import { Mascot } from './Mascot';
 
@@ -27,17 +27,19 @@ import { Mascot } from './Mascot';
  *    in grayscale the four verdicts stay distinguishable by `✓ ! ⚠ ?` and by their wording. The
  *    mascot's mood is a FOURTH signal in the same spirit (worried only ever backs `toxic`), never
  *    a substitute for the other three.
- *  - **Nothing here is fixed-height, and the mascot cannot cause a truncation.** Spanish runs
- *    20–30% longer than English and the worst case for the whole app is `es` at 200% font scale
- *    landing on this banner (docs/06 §2). The text column is `flex-1` and the mascot sits beside
- *    it at a fixed size, rather than absolutely positioned over the text — so a long translation
- *    pushes the mascot down as the row wraps, and never sits underneath it.
+ *  - **Nothing here is fixed-height, and the badge can't clip the glyph.** Spanish runs 20–30%
+ *    longer than English and the worst case for the whole app is `es` at 200% font scale landing
+ *    on this banner (docs/06 §2). The glyph badge below is a MINIMUM size (`minWidth`/`minHeight`,
+ *    not `width`/`height`), so a scaled-up glyph grows the badge into a pill rather than being
+ *    clipped by a fixed circle — and the mascot sits beside the text column at a fixed size
+ *    rather than absolutely positioned over it, so a long translation pushes it down as the row
+ *    wraps, never sitting underneath it.
  *
  * **The background colour is a plain, unconditional `View` style (docs/02 D23), and this
  * component adds nothing that touches it.** D23 found that a `react-native-reanimated`-driven
  * wash-in did not reach a real device at all — the banner rendered with no colour, the single
- * highest-stakes failure this app can have (AGENTS.md #2). The mascot below is pure addition:
- * static, decorative, and irrelevant to whether the banner itself renders correctly.
+ * highest-stakes failure this app can have (AGENTS.md #2). The badge and mascot below are pure
+ * addition: static, decorative, and irrelevant to whether the banner itself renders correctly.
  */
 export interface VerdictBannerProps {
   verdict: Verdict;
@@ -95,21 +97,32 @@ export function VerdictBanner({
             item: itemName,
             species,
           })}
-          className="min-w-0 flex-1 gap-1"
+          className="min-w-0 flex-1 gap-2"
         >
-          <View className="flex-row flex-wrap items-center gap-2">
-            <Text
-              variant="display"
-              className={classes.onBgText}
-              accessibilityElementsHidden
-              importantForAccessibility="no-hide-descendants"
-            >
+          {/* The glyph's white "sticker" badge (docs/02 D25) — a minimum, not a fixed, size. */}
+          <View
+            accessibilityElementsHidden
+            importantForAccessibility="no-hide-descendants"
+            style={{
+              minWidth: sizes.verdictBadge,
+              minHeight: sizes.verdictBadge,
+              borderRadius: radius.full,
+              borderWidth: 3,
+              borderColor: verdictBadge.border,
+              backgroundColor: verdictBadge.bg,
+              alignItems: 'center',
+              justifyContent: 'center',
+              paddingHorizontal: 8,
+              ...hardShadow[1][theme],
+            }}
+          >
+            <Text variant="title" style={{ color: verdictBadge.ink }}>
               {VERDICT_GLYPH[verdict]}
             </Text>
-            <Text variant="display" className={classes.onBgText}>
-              {verdictWord}
-            </Text>
           </View>
+          <Text variant="display" className={classes.onBgText}>
+            {verdictWord}
+          </Text>
           <Text variant="title" className={classes.onBgText}>
             {itemName}
           </Text>

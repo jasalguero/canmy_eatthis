@@ -3,7 +3,8 @@ import { useTranslation } from 'react-i18next';
 import { TextInput, View } from 'react-native';
 
 import { Text } from '@/components/primitives';
-import { typography } from '@/theme/tokens';
+import { useTheme } from '@/theme/ThemeProvider';
+import { hardShadow, typography } from '@/theme/tokens';
 
 /**
  * The free-text description (docs/06 §4 Home): min 3 lines, grows to 6, top-aligned, with a
@@ -12,6 +13,9 @@ import { typography } from '@/theme/tokens';
  * The min/max height are computed from the type scale's line height rather than hardcoded, so
  * the field still shows three lines at 200% font scale instead of clipping to a box sized for
  * 100% (docs/06 §5). This is the one place a "fixed height" would be most tempting and most wrong.
+ *
+ * The thick ink border and flat shadow are Bold Ink's input treatment (docs/02 D25) — the
+ * focused-border colour swap to `brand.primary` is unchanged from before that, just thicker.
  */
 export const DESCRIPTION_MAX_LENGTH = 500;
 /** The counter is noise until the user is near the limit (docs/06 §4). */
@@ -25,6 +29,7 @@ export interface DescriptionInputProps {
 
 export function DescriptionInput({ value, onChangeText, className }: DescriptionInputProps) {
   const { t } = useTranslation();
+  const { theme } = useTheme();
   const [focused, setFocused] = useState(false);
 
   const lineHeight = typography.body.lineHeight;
@@ -45,10 +50,13 @@ export function DescriptionInput({ value, onChangeText, className }: Description
         maxLength={DESCRIPTION_MAX_LENGTH}
         placeholder={t('home:descriptionPlaceholder')}
         // Multiples of the body line height: 3 lines minimum, growing to 6, plus the padding.
-        style={{ minHeight: lineHeight * 3 + 24, maxHeight: lineHeight * 6 + 24 }}
+        style={[
+          { minHeight: lineHeight * 3 + 24, maxHeight: lineHeight * 6 + 24 },
+          hardShadow[1][theme],
+        ]}
         className={[
-          'rounded-md border bg-surface-raised p-3 text-body text-ink-primary',
-          focused ? 'border-brand-primary' : 'border-line-default',
+          'rounded-md border-[3px] bg-surface-raised p-3 text-body text-ink-primary',
+          focused ? 'border-brand-primary' : 'border-line-strong',
         ].join(' ')}
       />
       {value.length >= COUNTER_VISIBLE_FROM ? (

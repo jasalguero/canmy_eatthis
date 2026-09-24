@@ -51,6 +51,9 @@ function palette() {
       'on-primary': v('brand-on-primary'),
       // Text-safe blue, distinct from `primary` (docs/02 D25) — see tokens.ts's doc comment.
       link: v('brand-link'),
+      // The species toggle's selected-pill fill, per species (docs/02 D25).
+      'tint-dog': v('brand-tint-dog'),
+      'tint-cat': v('brand-tint-cat'),
     },
     surface: {
       base: v('surface-base'),

@@ -38,3 +38,41 @@ export function SettingsIcon({ size = 22, color }: IconProps) {
     </Svg>
   );
 }
+
+/** A clock face — "recent checks" (History), matching the design canvas's history glyph. */
+export function HistoryIcon({ size = 22, color }: IconProps) {
+  return (
+    <Svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke={color}
+      strokeWidth={2.2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <Circle cx={12} cy={12} r={8.5} />
+      <Path d="M12 7.5V12l3 2" />
+    </Svg>
+  );
+}
+
+/** A camera body — the photo tray's empty-state icon, matching the design canvas's camera glyph. */
+export function CameraIcon({ size = 26, color }: IconProps) {
+  return (
+    <Svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke={color}
+      strokeWidth={2.2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <Path d="M3.5 8.6A1.6 1.6 0 0 1 5.1 7h2.5l1.6-2.4h5.6L16.4 7h2.5a1.6 1.6 0 0 1 1.6 1.6v8.8a1.6 1.6 0 0 1-1.6 1.6H5.1a1.6 1.6 0 0 1-1.6-1.6z" />
+      <Circle cx={12} cy={12.8} r={3.3} />
+    </Svg>
+  );
+}

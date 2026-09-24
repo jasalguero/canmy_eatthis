@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { KeyboardAvoidingView, Platform, ScrollView, View } from 'react-native';
 
+import { Mascot, Wordmark } from '@/components/feedback';
 import {
   CheckButton,
   DescriptionInput,
@@ -12,7 +13,7 @@ import {
   SpeciesToggle,
 } from '@/components/inputs';
 import { Screen, StickyFooter } from '@/components/layout';
-import { Button, IconButton, SettingsIcon, Text } from '@/components/primitives';
+import { HistoryIcon, IconButton, SettingsIcon, Text } from '@/components/primitives';
 import { MAX_PHOTOS, useDraftStore } from '@/lib/draft';
 import { processImage } from '@/lib/imagePipeline';
 import { useTheme } from '@/theme/ThemeProvider';
@@ -26,6 +27,16 @@ import { tokens } from '@/theme/tokens';
  * barcode capture happen on the `/camera` screen, the library picker runs in place (it is
  * already its own system modal, not a screen this app owns) — both paths end at
  * `processImage()` before a URI ever reaches the draft.
+ *
+ * The header is two rows (docs/02-tech-decisions.md D25): the `Wordmark` and the History/Settings
+ * icons on the first, the big page title on the second. History moved from a text link ("Recent
+ * checks") lower on the screen to a header icon to match the design — `home:openHistory`'s
+ * existing string ("Recent checks") still works as the icon's accessibility label unchanged.
+ * The page title is `variant="display"` (Lilita One), not `variant="title"` (Nunito) — this
+ * screen predates Bold Ink and kept the size/font role its heading had before that decision;
+ * the mascot beside it is a flex sibling with a fixed size, not absolutely positioned over the
+ * text the way the design canvas draws it, so a long `es` translation at 200% font scale pushes
+ * the mascot down as the title wraps instead of the mascot ever sitting on top of it.
  */
 export default function Home() {
   const { t } = useTranslation();
@@ -69,22 +80,38 @@ export default function Home() {
         >
           <View className="gap-5 px-4 pb-6 pt-2">
             <View className="flex-row items-center justify-between gap-3">
-              <Text variant="title" tone="primary" accessibilityRole="header" className="flex-1">
+              <Wordmark species={species} />
+              <View className="flex-row gap-2">
+                <IconButton
+                  icon={<HistoryIcon color={tokens[theme].text.secondary} />}
+                  accessibilityLabel={t('home:openHistory')}
+                  onPress={() => router.push('/history')}
+                />
+                {/* A drawn `SettingsIcon`, not a `⚙` glyph: that character rendered as a solid
+                    blue colour-emoji badge on a real iOS Simulator, not the ink-coloured icon
+                    this design calls for — see `IconButton`'s doc comment. And an icon, not a
+                    text button: a translated label here ("Ajustes", "Settings") has no fixed
+                    width, and at `es` + 200% font scale its natural width once overflowed the
+                    screen edge — the exact regression docs/06 §5's acceptance line exists to
+                    catch. A fixed-size icon target can't regress this way in any language. */}
+                <IconButton
+                  icon={<SettingsIcon color={tokens[theme].text.secondary} />}
+                  accessibilityLabel={t('home:openSettings')}
+                  onPress={() => router.push('/settings')}
+                />
+              </View>
+            </View>
+
+            <View className="flex-row items-start justify-between gap-3">
+              <Text
+                variant="display"
+                tone="primary"
+                accessibilityRole="header"
+                className="min-w-0 flex-1"
+              >
                 {t('home:title')}
               </Text>
-              {/* An icon, not a text button (docs/02-tech-decisions.md D25): a translated label
-                  here ("Ajustes", "Settings") has no fixed width, and at `es` + 200% font scale
-                  its natural width plus this row's title left the button overflowing the screen
-                  edge — the exact regression docs/06 §5's acceptance line exists to catch. A
-                  fixed-size icon target can't regress this way in any language or scale. A drawn
-                  `SettingsIcon`, not a `⚙` glyph: that character rendered as a solid blue
-                  colour-emoji badge on a real iOS Simulator, not the ink-coloured icon this design
-                  calls for — see `IconButton`'s doc comment. */}
-              <IconButton
-                icon={<SettingsIcon color={tokens[theme].text.secondary} />}
-                accessibilityLabel={t('home:openSettings')}
-                onPress={() => router.push('/settings')}
-              />
+              <Mascot species={species} pose="peek" size={130} />
             </View>
 
             <SpeciesToggle value={species} onChange={setSpecies} />
@@ -105,13 +132,6 @@ export default function Home() {
             </View>
 
             <DescriptionInput value={description} onChangeText={setDescription} />
-
-            <Button
-              label={t('home:openHistory')}
-              variant="quiet"
-              onPress={() => router.push('/history')}
-              className="self-start"
-            />
           </View>
         </ScrollView>
 

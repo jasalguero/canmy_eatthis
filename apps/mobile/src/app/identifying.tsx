@@ -130,7 +130,9 @@ export default function Identifying() {
   return (
     <Screen className="justify-between px-4 py-6">
       <View className="gap-6">
-        <Text variant="title" tone="primary" accessibilityRole="header">
+        {/* `display` (Lilita One), matching Home's page title (docs/02-tech-decisions.md D25) —
+            both are page headings, sized/fonted the same as the design canvas's `.disp` H1s. */}
+        <Text variant="display" tone="primary" accessibilityRole="header">
           {t(hasPhoto ? 'identify:title' : 'identify:titleTextOnly')}
         </Text>
 
