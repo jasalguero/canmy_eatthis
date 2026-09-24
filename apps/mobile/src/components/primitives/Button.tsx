@@ -24,7 +24,9 @@ const VARIANT_CONTAINER: Record<ButtonVariant, string> = {
 const VARIANT_LABEL: Record<ButtonVariant, string> = {
   primary: 'text-brand-on-primary',
   secondary: 'text-ink-primary',
-  quiet: 'text-brand-primary',
+  // `brand-link`, not `brand-primary`: this is a text colour, and `primary` is a fill-only
+  // colour under Bold Ink (docs/02 D25) — see tokens.ts's doc comment on `brand.link`.
+  quiet: 'text-brand-link',
 };
 
 export interface ButtonProps extends Omit<PressableProps, 'children' | 'style'> {

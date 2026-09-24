@@ -4,6 +4,16 @@ The brief asks for a clean, fancy UI. That is achieved by deciding the system on
 then refusing to deviate — not by making each screen pretty individually. Phase 2 builds this
 before any network code exists.
 
+> **The specific colour values and font family below are superseded by
+> [`docs/02-tech-decisions.md` D25](02-tech-decisions.md#d25--visual-identity-bold-ink-chosen-from-three-explored-directions)**
+> ("Bold Ink", decided 2026-09-24) — a cartoon visual identity chosen by the user from three
+> explored directions. The *shape* of everything in this document still holds exactly as written:
+> the six-key verdict token structure, the CI-checked ≥4.5:1 contrast requirement, "colour is
+> never the only signal," logical layout properties, the `es` + 200% acceptance line, and so on.
+> Only the literal hex values (§1) and the font choice (§2) changed; D25 also added a fourth
+> non-colour signal (a dog/cat mascot whose mood follows the verdict) on top of the glyph and word
+> below, and records the reasoning `tokens.ts`/`tailwind.config.js` reference inline.
+
 ## 1. Tokens
 
 Defined once in `apps/mobile/src/theme/tokens.ts`, exposed to NativeWind via `tailwind.config.js`.

@@ -49,6 +49,8 @@ function palette() {
       press: v('brand-primary-press'),
       tint: v('brand-tint'),
       'on-primary': v('brand-on-primary'),
+      // Text-safe blue, distinct from `primary` (docs/02 D25) — see tokens.ts's doc comment.
+      link: v('brand-link'),
     },
     surface: {
       base: v('surface-base'),
@@ -133,8 +135,19 @@ module.exports = {
       lg: `${radius.lg}px`,
       full: `${radius.full}px`,
     },
-    // One family, the platform system font (docs/06 §2 — see tokens.ts for the Inter note).
-    fontFamily: { sans: ['system'] },
+    // Bold Ink (docs/02-tech-decisions.md D25): one family per typography ROLE, not one family
+    // for the whole app — `display` is Lilita One, everything else is a specific Nunito weight.
+    // Reusing the `typography` role names as the fontFamily keys too means `Text.tsx` can pair
+    // `text-<role>` (size, from `fontSize` above) with `font-<role>` (family) mechanically; see
+    // `theme/fonts.ts` for why a weight can't just be layered onto one generic family here.
+    fontFamily: {
+      display: ['LilitaOne_400Regular'],
+      title: ['Nunito_800ExtraBold'],
+      headline: ['Nunito_700Bold'],
+      body: ['Nunito_400Regular'],
+      label: ['Nunito_700Bold'],
+      caption: ['Nunito_500Medium'],
+    },
   },
   plugins: [elevationPlugin],
 };

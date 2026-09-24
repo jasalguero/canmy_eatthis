@@ -12,9 +12,11 @@ import {
   SpeciesToggle,
 } from '@/components/inputs';
 import { Screen, StickyFooter } from '@/components/layout';
-import { Button, Text } from '@/components/primitives';
+import { Button, IconButton, SettingsIcon, Text } from '@/components/primitives';
 import { MAX_PHOTOS, useDraftStore } from '@/lib/draft';
 import { processImage } from '@/lib/imagePipeline';
+import { useTheme } from '@/theme/ThemeProvider';
+import { tokens } from '@/theme/tokens';
 
 /**
  * Home (docs/06 §4).
@@ -27,6 +29,7 @@ import { processImage } from '@/lib/imagePipeline';
  */
 export default function Home() {
   const { t } = useTranslation();
+  const { theme } = useTheme();
   const species = useDraftStore((state) => state.species);
   const setSpecies = useDraftStore((state) => state.setSpecies);
   const photos = useDraftStore((state) => state.photos);
@@ -69,9 +72,17 @@ export default function Home() {
               <Text variant="title" tone="primary" accessibilityRole="header" className="flex-1">
                 {t('home:title')}
               </Text>
-              <Button
-                label={t('home:openSettings')}
-                variant="quiet"
+              {/* An icon, not a text button (docs/02-tech-decisions.md D25): a translated label
+                  here ("Ajustes", "Settings") has no fixed width, and at `es` + 200% font scale
+                  its natural width plus this row's title left the button overflowing the screen
+                  edge — the exact regression docs/06 §5's acceptance line exists to catch. A
+                  fixed-size icon target can't regress this way in any language or scale. A drawn
+                  `SettingsIcon`, not a `⚙` glyph: that character rendered as a solid blue
+                  colour-emoji badge on a real iOS Simulator, not the ink-coloured icon this design
+                  calls for — see `IconButton`'s doc comment. */}
+              <IconButton
+                icon={<SettingsIcon color={tokens[theme].text.secondary} />}
+                accessibilityLabel={t('home:openSettings')}
                 onPress={() => router.push('/settings')}
               />
             </View>

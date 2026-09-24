@@ -75,11 +75,20 @@ export const VERDICT_CLASSES: Record<Verdict, VerdictClasses> = {
  *
  * These are text glyphs rather than icons so they inherit the font scale: at 200% the glyph
  * grows with everything around it instead of staying 64pt while the word wraps past it.
+ *
+ * `toxic`'s `⚠` carries `U+FE0E` (VARIATION SELECTOR-15, "render as text") — found on a real iOS
+ * Simulator pass (docs/02-tech-decisions.md D25 addendum): without it, `⚠` (U+26A0) gets Apple's
+ * default *colour emoji* presentation — a yellow triangle, not the ink-coloured glyph this design
+ * system uses everywhere else. `U+FE0E` is the standard Unicode mechanism for exactly this
+ * (`⚠` is listed in Unicode's emoji-variation-sequences.txt as supporting both presentations),
+ * and every platform this app ships on honours it. The other three glyphs were checked against
+ * the same emoji-default-presentation list and don't need it: `!`/`?` are plain ASCII, and `✓`
+ * (U+2713) is a different, text-only codepoint from the emoji-default `✅` (U+2705).
  */
 export const VERDICT_GLYPH: Record<Verdict, string> = {
   safe: '✓',
   caution: '!',
-  toxic: '⚠',
+  toxic: '⚠︎',
   unknown: '?',
 };
 

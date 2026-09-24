@@ -19,7 +19,7 @@
  * accent-as-foreground would require changing values the design doc pins down; restricting where
  * accent may be used is the cheaper and more honest fix. See docs/02-tech-decisions.md D18.
  *   - text.primary/secondary/tertiary on surface.base ≥ 4.5:1
- *   - brand.primary on surface.raised        ≥ 4.5:1 (primary button label AND focus rings)
+ *   - brand.link on surface.base/raised      ≥ 4.5:1 (link text, quiet-button labels)
  *   - text.primary on surface.raised         ≥ 4.5:1 (card body)
  *   - text.primary on surface.overlay        ≥ 4.5:1 (sheet body)
  *   - border ordering sanity: strong, default and subtle are strictly ordered by their contrast
@@ -108,9 +108,18 @@ for (const theme of ['light', 'dark']) {
     contrast(t.text.primary, t.surface.overlay),
     4.5,
   );
+  // `brand.primary` is a FILL colour only (docs/02 D25) — tuned to carry a dark-ink label as a
+  // button/badge fill, which pulls in the opposite direction from also being ≥4.5:1 as text on
+  // a light surface (both cannot hold for one value; see tokens.ts's `link` doc comment). Text
+  // uses of brand colour (links, quiet-button labels) go through the separate `brand.link` token.
   check(
-    `${theme} brand.primary on surface.raised (link/label)`,
-    contrast(t.brand.primary, t.surface.raised),
+    `${theme} brand.link on surface.base (link/label)`,
+    contrast(t.brand.link, t.surface.base),
+    4.5,
+  );
+  check(
+    `${theme} brand.link on surface.raised (link/label)`,
+    contrast(t.brand.link, t.surface.raised),
     4.5,
   );
   check(

@@ -1,13 +1,17 @@
+import type { Species } from '@canmyeatthis/shared';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Image, View } from 'react-native';
+import { useReducedMotion } from 'react-native-reanimated';
 
+import { Mascot } from '@/components/feedback';
 import { Screen } from '@/components/layout';
 import { Button, Text } from '@/components/primitives';
 import { useDraftStore } from '@/lib/draft';
 import { resolveOffline } from '@/lib/offlineKb';
 import { MOCK_PHOTO_URI } from '@/mock/photos';
+import { sizes } from '@/theme/tokens';
 
 /**
  * Signature interaction #2 (docs/06 §2): the scanning state.
@@ -19,8 +23,14 @@ import { MOCK_PHOTO_URI } from '@/mock/photos';
  * information a sighted user gets from the stage list — that text list is what carries the
  * information. There used to also be a shimmer sweeping over the photo; it is gone
  * (docs/02-tech-decisions.md D23) — the `react-native-reanimated`-driven animation did not
- * reliably render on a real device, the same failure found in `SpeciesToggle`/`VerdictBanner`,
- * and it was purely decorative, so it is removed rather than fixed.
+ * reliably render on a real device, the same failure found in `SpeciesToggle`/`VerdictBanner`.
+ *
+ * **The mascot's "sniffing" is a flipbook, not an animation library (docs/02 D25).** It swaps
+ * between two static moods on a plain `setInterval`/`setState` — the exact mechanism the stage
+ * list below already uses successfully in this file — rather than through `react-native-
+ * reanimated`, which is what actually failed in D23. `useReducedMotion()` freezes it on `idle`
+ * rather than skipping the interval silently, so there is nothing left running that a reader
+ * sensitive to motion would notice.
  *
  * The stages still advance on a fixed timer — for a typed query the real, synchronous on-device
  * resolution (H3) finishes well under `STAGE_MS`, so the timer is what keeps the moment readable
@@ -49,15 +59,30 @@ const TEXT_STAGE_KEYS = ['identify:stage_reading', 'identify:stage_matching'] as
 /** Long enough to read, short enough not to feel stuck. */
 const STAGE_MS = 900;
 
+/** The sniff flipbook's frame length — quick enough to read as a repeated gesture. */
+const SNIFF_MS = 500;
+
 export default function Identifying() {
   const { t } = useTranslation();
   const params = useLocalSearchParams<{ species?: string; hasPhoto?: string }>();
   const hasPhoto = params.hasPhoto === '1';
+  const species: Species = params.species === 'cat' ? 'cat' : 'dog';
   const [stage, setStage] = useState(0);
   const stageKeys = hasPhoto ? PHOTO_STAGE_KEYS : TEXT_STAGE_KEYS;
   const description = useDraftStore((state) => state.description);
   const draftPhotos = useDraftStore((state) => state.photos);
   const previewUri = draftPhotos[0] ?? MOCK_PHOTO_URI;
+
+  const reducedMotion = useReducedMotion();
+  const [sniffing, setSniffing] = useState(false);
+
+  useEffect(() => {
+    // Only for a photo: "sniffing" is a metaphor for examining the picture, and doesn't fit a
+    // typed lookup, which never leaves the device (see the doc comment above).
+    if (!hasPhoto || reducedMotion) return;
+    const id = setInterval(() => setSniffing((s) => !s), SNIFF_MS);
+    return () => clearInterval(id);
+  }, [hasPhoto, reducedMotion]);
 
   useEffect(() => {
     if (stage < stageKeys.length - 1) {
@@ -108,6 +133,17 @@ export default function Identifying() {
         <Text variant="title" tone="primary" accessibilityRole="header">
           {t(hasPhoto ? 'identify:title' : 'identify:titleTextOnly')}
         </Text>
+
+        {/* Decorative — the stage list below carries the actual progress information for
+            assistive tech (docs/06 §5), so the mascot stays out of the accessibility tree. */}
+        <View className="items-center">
+          <Mascot
+            species={species}
+            mood={hasPhoto && sniffing ? 'sniff' : 'idle'}
+            pose="peek"
+            size={sizes.mascotIdentifying}
+          />
+        </View>
 
         {hasPhoto ? (
           <View className="aspect-[3/2] w-full overflow-hidden rounded-md bg-surface-sunken">

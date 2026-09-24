@@ -560,3 +560,139 @@ about 300 paid calls a day. When writes fail, the daily cap fails closed.
 **Verified:** `services/api/test/` (hermetic, `fetch` stubbed) covers every acceptance item that
 can be checked in code. I also smoke-tested under `wrangler dev` (workerd): exact match, verdict,
 manifest, no-key `PROVIDER_UNAVAILABLE`, and the kill switch flipped in local KV with no restart.
+
+## D25 — Visual identity: "Bold Ink", chosen from three explored directions
+
+**Decided 2026-09-24.** The user asked for the app's design to become "animated cartoon" style.
+Three genuinely different directions were sketched on a design canvas — a loud, thick-outlined
+cartoon ("Bold Ink"), a soft pastel blob style ("Marshmallow"), and a non-cartoon "Field Guide"
+reference-book alternative — and the user picked Bold Ink. This records what that decision
+actually changed in the shipped app, distinct from the exploration itself.
+
+1. **The colour tokens moved, not the token shape.** `apps/mobile/src/theme/tokens.ts` keeps
+   exactly the same `VerdictTokens`/`ThemeTokens` interfaces docs/06 §1 defines — six keys per
+   verdict, four chrome groups — only the hex values changed. The verdict banner is now a
+   saturated "sticker" colour with dark-ink text ON it (`onBg`/`onAccent` are the same ink colour
+   in both themes), rather than white text on a dark, desaturated banner. This holds in dark mode
+   too — the banner itself stays bright; only the surrounding chrome goes dark — because Bold Ink
+   treats the verdict as a badge, not as chrome that follows the theme. Every pair is still
+   CI-checked at ≥4.5:1 by `scripts/check-contrast.mjs`, and the semantic rules (`unknown` never
+   green, never brighter than `safe`/`caution`) still hold; both were re-verified against the new
+   values, not waived.
+2. **`brand.primary` split into `primary` (fill) and `link` (text).** The vivid toon-blue that
+   works as a button/badge fill with a dark-ink label cannot also pass ≥4.5:1 as text on a light
+   surface — the two constraints pull in opposite directions from the same value (checked
+   numerically, not by eye: no colour satisfies both `contrast(c, white) ≥ 4.5` and
+   `contrast(c, ink) ≥ 4.5` here). `brand.link` is a separate, darker blue for anywhere brand
+   colour is text (`SourceCite`'s arrow, the `quiet` button variant). `scripts/check-contrast.mjs`
+   was updated to check `brand.link` against `surface.base`/`surface.raised` instead of checking
+   `brand.primary` there.
+3. **Two bundled Google Fonts — Lilita One (`display`) and Nunito (everything else) — replace the
+   platform system font**, a deliberate deviation from docs/06 §2's "the platform system font if
+   bundle size matters" allowance: this is a hobby build, and it takes the ~250 KB cost for the
+   identity docs/10 asked for. Loaded via `@expo-google-fonts/*` (bundled TTFs, not fetched — this
+   holds docs/10 §5's "collect nothing" posture and the screenshot script's zero-network-call
+   check) and gated behind the splash screen (`_layout.tsx`) so no screen ever flashes the system
+   font. Each typography role maps to a *specific* font file (`tailwind.config.js`'s `fontFamily`),
+   not a generic family plus a `fontWeight` style — Google Fonts ship one file per weight with its
+   own PostScript name, and React Native does not synthesise weight across separate files the way
+   it can for a system font.
+4. **A dog-and-cat mascot (`components/feedback/Mascot.tsx`) is a real signal, not decoration
+   layered on top of one.** `theme/mascot.ts`'s `VERDICT_MASCOT_MOOD` maps each verdict to a mood
+   (`safe`→happy, `caution`→cautious, `toxic`→worried, `unknown`→confused), so it is a fourth
+   non-colour channel alongside the existing glyph and word (docs/06 §1) — confirmed in the
+   regenerated `docs/screenshots/grayscale/` set, where the mascot's expression is still legible
+   with colour removed. It appears in `VerdictBanner`, `SpeciesToggle` and `identifying.tsx`.
+   Colour literals live in `theme/mascot.ts` (AGENTS.md #7's designated place for them), and the
+   mascot is theme-invariant by design — same fur colours in light and dark, matching how the
+   canvas exploration treated it as illustration ink rather than themed chrome.
+5. **Motion uses `LayoutAnimation` and plain timers, never `react-native-reanimated` — following
+   D23, not reopening it.** D23 found that Reanimated's animated styles did not reliably reach a
+   real device here, with no error and no web reproduction, and this session has no way to check
+   otherwise: `attach`ing the iOS Simulator tool failed outright (this machine has only the Xcode
+   command-line tools, not a full Xcode install), so there is still no device or simulator
+   available to this project's agents. Two mechanisms were used instead, both already proven
+   working in this exact codebase before this decision:
+     - **`SpeciesToggle`'s pill now really slides**, via `LayoutAnimation.configureNext` — the
+       same API `Collapsible`'s expand/collapse already ships on — rather than snapping instantly.
+       This required switching the pill's position from `transform: translateX` to
+       `insetInlineStart` (still a logical property, still CI-checked), because `LayoutAnimation`
+       is documented and cross-platform for actual layout-property changes, not for a `transform`
+       applied outside layout. Critically, `pillOffset`/`pillStart` is still computed directly
+       from `value` on every render, exactly as D23 left it — if the animation request does
+       nothing on some device, the pill still snaps to the correct position. There is no new way
+       for this control to render wrong, only a chance it renders wrong *instantly* instead of
+       *smoothly*, which is strictly the old, safe behaviour.
+     - **`identifying.tsx`'s mascot "sniffs" by swapping between two static moods on a plain
+       `setInterval`/`setState`** — the identical mechanism that file already uses successfully to
+       advance its stage list — rather than through an animation library. `useReducedMotion()`
+       freezes it on `idle` (no interval at all), and the same hook now also gates the toggle's
+       `LayoutAnimation` request (docs/06 §1 Motion).
+     - Neither of these is verified on a real device or simulator. Treat them the way
+       `docs/screenshots/README.md` already treats haptics: implemented correctly in principle,
+       pending a device pass. If a future agent gets a working Simulator or device, verifying
+       these two is the first thing worth doing with it — not reaching for Reanimated again.
+6. **One real, unrelated layout bug found and fixed along the way, not left for later.**
+   Regenerating the `es` + 200% font-scale screenshots (docs/06 §5's own acceptance line) showed
+   Home's "Ajustes"/"Settings" text button overflowing the screen edge — a translated label has no
+   fixed width, and the heavier Nunito Bold face (vs. the thinner system font previously) pushed
+   an already-marginal fit past the edge. Confirmed pre-existing (the old committed screenshot
+   shows the same label touching the edge with no margin), so this decision made a latent bug
+   visible rather than causing it, but it was fixed here rather than logged for a future agent:
+   the text button became an `IconButton` (⚙), a fixed 44×44 target whose size cannot depend on
+   translated string length in the first place — the general fix for this whole bug *class*, not
+   a patch for this one screen. `apps/mobile/src/app/index.tsx`.
+7. **What did not change.** `resolveVerdict()` and every KB entry, unchanged (AGENTS.md #1, #5) —
+   this is presentation only. The verdict glyphs (`✓ ! ⚠ ?`) are unchanged: `verdict.test.ts`
+   already asserts their distinctness and it was cheaper to keep them than to re-justify new ones.
+   No app icon or splash *artwork* was redrawn — only the splash/adaptive-icon background colour
+   moved to the new cream (`app.json`) — redrawing the actual icon/splash images needs real image
+   tooling this environment does not have; the existing placeholder art now sits on the new
+   background colour, which is a visible seam worth a follow-up, not a blocker.
+
+**Verified:** `pnpm -r typecheck`, `pnpm lint`, `pnpm -r test`, `scripts/check-contrast.mjs`,
+`scripts/check-ui-hygiene.sh`, `scripts/check-safe-claims.sh` all pass. `pnpm --filter mobile
+run build` (the production web export) and a full `pnpm screenshots` run both succeed; the
+regenerated light/dark/grayscale/`es`-200% sets are the evidence for this decision, not an
+assertion — including the Home fix above, which the `es`-200% set caught directly. One real bug
+was caught this way and is not a residual risk: `Mascot`'s accessibility props were originally set
+on the `Svg` element itself, which `react-native-svg`'s web implementation forwards straight to
+the DOM `<svg>` tag — surfaced as a live "React does not recognize the `…` prop" warning in the
+actual web export (not by typecheck, which cannot see this), fixed by moving them to a wrapping
+`View`, which supports all of them natively on every platform including web.
+
+### D25 addendum — verified on a real iOS Simulator (2026-09-24)
+
+The user installed a full Xcode after D25 was written, which removed the blocker its motion
+section described. A pass on a booted iPhone 17 Simulator (iOS 27, via Expo Go, not a standalone
+build) found:
+
+- **Confirmed working on-device:** the cream/ink palette and saturated verdict banners, both
+  fonts (Lilita One is visibly distinct from Nunito on the actual `display`-variant text — "Toxic"
+  vs. "Grapes and raisins" on the same screen — not just in the web screenshots), the mascot in
+  the banner and the species toggle, and `SpeciesToggle`'s `LayoutAnimation` slide reaching the
+  correct end state (species really changes, pill really moves, colours really swap). The
+  scanning/sniff mascot and dark mode were not independently re-checked this pass (dark mode
+  needs the in-app Settings toggle, not the simulator's system appearance, which this Expo-Go
+  session did not pick up live) — no reason to expect them to differ from what light mode and
+  everything else already confirmed, since none of it is platform- or theme-conditional code.
+- **One real bug found and fixed, not the one first suspected.** The Home header's icon looked
+  wrong on-device (a filled blue circle around it) in a way the web screenshots never showed.
+  Investigating, the actual cause was **not** the app: Expo Go draws its own on-screen dev-menu
+  launcher (a stand-in for the shake gesture, which a simulator can't perform) in the same top-right
+  corner, and it was sitting on top of the real button — confirmed by tapping it and getting the
+  Expo dev menu, not `/settings`. It is dev-tooling chrome that cannot appear in a real build.
+  That said, the ⚙ Unicode glyph originally used there was independently worth replacing:
+  characters like it get a default *colour emoji* presentation on some platforms, which is a
+  real, separate risk this pass couldn't fully rule in or out for the actual gear glyph itself.
+  It is now `SettingsIcon` (`components/primitives/icons.tsx`), a drawn `react-native-svg` icon
+  matching the design canvas's own settings glyph, colour resolved from `tokens` — the same
+  concrete-colour-string pattern `Mascot`/`SpeciesToggle` already use, since NativeWind has no
+  `cssInterop` registration for `react-native-svg` elements in this project. `IconButton` gained
+  an `icon` prop alongside its existing `glyph` prop so this is reusable for any future icon that
+  isn't safe as plain text.
+- **Not re-checked:** whether the pre-existing verdict glyphs (`✓ ! ⚠ ?`, predating this session)
+  render as plain text or as colour emoji on real iOS — `⚠` in particular is in the same
+  Unicode category as `⚙`. Worth a look if this comes up again, but out of scope to change
+  unprompted: those glyphs are asserted for distinctness in `verdict.test.ts` and used throughout
+  the KB/result rendering, unlike the Home settings icon, which had exactly one call site.

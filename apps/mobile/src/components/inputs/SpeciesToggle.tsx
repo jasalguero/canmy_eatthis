@@ -2,38 +2,65 @@ import type { Species } from '@canmyeatthis/shared';
 import * as Haptics from 'expo-haptics';
 import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { type LayoutChangeEvent, Pressable, View } from 'react-native';
+import {
+  LayoutAnimation,
+  type LayoutChangeEvent,
+  Platform,
+  Pressable,
+  UIManager,
+  View,
+} from 'react-native';
+import { useReducedMotion } from 'react-native-reanimated';
 
+import { Mascot } from '@/components/feedback';
 import { Text } from '@/components/primitives';
 import { useTheme } from '@/theme/ThemeProvider';
-import { radius, sizes, tokens } from '@/theme/tokens';
+import { motion, radius, sizes, tokens } from '@/theme/tokens';
+
+// Android needs this opted into explicitly, same as `Collapsible` — without it LayoutAnimation
+// is a silent no-op there rather than an instant jump, which would look identical to before this
+// change and defeat the point of adding it.
+if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
+  UIManager.setLayoutAnimationEnabledExperimental(true);
+}
 
 /**
  * Signature interaction #1 (docs/06 §2): a sliding pill between Dog and Cat, with a light haptic
- * on change. It is the first thing anyone touches, and the answer genuinely depends on it — the
- * KB is authored per species (AGENTS.md #8), so this is a safety control as much as a piece of
- * chrome.
+ * on change and a mascot face in each segment (docs/02-tech-decisions.md D25). It is the first
+ * thing anyone touches, and the answer genuinely depends on it — the KB is authored per species
+ * (AGENTS.md #8), so this is a safety control as much as a piece of chrome.
  *
- * **Not animated, on purpose (docs/02-tech-decisions.md D23).** This was originally a
- * `react-native-reanimated`-driven spring slide. On a real device (iPhone, Expo Go, SDK 57) the
- * pill rendered with no colour and no position update at all — confirmed, via an on-device debug
- * readout, that `useAnimatedStyle`'s computed values (`halfWidth`, the resolved brand colour)
- * were correct in JS the whole time; they just never reached the native view. No error, no
- * warning, nothing reproducible on web or in a unit test. Rather than keep guessing at a
- * Reanimated/Fabric interop issue with no device to debug it on, the pill's position and colour
- * are now driven by a plain `View` and ordinary React state — which cannot fail this way,
- * because it doesn't go through Reanimated's UI-thread pipeline at all. The cost is the slide is
- * an instant snap instead of a spring; the benefit is the control cannot render invisibly.
+ * **The slide is `LayoutAnimation`, not `react-native-reanimated` (docs/02 D25, following D23).**
+ * D23 found that Reanimated's animated styles did not reliably reach a real device here, with no
+ * error and no reproduction on web — the pill rendered with no colour and no position at all.
+ * `LayoutAnimation` is a different mechanism (it wraps the next native prop commit in a platform
+ * animation, rather than driving styles through Reanimated's own worklet/UI-thread pipeline),
+ * and it is already proven working in this exact codebase (`Collapsible`'s expand/collapse
+ * ships on it). Critically, it keeps D23's safety property: `pillOffset` below is still computed
+ * directly from `value` on every render and applied as an ordinary style, so if the animation
+ * request does nothing on some device, the pill still SNAPS to the correct position — the exact
+ * pre-D25 behaviour — rather than rendering wrong or invisible. Requesting the animation is pure
+ * upside; there is no new way for this control to fail.
+ *
+ * Still **implemented, not yet verified on a real device or simulator** — this environment has no
+ * full Xcode install (only the command-line tools), so there is no way to confirm the slide is
+ * visible rather than merely requested. Treat it the same way `docs/screenshots/README.md`
+ * already treats haptics: correct in principle, pending a device pass.
  *
  * Implementation notes still worth keeping:
- *  - The pill moves with `translateX`, never `left`/`right`: docs/06 §2 mandates logical layout
- *    properties and there is a CI grep for it. The travel distance is measured from the track
- *    rather than expressed as a percentage — React Native resolves a percentage width on an
- *    absolutely positioned child against the parent's padding box, which does not line up with
- *    the padded halves the labels actually occupy, and the pill ends up overhanging by the
+ *  - The pill moves via `insetInlineStart`, never `left`/`right` (docs/06 §2, CI-checked) —
+ *    and never `transform: translateX` either, now: `LayoutAnimation` is documented and reliably
+ *    cross-platform for changes to actual layout properties (`insetInlineStart`, `width`, …), not
+ *    for a `transform` set outside layout, so the switch to `insetInlineStart` is what makes the
+ *    animation request meaningful, not just present. The travel distance is measured from the
+ *    track rather than expressed as a percentage — React Native resolves a percentage width on
+ *    an absolutely positioned child against the parent's padding box, which does not line up
+ *    with the padded halves the labels actually occupy, and the pill ends up overhanging by the
  *    padding. Measuring is a few lines and is exact.
  *  - The two options are `radio`s inside a `radiogroup`, which is what gives a screen reader the
  *    "1 of 2" context; a pair of buttons would not.
+ *  - `useReducedMotion()` (docs/06 §1 Motion) skips the animation request, not the state change —
+ *    the pill still moves, instantly, exactly as it did before D25.
  */
 export interface SpeciesToggleProps {
   value: Species;
@@ -49,6 +76,7 @@ const TRACK_PADDING = 4;
 export function SpeciesToggle({ value, onChange, className }: SpeciesToggleProps) {
   const { t } = useTranslation();
   const { theme } = useTheme();
+  const reducedMotion = useReducedMotion();
   /** Width of one half of the track's content box — the pill's travel distance. */
   const [halfWidth, setHalfWidth] = useState(0);
 
@@ -60,14 +88,20 @@ export function SpeciesToggle({ value, onChange, className }: SpeciesToggleProps
   const select = useCallback(
     (species: Species) => {
       if (species === value) return;
+      if (!reducedMotion) {
+        LayoutAnimation.configureNext({
+          duration: motion.durationBase,
+          update: { type: LayoutAnimation.Types.spring, springDamping: 0.7 },
+        });
+      }
       // Light impact: a confirmation of a deliberate tap, not an alert.
       void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
       onChange(species);
     },
-    [value, onChange],
+    [value, onChange, reducedMotion],
   );
 
-  const pillOffset = value === 'dog' ? 0 : halfWidth;
+  const pillStart = TRACK_PADDING + (value === 'dog' ? 0 : halfWidth);
 
   return (
     <View
@@ -88,9 +122,8 @@ export function SpeciesToggle({ value, onChange, className }: SpeciesToggleProps
           position: 'absolute',
           top: TRACK_PADDING,
           bottom: TRACK_PADDING,
-          insetInlineStart: TRACK_PADDING,
+          insetInlineStart: pillStart,
           width: halfWidth,
-          transform: [{ translateX: pillOffset }],
           backgroundColor: tokens[theme].brand.primary,
           borderRadius: radius.full,
         }}
@@ -105,8 +138,9 @@ export function SpeciesToggle({ value, onChange, className }: SpeciesToggleProps
             accessibilityLabel={t(`common:species_${species}`)}
             onPress={() => select(species)}
             style={{ minHeight: sizes.touchTarget - 8 }}
-            className="flex-1 items-center justify-center rounded-full px-3"
+            className="flex-1 flex-row items-center justify-center gap-2 rounded-full px-3"
           >
+            <Mascot species={species} pose="head" size={sizes.mascotToggle} />
             <Text
               variant="label"
               className={selected ? 'text-brand-on-primary' : 'text-ink-secondary'}

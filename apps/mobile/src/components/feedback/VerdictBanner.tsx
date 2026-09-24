@@ -6,14 +6,17 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Text } from '@/components/primitives';
 import { useTheme } from '@/theme/ThemeProvider';
-import { tokens } from '@/theme/tokens';
+import { VERDICT_MASCOT_MOOD } from '@/theme/mascot';
+import { sizes, tokens } from '@/theme/tokens';
 import { VERDICT_CLASSES, VERDICT_GLYPH, verdictWordKey } from '@/theme/verdict';
+import { Mascot } from './Mascot';
 
 /**
- * The app's signature moment (docs/06 §2.3): the full-bleed verdict colour, glyph and word.
- * Full-bleed to the top edge (docs/06 §4) — the screen that renders it opts out of the top
- * safe-area inset, so this component reserves it itself via `useSafeAreaInsets` rather than a
- * fixed `pt-*` class, which would sit under the status bar/notch on any device with one.
+ * The app's signature moment (docs/06 §2.3): the full-bleed verdict colour, glyph, word — and,
+ * since docs/02-tech-decisions.md D25, the mascot in the mood the verdict maps to. Full-bleed to
+ * the top edge (docs/06 §4) — the screen that renders it opts out of the top safe-area inset, so
+ * this component reserves it itself via `useSafeAreaInsets` rather than a fixed `pt-*` class,
+ * which would sit under the status bar/notch on any device with one.
  *
  * Three things here are safety requirements rather than polish:
  *
@@ -21,22 +24,20 @@ import { VERDICT_CLASSES, VERDICT_GLYPH, verdictWordKey } from '@/theme/verdict'
  *    the first element in the tree, so VoiceOver and TalkBack lead with the answer rather than
  *    with the item name (docs/06 §5).
  *  - **Colour is never the only signal.** The glyph and the word are both present at every size;
- *    in grayscale the four verdicts stay distinguishable by `✓ ! ⚠ ?` and by their wording.
- *  - **Nothing here is fixed-height.** Spanish runs 20–30% longer than English and the worst
- *    case for the whole app is `es` at 200% font scale landing on this banner (docs/06 §2) — the
- *    glyph and word sit on one row but that row wraps (`flex-wrap`) rather than being forced
- *    onto a single un-breakable line, and the item name below still wraps freely.
+ *    in grayscale the four verdicts stay distinguishable by `✓ ! ⚠ ?` and by their wording. The
+ *    mascot's mood is a FOURTH signal in the same spirit (worried only ever backs `toxic`), never
+ *    a substitute for the other three.
+ *  - **Nothing here is fixed-height, and the mascot cannot cause a truncation.** Spanish runs
+ *    20–30% longer than English and the worst case for the whole app is `es` at 200% font scale
+ *    landing on this banner (docs/06 §2). The text column is `flex-1` and the mascot sits beside
+ *    it at a fixed size, rather than absolutely positioned over the text — so a long translation
+ *    pushes the mascot down as the row wraps, and never sits underneath it.
  *
- * **Not animated (docs/02-tech-decisions.md D23).** This originally washed in its colour and
- * sprang its glyph via `react-native-reanimated`. On a real device that pipeline did not reach
- * the native view at all — confirmed first in `SpeciesToggle` (same library, same symptom: an
- * on-device debug readout showed every computed value correct in JS, nothing applied on
- * screen), then confirmed here directly: the banner rendered with no colour at all. This is the
- * single highest-stakes colour in the app (AGENTS.md #2 — a verdict must never read as
- * ambiguous, let alone blank), so it gets a plain `View` and no animation library at all, the
- * same fix as `SpeciesToggle`. The reveal haptic (fired by the caller, `result.tsx`) and the
- * accessibility announcement below are unaffected — only the visual wash-in and glyph spring
- * are gone.
+ * **The background colour is a plain, unconditional `View` style (docs/02 D23), and this
+ * component adds nothing that touches it.** D23 found that a `react-native-reanimated`-driven
+ * wash-in did not reach a real device at all — the banner rendered with no colour, the single
+ * highest-stakes failure this app can have (AGENTS.md #2). The mascot below is pure addition:
+ * static, decorative, and irrelevant to whether the banner itself renders correctly.
  */
 export interface VerdictBannerProps {
   verdict: Verdict;
@@ -83,37 +84,42 @@ export function VerdictBanner({
       style={{ backgroundColor: tokens[theme].verdict[verdict].bg, paddingTop: insets.top + 24 }}
       className="w-full px-5 pb-6"
     >
-      <View
-        // One accessibility node, read in one breath, verdict word first.
-        accessible
-        accessibilityRole="header"
-        accessibilityLiveRegion="assertive"
-        accessibilityLabel={t('result:a11yVerdictAnnouncement', {
-          verdictWord,
-          item: itemName,
-          species,
-        })}
-        className="gap-1"
-      >
-        <View className="flex-row flex-wrap items-center gap-2">
-          <Text
-            variant="display"
-            className={classes.onBgText}
-            accessibilityElementsHidden
-            importantForAccessibility="no-hide-descendants"
-          >
-            {VERDICT_GLYPH[verdict]}
+      <View className="flex-row flex-wrap items-start justify-between gap-3">
+        <View
+          // One accessibility node, read in one breath, verdict word first.
+          accessible
+          accessibilityRole="header"
+          accessibilityLiveRegion="assertive"
+          accessibilityLabel={t('result:a11yVerdictAnnouncement', {
+            verdictWord,
+            item: itemName,
+            species,
+          })}
+          className="min-w-0 flex-1 gap-1"
+        >
+          <View className="flex-row flex-wrap items-center gap-2">
+            <Text
+              variant="display"
+              className={classes.onBgText}
+              accessibilityElementsHidden
+              importantForAccessibility="no-hide-descendants"
+            >
+              {VERDICT_GLYPH[verdict]}
+            </Text>
+            <Text variant="display" className={classes.onBgText}>
+              {verdictWord}
+            </Text>
+          </View>
+          <Text variant="title" className={classes.onBgText}>
+            {itemName}
           </Text>
-          <Text variant="display" className={classes.onBgText}>
-            {verdictWord}
+          <Text variant="body" className={`${classes.onBgText} opacity-80`}>
+            {subject}
           </Text>
         </View>
-        <Text variant="title" className={classes.onBgText}>
-          {itemName}
-        </Text>
-        <Text variant="body" className={`${classes.onBgText} opacity-80`}>
-          {subject}
-        </Text>
+        {/* Decorative — the mood is a real signal (see doc comment) but never the only one, and
+            the glyph/word above already carry it for assistive tech. */}
+        <Mascot species={species} mood={VERDICT_MASCOT_MOOD[verdict]} size={sizes.mascotBanner} />
       </View>
     </View>
   );

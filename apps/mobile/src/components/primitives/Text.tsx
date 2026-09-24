@@ -16,13 +16,18 @@ export type TextTone = 'primary' | 'secondary' | 'tertiary' | 'inverse';
 
 // The prop is `variant`, not `role`: React Native already has a `role` prop (the ARIA one), and
 // shadowing it would mean a component could never set an accessibility role on its own text.
+//
+// Each entry pairs a size class (`text-<role>`, from `fontSize` in tailwind.config.js) with a
+// family class (`font-<role>`) — Bold Ink (docs/02 D25) gives every role its own font FILE
+// (Lilita One for `display`, a specific Nunito weight otherwise), so the two always travel
+// together and there is no separate `fontWeight` to set.
 const VARIANT_CLASS: Record<TypeRole, string> = {
-  display: 'text-display',
-  title: 'text-title',
-  headline: 'text-headline',
-  body: 'text-body',
-  label: 'text-label',
-  caption: 'text-caption',
+  display: 'text-display font-display',
+  title: 'text-title font-title',
+  headline: 'text-headline font-headline',
+  body: 'text-body font-body',
+  label: 'text-label font-label',
+  caption: 'text-caption font-caption',
 };
 
 const TONE_CLASS: Record<TextTone, string> = {

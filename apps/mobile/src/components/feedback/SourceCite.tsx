@@ -52,8 +52,10 @@ export function SourceCite({ source, itemName, verdict, species, className }: So
     >
       <Text variant="body" tone="primary">
         {sentence}
-        {/* The arrow is part of the visual sentence but already implied by the link role. */}
-        <Text variant="body" className="text-brand-primary">
+        {/* The arrow is part of the visual sentence but already implied by the link role.
+            `brand-link`, not `brand-primary`: this renders as text, and `primary` is a fill-only
+            colour under Bold Ink (docs/02 D25) — see tokens.ts's doc comment on `brand.link`. */}
+        <Text variant="body" className="text-brand-link">
           {' →'}
         </Text>
       </Text>

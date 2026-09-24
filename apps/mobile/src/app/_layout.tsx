@@ -1,6 +1,7 @@
 import '../../global.css';
 
 import { Stack } from 'expo-router';
+import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect, useMemo } from 'react';
 import { I18nextProvider } from 'react-i18next';
@@ -9,6 +10,13 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { initI18n } from '@/i18n';
 import { useSettingsStore } from '@/lib/settings';
 import { ThemeProvider, useTheme } from '@/theme/ThemeProvider';
+import { useAppFonts } from '@/theme/fonts';
+
+// Held until Bold Ink's fonts are loaded (below), so the native splash screen — not a flash of
+// the platform system font — is what covers the swap to Lilita One / Nunito (docs/02 D25).
+// Module-level, per Expo's own pattern: it must run once, before the first render, not inside
+// the component (a component body re-runs; a rejected repeat call here is harmless either way).
+void SplashScreen.preventAutoHideAsync();
 
 /**
  * Root layout. Composition order matters:
@@ -17,6 +25,20 @@ import { ThemeProvider, useTheme } from '@/theme/ThemeProvider';
  *   ThemeProvider     — design-token CSS variables for the active light/dark theme
  */
 function RootLayout() {
+  const fontsLoaded = useAppFonts();
+
+  useEffect(() => {
+    if (fontsLoaded) void SplashScreen.hideAsync();
+  }, [fontsLoaded]);
+
+  // Keep the native splash on screen rather than rendering a frame in the system font — this is
+  // the ONE render this app skips on a technicality, not a pattern to reach for elsewhere.
+  if (!fontsLoaded) return null;
+
+  return <ThemedRootLayout />;
+}
+
+function ThemedRootLayout() {
   // Settings (language + region) are persisted independently and each defaults from the
   // device on first launch — docs/07-implementation-plan.md Phase 0, AGENTS.md #12.
   const language = useSettingsStore((state) => state.language);
