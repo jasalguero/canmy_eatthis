@@ -26,5 +26,7 @@
   "emergencyCallA11yHint": "Abre los teléfonos de urgencia de tu región",
   "reportWrongAnswer": "Informar de una respuesta incorrecta",
   "checkSomethingElse": "Comprobar otra cosa",
-  "a11yVerdictAnnouncement": "{verdictWord}. {item} {species, select, dog {para perros} other {para gatos}}."
+  "a11yVerdictAnnouncement": "{verdictWord}. {item} {species, select, dog {para perros} other {para gatos}}.",
+  "reportEmailSubject": "Respuesta incorrecta: {item} ({species, select, cat {gato} other {perro}})",
+  "reportEmailBody": "¿Qué está mal en esta respuesta?\n\n\n\n---\nPor favor, conserva las líneas de abajo. Nos ayudan a encontrar la entrada.\nProducto o sustancia: {item}\nRespuesta mostrada: {verdict}\nAnimal: {species, select, cat {gato} other {perro}}\nVersión de la base de conocimiento: {kbVersion}\nVersión de la app: {appVersion}"
 }

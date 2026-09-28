@@ -1,6 +1,6 @@
-import type { Species } from '@canmyeatthis/shared';
+import type { Species, VerdictPayload } from '@canmyeatthis/shared';
 import * as Haptics from 'expo-haptics';
-import { router, useLocalSearchParams } from 'expo-router';
+import { Redirect, router, useLocalSearchParams } from 'expo-router';
 import { type ReactNode, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ScrollView, View } from 'react-native';
@@ -15,12 +15,12 @@ import {
 } from '@/components/feedback';
 import { Collapsible, Section, StickyFooter } from '@/components/layout';
 import { Button, Enter, MotionStill, Text } from '@/components/primitives';
+import { devResultPayload } from '@/lib/devPreview';
 import { useDraftStore } from '@/lib/draft';
 import { openEmergency } from '@/lib/emergency';
+import { canReport, reportWrongAnswer } from '@/lib/report';
 import { useSettingsStore } from '@/lib/settings';
 import { buildRealVerdict, buildUnknownVerdict } from '@/lib/verdict';
-import { MOCK_CASES, findMockCase, mockVerdict } from '@/mock/cases';
-import type { MockLanguage } from '@/mock/kbEntries';
 import { RESULT_STAGGER, VERDICT_MOTION } from '@/theme/motion';
 import { VERDICT_CLASSES } from '@/theme/verdict';
 
@@ -51,8 +51,8 @@ const REVEAL_HAPTIC = {
   toxic: Haptics.NotificationFeedbackType.Error,
 } as const;
 
-export default function Result() {
-  const { t, i18n } = useTranslation();
+export default function ResultRoute() {
+  const { t } = useTranslation();
   const params = useLocalSearchParams<{
     case?: string;
     still?: string;
@@ -62,18 +62,12 @@ export default function Result() {
     query?: string;
   }>();
   const language = useSettingsStore((state) => state.language);
-  const resetDraft = useDraftStore((state) => state.reset);
-  const reducedMotion = useReducedMotion();
-
-  // `still` freezes the entrance animation and the haptic for the gallery and for screenshots.
-  const still = params.still === '1';
   const species: Species = params.species === 'cat' ? 'cat' : 'dog';
   const disclaimer = t('legal:disclaimer');
 
-  // H3: a real on-device resolution (exact or fuzzy match, or a genuine no-match) takes
-  // priority over the mock cases, which stay in place for the `__dev__` gallery's fixed
-  // scenarios (docs/07 Phase 2) — `resolveVerdict()` (AGENTS.md #5) is the same function either
-  // way, called here against the bundled KB instead of the mock entries (`mock/cases.ts`).
+  // A real on-device resolution (exact or fuzzy match, or a genuine no-match), both through
+  // `resolveVerdict()` (AGENTS.md #5). `?case=` is the gallery's fixed scenarios, which only a
+  // development build honours (`lib/devPreview.ts`); anything else has no answer to show.
   const payload = params.kbId
     ? buildRealVerdict({ kbId: params.kbId, species, language, disclaimer })
     : params.unknown === '1'
@@ -85,11 +79,17 @@ export default function Result() {
           headline: t('result:unknownHeadline'),
           summary: t('result:unknownBody'),
         })
-      : mockVerdict(
-          findMockCase(params.case ?? '') ?? MOCK_CASES[0],
-          language as MockLanguage,
-          disclaimer,
-        );
+      : devResultPayload(params.case ?? '', language, disclaimer);
+
+  if (!payload) return <Redirect href="/" />;
+  // `still` freezes the entrance animation and the haptic for the gallery and for screenshots.
+  return <Result payload={payload} still={params.still === '1'} />;
+}
+
+function Result({ payload, still }: { payload: VerdictPayload; still: boolean }) {
+  const { t, i18n } = useTranslation();
+  const resetDraft = useDraftStore((state) => state.reset);
+  const reducedMotion = useReducedMotion();
 
   const classes = VERDICT_CLASSES[payload.verdict];
   const isToxic = payload.verdict === 'toxic';
@@ -235,12 +235,14 @@ export default function Result() {
             {/* Always visible, never collapsed. */}
             <DisclaimerFooter text={payload.disclaimer} />
 
-            <Button
-              label={t('result:reportWrongAnswer')}
-              variant="quiet"
-              onPress={() => router.push('/settings')}
-              className="self-start"
-            />
+            {canReport() ? (
+              <Button
+                label={t('result:reportWrongAnswer')}
+                variant="quiet"
+                onPress={() => reportWrongAnswer(t, payload)}
+                className="self-start"
+              />
+            ) : null}
             <Button
               label={t('result:checkSomethingElse')}
               variant="secondary"

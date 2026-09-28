@@ -107,11 +107,14 @@ function HomeScreen() {
             <View className="flex-row items-center justify-between gap-3">
               <Wordmark species={species} />
               <View className="flex-row gap-2">
-                <IconButton
-                  icon={<HistoryIcon color={tokens[theme].text.secondary} />}
-                  accessibilityLabel={t('home:openHistory')}
-                  onPress={() => router.push('/history')}
-                />
+                {/* Nothing records a check yet, so History is development-only (history.tsx). */}
+                {__DEV__ ? (
+                  <IconButton
+                    icon={<HistoryIcon color={tokens[theme].text.secondary} />}
+                    accessibilityLabel={t('home:openHistory')}
+                    onPress={() => router.push('/history')}
+                  />
+                ) : null}
                 {/* A drawn `SettingsIcon`, not a `⚙` glyph: that character rendered as a solid
                     blue colour-emoji badge on a real iOS Simulator, not the ink-coloured icon
                     this design calls for — see `IconButton`'s doc comment. And an icon, not a

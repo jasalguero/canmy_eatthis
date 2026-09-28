@@ -1,4 +1,4 @@
-import { router } from 'expo-router';
+import { Redirect, router } from 'expo-router';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { TextInput, View } from 'react-native';
@@ -6,9 +6,8 @@ import { TextInput, View } from 'react-native';
 import { EmptyState, VerdictCard } from '@/components/feedback';
 import { ScrollScreen } from '@/components/layout';
 import { Text } from '@/components/primitives';
+import { devHistoryRows } from '@/lib/devPreview';
 import { useSettingsStore } from '@/lib/settings';
-import { MOCK_HISTORY, findMockCase, mockVerdict } from '@/mock/cases';
-import type { MockLanguage } from '@/mock/kbEntries';
 
 /**
  * History (docs/07 Phase 8 owns the real SQLite store; Phase 2 builds the screen).
@@ -19,24 +18,22 @@ import type { MockLanguage } from '@/mock/kbEntries';
  *
  * `?empty=1` renders the empty state, which is a designed screen rather than a blank list
  * (docs/06 §4).
+ *
+ * **Development builds only, for now.** Nothing records a check yet, so a release build would
+ * show either a list that never fills or someone else's made-up history. Home hides its History
+ * icon outside development for the same reason.
  */
-export default function History() {
+export default function HistoryRoute() {
+  if (!__DEV__) return <Redirect href="/" />;
+  return <History />;
+}
+
+function History() {
   const { t } = useTranslation();
   const language = useSettingsStore((state) => state.language);
   const [query, setQuery] = useState('');
 
-  const rows = useMemo(
-    () =>
-      MOCK_HISTORY.map((row) => {
-        const mockCase = findMockCase(row.caseId);
-        if (!mockCase) return null;
-        return {
-          ...row,
-          payload: mockVerdict(mockCase, language as MockLanguage, t('legal:disclaimer')),
-        };
-      }).filter((row): row is NonNullable<typeof row> => row !== null),
-    [language, t],
-  );
+  const rows = useMemo(() => devHistoryRows(language, t('legal:disclaimer')), [language, t]);
 
   const filtered = query.trim()
     ? rows.filter((row) =>

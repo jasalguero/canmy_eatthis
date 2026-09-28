@@ -17,5 +17,7 @@
   "kbVersion": "Base de conocimiento {version}",
   "reportWrongAnswer": "Informar de una respuesta incorrecta",
   "devSection": "Desarrollo",
-  "openGallery": "Galería de componentes"
+  "openGallery": "Galería de componentes",
+  "reportEmailSubject": "Informar de una respuesta incorrecta",
+  "reportEmailBody": "¿Qué consultaste y qué está mal en la respuesta?\n\n\n\n---\nVersión de la base de conocimiento: {kbVersion}\nVersión de la app: {appVersion}"
 }

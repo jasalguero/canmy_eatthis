@@ -26,5 +26,7 @@
   "emergencyCallA11yHint": "Opens the emergency numbers for your region",
   "reportWrongAnswer": "Report a wrong answer",
   "checkSomethingElse": "Check something else",
-  "a11yVerdictAnnouncement": "{verdictWord}. {item} {species, select, dog {for dogs} other {for cats}}."
+  "a11yVerdictAnnouncement": "{verdictWord}. {item} {species, select, dog {for dogs} other {for cats}}.",
+  "reportEmailSubject": "Wrong answer: {item} ({species, select, cat {cat} other {dog}})",
+  "reportEmailBody": "What's wrong with this answer?\n\n\n\n---\nPlease keep the lines below. They help us find the entry.\nItem: {item}\nAnswer shown: {verdict}\nAnimal: {species, select, cat {cat} other {dog}}\nKnowledge base version: {kbVersion}\nApp version: {appVersion}"
 }

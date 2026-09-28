@@ -17,10 +17,10 @@ import {
   useLoop,
   useMotionEnabled,
 } from '@/components/primitives';
+import { devPhotoUri } from '@/lib/devPreview';
 import { useDraftStore } from '@/lib/draft';
 import { features } from '@/lib/features';
 import { resolveOffline } from '@/lib/offlineKb';
-import { MOCK_PHOTO_URI } from '@/mock/photos';
 import { useTheme } from '@/theme/ThemeProvider';
 import { MAGNIFIER_COLORS } from '@/theme/mascot';
 import { type Keyframes, MAGNIFIER, SCAN } from '@/theme/motion';
@@ -82,7 +82,7 @@ export default function Identifying() {
   const stageKeys = hasPhoto ? PHOTO_STAGE_KEYS : TEXT_STAGE_KEYS;
   const description = useDraftStore((state) => state.description);
   const draftPhotos = useDraftStore((state) => state.photos);
-  const previewUri = draftPhotos[0] ?? MOCK_PHOTO_URI;
+  const previewUri = draftPhotos[0] ?? devPhotoUri();
 
   // Only a photo is "sniffed": it's a metaphor for examining the picture, and doesn't fit a
   // typed lookup, which never leaves the device (see the doc comment above).
@@ -142,7 +142,7 @@ export default function Identifying() {
 
         {/* Decorative — the stage list below carries the actual progress information for
             assistive tech (docs/06 §5), so the mascot and the photo stay out of the tree. */}
-        {hasPhoto ? (
+        {hasPhoto && previewUri ? (
           <ScanningPhoto uri={previewUri} species={species} sniffing={motionOn} />
         ) : (
           <View className="items-center">

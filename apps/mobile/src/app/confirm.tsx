@@ -1,4 +1,4 @@
-import type { Candidate, Species } from '@canmyeatthis/shared';
+import type { Alternate, Candidate, Species } from '@canmyeatthis/shared';
 import { Redirect, router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -8,12 +8,11 @@ import { ConfidencePill } from '@/components/feedback';
 import { DescriptionInput } from '@/components/inputs';
 import { ScrollScreen, Section, StickyFooter } from '@/components/layout';
 import { Button, Card, Text } from '@/components/primitives';
+import { devConfirm } from '@/lib/devPreview';
 import { useDraftStore } from '@/lib/draft';
 import { features } from '@/lib/features';
 import { getKbEntry } from '@/lib/offlineKb';
 import { useSettingsStore } from '@/lib/settings';
-import { MOCK_ALTERNATES, MOCK_CANDIDATES, MOCK_PLANT_CANDIDATE } from '@/mock/cases';
-import { MOCK_PHOTO_URI } from '@/mock/photos';
 import { sizes } from '@/theme/tokens';
 
 /**
@@ -31,37 +30,61 @@ import { sizes } from '@/theme/tokens';
  * real on-device candidate, no alternates (the fuzzy resolver returns one match or none — there
  * is nothing else to offer), and no photo, since this only happens for a typed query.
  *
- * Without `kbId` this is the photo path, which exists only in a build with photo identification
- * (`lib/features.ts`, D28) — or in development, where the gallery opens its mock states.
+ * Without `kbId` this is the photo path. Photo identification does not exist yet (D28), so its
+ * candidates are the development mocks from `lib/devPreview.ts`, which a release build never
+ * gets: there, this screen without a real candidate has nothing to confirm and goes Home.
  */
-export default function ConfirmRoute() {
-  const params = useLocalSearchParams<{ kbId?: string }>();
-  if (!params.kbId && !features.photoId && !__DEV__) return <Redirect href="/" />;
-  return <Confirm />;
+interface ConfirmProps {
+  primary: Candidate;
+  alternates: readonly Alternate[];
+  photoUri: string | null;
+  isPlant: boolean;
+  /** Where confirming goes: a real result, or the development mock's. */
+  resultParams: Record<string, string>;
 }
 
-function Confirm() {
-  const { t } = useTranslation();
+export default function ConfirmRoute() {
   const params = useLocalSearchParams<{ plant?: string; kbId?: string; species?: string }>();
-  const isPlant = params.plant === '1';
-  const isReal = Boolean(params.kbId);
   const language = useSettingsStore((state) => state.language);
   const draftPhotos = useDraftStore((state) => state.photos);
+  const isPlant = params.plant === '1';
 
-  const realEntry = params.kbId ? getKbEntry(params.kbId, language) : undefined;
-  const realCandidate: Candidate | null = realEntry
-    ? {
-        id: realEntry.id,
-        label: realEntry.displayName,
-        kbId: realEntry.id,
-        confidence: 0.6,
-        confidenceBand: 'medium',
-      }
-    : null;
+  if (params.kbId) {
+    const entry = getKbEntry(params.kbId, language);
+    if (!entry) return <Redirect href="/" />;
+    const species: Species = params.species === 'cat' ? 'cat' : 'dog';
+    return (
+      <Confirm
+        primary={{
+          id: entry.id,
+          label: entry.displayName,
+          kbId: entry.id,
+          confidence: 0.6,
+          confidenceBand: 'medium',
+        }}
+        alternates={[]}
+        photoUri={null}
+        isPlant={false}
+        resultParams={{ kbId: entry.id, species }}
+      />
+    );
+  }
 
-  const primary: Candidate = realCandidate ?? (isPlant ? MOCK_PLANT_CANDIDATE : MOCK_CANDIDATES[0]);
-  const alternates = isReal || isPlant ? [] : MOCK_ALTERNATES;
-  const photoUri = isReal ? null : (draftPhotos[0] ?? MOCK_PHOTO_URI);
+  const dev = features.photoId || __DEV__ ? devConfirm(isPlant) : null;
+  if (!dev) return <Redirect href="/" />;
+  return (
+    <Confirm
+      primary={dev.primary}
+      alternates={dev.alternates}
+      photoUri={draftPhotos[0] ?? dev.photoUri}
+      isPlant={isPlant}
+      resultParams={{ case: dev.resultCaseId }}
+    />
+  );
+}
+
+function Confirm({ primary, alternates, photoUri, isPlant, resultParams }: ConfirmProps) {
+  const { t } = useTranslation();
 
   const [selected, setSelected] = useState<string>(primary.id);
   const [otherText, setOtherText] = useState('');
@@ -163,17 +186,7 @@ function Confirm() {
         <Button
           label={t('confirm:confirmCta')}
           size="large"
-          onPress={() => {
-            if (isReal && realEntry) {
-              const species: Species = params.species === 'cat' ? 'cat' : 'dog';
-              router.push({ pathname: '/result', params: { kbId: realEntry.id, species } });
-              return;
-            }
-            router.push({
-              pathname: '/result',
-              params: { case: isPlant ? 'toxic-severe-cat' : 'toxic-moderate-dog' },
-            });
-          }}
+          onPress={() => router.push({ pathname: '/result', params: resultParams })}
         />
       </StickyFooter>
     </KeyboardAvoidingView>

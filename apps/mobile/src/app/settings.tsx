@@ -7,8 +7,9 @@ import { ScrollScreen, Section } from '@/components/layout';
 import { Button, Divider, Text } from '@/components/primitives';
 import { SUPPORTED_LANGUAGES, type SupportedLanguage } from '@/i18n/namespaces';
 import { features } from '@/lib/features';
+import { getKbVersion } from '@/lib/offlineKb';
+import { canReport, reportGeneral } from '@/lib/report';
 import { type Appearance, useSettingsStore } from '@/lib/settings';
-import { MOCK_KB_VERSION } from '@/mock/kbEntries';
 import { sizes } from '@/theme/tokens';
 
 /**
@@ -69,6 +70,7 @@ export default function Settings() {
     setAppearance,
     setPhotoIdConsent,
   } = useSettingsStore();
+  const kbVersion = getKbVersion(language);
 
   return (
     <ScrollScreen contentClassName="gap-5 px-4 pb-6 pt-2">
@@ -188,14 +190,16 @@ export default function Settings() {
           {t('settings:version', { version: Constants.expoConfig?.version ?? '0.0.0' })}
         </Text>
         <Text variant="caption" tone="tertiary">
-          {t('settings:kbVersion', { version: MOCK_KB_VERSION.en })}
+          {t('settings:kbVersion', { version: kbVersion })}
         </Text>
-        <Button
-          label={t('settings:reportWrongAnswer')}
-          variant="quiet"
-          onPress={() => router.push('/profile')}
-          className="self-start"
-        />
+        {canReport() ? (
+          <Button
+            label={t('settings:reportWrongAnswer')}
+            variant="quiet"
+            onPress={() => reportGeneral(t, kbVersion)}
+            className="self-start"
+          />
+        ) : null}
       </Section>
 
       {__DEV__ ? (

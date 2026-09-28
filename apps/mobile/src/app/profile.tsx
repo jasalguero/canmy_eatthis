@@ -1,4 +1,5 @@
 import type { Species } from '@canmyeatthis/shared';
+import { Redirect } from 'expo-router';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { TextInput, View } from 'react-native';
@@ -15,8 +16,16 @@ import { Button, Text } from '@/components/primitives';
  * are the highest-expertise feature in the plan and cannot be done unreviewed. Collecting a
  * number the app must then refuse to use would be worse than not asking — so the screen says so
  * out loud rather than leaving a suspicious gap.
+ *
+ * **Development builds only, for now:** nothing is saved or used yet, so a release would offer a
+ * form that does nothing.
  */
-export default function Profile() {
+export default function ProfileRoute() {
+  if (!__DEV__) return <Redirect href="/" />;
+  return <Profile />;
+}
+
+function Profile() {
   const { t } = useTranslation();
   const [name, setName] = useState('');
   const [species, setSpecies] = useState<Species>('dog');

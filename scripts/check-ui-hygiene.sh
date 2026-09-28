@@ -58,10 +58,26 @@ if hits=$(grep -rnE '(^|[^a-zA-Z])(left|right)\s*:' "$SRC" --include='*.tsx' --i
   fi
 fi
 
+echo "Checking that mock data is imported only by the gallery and lib/devPreview.ts..."
+# Mock data must never reach a release build. Only the gallery and lib/devPreview.ts (whose every
+# function returns nothing outside a development build) may import mock/; any other screen that
+# needs a fixed state goes through devPreview. Tests and mock/ itself are exempt.
+if hits=$(grep -rnE "from ['\"](@/mock|(\.\.?/)+mock)/" "$SRC" --include='*.tsx' --include='*.ts' \
+  | grep -v "^$SRC/mock/" \
+  | grep -v "^$SRC/app/gallery.tsx:" \
+  | grep -v "^$SRC/lib/devPreview.ts:" \
+  | grep -vE "\.test\.tsx?:" || true); then
+  if [ -n "$hits" ]; then
+    echo "$hits"
+    echo "  → get the fixed state from src/lib/devPreview.ts instead."
+    fail=1
+  fi
+fi
+
 if [ "$fail" -ne 0 ]; then
   echo ""
   echo "FAIL: UI hygiene check failed."
   exit 1
 fi
 
-echo "OK: no colour literals outside theme/, no default-palette classes, no physical layout properties."
+echo "OK: no colour literals outside theme/, no default-palette classes, no physical layout properties, no mock imports outside the gallery."

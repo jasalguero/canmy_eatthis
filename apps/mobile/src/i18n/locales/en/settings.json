@@ -17,5 +17,7 @@
   "kbVersion": "Knowledge base {version}",
   "reportWrongAnswer": "Report a wrong answer",
   "devSection": "Developer",
-  "openGallery": "Component gallery"
+  "openGallery": "Component gallery",
+  "reportEmailSubject": "Report a wrong answer",
+  "reportEmailBody": "Which item did you check, and what's wrong with the answer?\n\n\n\n---\nKnowledge base version: {kbVersion}\nApp version: {appVersion}"
 }
