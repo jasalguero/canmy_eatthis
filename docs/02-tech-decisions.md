@@ -860,3 +860,33 @@ section should too.
 **Alternatives:** keep the lookup in the Worker (needs the Worker in v1, which D28 defers);
 bundle a product database (Open Food Facts is millions of products, far beyond an app bundle);
 leave barcode out of v1 (declined — it is the fastest way to answer "what's in this?").
+
+## D30 — Hotline registry: bundled, per region, hidden until a person verifies each number
+
+Until now every emergency button dialled a placeholder (`+00000000000`). The registry replaces it.
+
+- **Data and schema in `packages/shared`** (`schemas/hotline.ts`, `hotlines.ts`), so the Worker
+  can serve `GET /v1/hotlines` from the same list later. Bundled, so the emergency path works
+  offline (AGENTS.md #4). Chosen by region, never language (AGENTS.md #12); each entry records
+  the languages it answers in, its cost, and the official page it was taken from.
+- **Every number is `verifiedAt: null`** until a person has dialled it and confirmed it reaches
+  the service and takes calls about pets (docs/03, docs/05 §3). Release builds show only verified
+  lines; development builds show all of them, labelled unverified. Tests check a release build
+  never shows an unverified line, that each displayed number matches the digits dialled, and
+  that every fee is stated in every shipped language.
+- **Candidates, from official pages on 2026-09-28:** ES — Servicio de Información Toxicológica,
+  91 562 04 20 (its animal page urges calling SIT for any animal exposure); GB — Animal
+  PoisonLine, 01202 509000 (£35–£45 per case); US — ASPCA Animal Poison Control Center,
+  (888) 426-4435 (fee may apply), and Pet Poison Helpline, (855) 764-7661 ($89 per incident).
+- **No line for MX or AR, deliberately.** Mexico has no single national line. Argentina's Centro
+  Nacional de Intoxicaciones (0800-333-0160) is confirmed as 24 h and free, but its official page
+  does not say it takes calls about animals. Those regions get their own vet and the maps search.
+- **The US lines are not offered outside the US.** docs/05 §3 lists them as international
+  fallbacks, but they are US toll-free numbers, which generally cannot be dialled from abroad.
+- **The emergency button opens an emergency screen instead of dialling one number:** the user's
+  own vet first (docs/05 §3), then the region's lines with cost, hours and languages, then an
+  emergency-vet search in the maps app (the only part that needs a connection). A single `tel:`
+  could neither put the user's vet first nor say that a region has no checked line.
+
+**Before release:** dial each number, confirm it reaches the named service and takes pet cases,
+and set `verifiedAt`. Repeat before every release.

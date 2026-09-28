@@ -137,10 +137,3 @@ export const MOCK_HISTORY: readonly MockHistoryRow[] = [
   { id: 'h3', caseId: 'unknown-cat', checkedAt: new Date('2026-09-19T08:40:00Z') },
   { id: 'h4', caseId: 'toxic-severe-cat', checkedAt: new Date('2026-09-17T23:11:00Z') },
 ];
-
-/**
- * A placeholder hotline number for the emergency button. The real registry is region-aware and
- * human-verified in H5 (docs/07 Phase 7) — this is deliberately an obvious non-number so that a
- * mock can never be mistaken for a dialable one.
- */
-export const MOCK_HOTLINE = '+00000000000';

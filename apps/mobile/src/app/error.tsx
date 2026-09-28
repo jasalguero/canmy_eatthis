@@ -3,6 +3,7 @@ import { router, useLocalSearchParams } from 'expo-router';
 
 import { ErrorState, type ErrorStateCode } from '@/components/feedback';
 import { Screen } from '@/components/layout';
+import { openEmergency } from '@/lib/emergency';
 
 /**
  * The error and offline screens (docs/06 §4: "Designed, not default").
@@ -27,7 +28,7 @@ export default function ErrorScreen() {
         code={code}
         onRetry={() => router.back()}
         onTypeInstead={() => router.dismissTo('/')}
-        onHotlines={() => router.dismissTo('/')}
+        onHotlines={openEmergency}
       />
     </Screen>
   );

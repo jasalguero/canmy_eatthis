@@ -16,9 +16,10 @@ import {
 import { Collapsible, Section, StickyFooter } from '@/components/layout';
 import { Button, Enter, MotionStill, Text } from '@/components/primitives';
 import { useDraftStore } from '@/lib/draft';
+import { openEmergency } from '@/lib/emergency';
 import { useSettingsStore } from '@/lib/settings';
 import { buildRealVerdict, buildUnknownVerdict } from '@/lib/verdict';
-import { MOCK_CASES, MOCK_HOTLINE, findMockCase, mockVerdict } from '@/mock/cases';
+import { MOCK_CASES, findMockCase, mockVerdict } from '@/mock/cases';
 import type { MockLanguage } from '@/mock/kbEntries';
 import { RESULT_STAGGER, VERDICT_MOTION } from '@/theme/motion';
 import { VERDICT_CLASSES } from '@/theme/verdict';
@@ -160,7 +161,7 @@ export default function Result() {
             ) : null}
 
             {/* Severe: the action is reachable without scrolling. */}
-            {isSevere ? <EmergencyCallButton phoneNumber={MOCK_HOTLINE} /> : null}
+            {isSevere ? <EmergencyCallButton onPress={openEmergency} /> : null}
 
             {isToxic ? (
               // Locked open, with no toggle at all — docs/06 §4.
@@ -255,7 +256,7 @@ export default function Result() {
       {/* Toxic: sticky, so it is the last focusable element however long the page is. */}
       {isToxic ? (
         <StickyFooter>
-          <EmergencyCallButton phoneNumber={MOCK_HOTLINE} />
+          <EmergencyCallButton onPress={openEmergency} />
         </StickyFooter>
       ) : null}
     </MotionStill>

@@ -1,5 +1,5 @@
 import { I18nextProvider } from 'react-i18next';
-import { Animated, Linking, Platform, StyleSheet } from 'react-native';
+import { Animated, Platform, StyleSheet } from 'react-native';
 import { useReducedMotion } from 'react-native-reanimated';
 import { type ReactTestInstance, type ReactTestRenderer, act, create } from 'react-test-renderer';
 
@@ -25,7 +25,7 @@ jest.mock('react-native-safe-area-context', () => ({
 }));
 const mockReducedMotion = useReducedMotion as jest.Mock;
 
-const HOTLINE = '+18884264435';
+const openEmergency = jest.fn();
 const i18n = initI18n('en');
 
 function renderEmergencyPath(): ReactTestRenderer {
@@ -35,7 +35,7 @@ function renderEmergencyPath(): ReactTestRenderer {
       <I18nextProvider i18n={i18n}>
         <ThemeProvider theme="dark">
           <VerdictBanner verdict="toxic" itemName="Grapes and raisins" species="dog" />
-          <EmergencyCallButton phoneNumber={HOTLINE} />
+          <EmergencyCallButton onPress={openEmergency} />
         </ThemeProvider>
       </I18nextProvider>,
     );
@@ -93,7 +93,7 @@ describe.each([
     // The JS driver: a test renderer never sees values the native driver moves.
     jest.replaceProperty(Platform, 'OS', 'web');
     mockReducedMotion.mockReturnValue(reduced);
-    jest.spyOn(Linking, 'openURL').mockResolvedValue(true);
+    openEmergency.mockClear();
     if (stuck) animationsNeverRun();
   });
   afterEach(() => {
@@ -106,7 +106,7 @@ describe.each([
     expect(textNode(tree, 'Toxic')).toBeTruthy();
     expect(textNode(tree, 'Call a vet now')).toBeTruthy();
     pressCallButton(tree);
-    expect(Linking.openURL).toHaveBeenCalledWith(`tel:${HOTLINE}`);
+    expect(openEmergency).toHaveBeenCalledTimes(1);
   });
 
   it('leaves the verdict fully visible and in place once the reveal is over', () => {

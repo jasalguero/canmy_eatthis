@@ -27,8 +27,9 @@ import {
   Skeleton,
   Text,
 } from '@/components/primitives';
+import { openEmergency } from '@/lib/emergency';
 import { useSettingsStore } from '@/lib/settings';
-import { MOCK_CASES, MOCK_HOTLINE, mockVerdict } from '@/mock/cases';
+import { MOCK_CASES, mockVerdict } from '@/mock/cases';
 import type { MockLanguage } from '@/mock/kbEntries';
 import { MOCK_PHOTO_URI } from '@/mock/photos';
 import { ThemeProvider } from '@/theme/ThemeProvider';
@@ -261,7 +262,7 @@ export default function Gallery() {
           <ConfidencePill band="medium" />
           <ConfidencePill band="low" />
         </View>
-        <EmergencyCallButton phoneNumber={MOCK_HOTLINE} />
+        <EmergencyCallButton onPress={openEmergency} />
         <DisclaimerFooter />
         <EmptyState
           title={t('history:emptyTitle')}

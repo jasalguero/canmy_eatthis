@@ -1,0 +1,22 @@
+{
+  "title": "Get help now",
+  "intro": "If your pet may have eaten something harmful, call for help now. Don't wait for signs.",
+  "ownVetTitle": "Your own vet",
+  "ownVetBody": "Usually the fastest option, and free. Out of hours, their phone line often gives an emergency number.",
+  "regionTitle": "Poison lines for region {region}",
+  "noneForRegion": "We don't have a checked poison line for this region yet. Call your own vet, or find an emergency vet below.",
+  "callA11y": "Call {name}, {number}",
+  "cost_free": "Free call",
+  "cost_standard_rate": "Standard call rate",
+  "fee_animal_poisonline_gb": "£35 to £45 per case, paid by card when you call",
+  "fee_aspca_apcc_us": "A consultation fee may apply",
+  "fee_pet_poison_helpline_us": "$89 per incident",
+  "hours24": "Open 24 hours",
+  "languages": "Answers in {languages}",
+  "language_en": "English",
+  "language_es": "Spanish",
+  "unverified": "Not verified yet. Shown in development builds only.",
+  "findVet": "Find an emergency vet near me",
+  "findVetQuery": "emergency vet",
+  "changeRegion": "Wrong region? Change it in Settings."
+}

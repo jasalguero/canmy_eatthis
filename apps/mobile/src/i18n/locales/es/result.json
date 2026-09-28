@@ -23,7 +23,7 @@
   "noSignsListed": "No hay síntomas concretos descritos para este caso.",
   "kbVersion": "Base de conocimiento {version}",
   "emergencyCall": "Llamar a un veterinario",
-  "emergencyCallA11yHint": "Abre el teléfono con una línea veterinaria de urgencias",
+  "emergencyCallA11yHint": "Abre los teléfonos de urgencia de tu región",
   "reportWrongAnswer": "Informar de una respuesta incorrecta",
   "checkSomethingElse": "Comprobar otra cosa",
   "a11yVerdictAnnouncement": "{verdictWord}. {item} {species, select, dog {para perros} other {para gatos}}."

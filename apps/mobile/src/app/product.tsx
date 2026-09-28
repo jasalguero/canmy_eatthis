@@ -9,9 +9,9 @@ import { Collapsible, ScrollScreen, Section, StickyFooter } from '@/components/l
 import { Button, Text } from '@/components/primitives';
 import { type ProductLookup, lookupProduct } from '@/lib/barcode';
 import { useDraftStore } from '@/lib/draft';
+import { openEmergency } from '@/lib/emergency';
 import { useSettingsStore } from '@/lib/settings';
 import { buildRealVerdict } from '@/lib/verdict';
-import { MOCK_HOTLINE } from '@/mock/cases';
 import { sizes } from '@/theme/tokens';
 
 /**
@@ -192,7 +192,7 @@ export default function Product() {
       {/* A toxic ingredient puts the call one tap away, as on the result screen (AGENTS.md #4). */}
       {hasToxic ? (
         <StickyFooter>
-          <EmergencyCallButton phoneNumber={MOCK_HOTLINE} />
+          <EmergencyCallButton onPress={openEmergency} />
         </StickyFooter>
       ) : null}
     </>

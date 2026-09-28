@@ -1,0 +1,22 @@
+{
+  "title": "Pide ayuda ya",
+  "intro": "Si tu mascota puede haber comido algo dañino, pide ayuda ya. No esperes a que aparezcan signos.",
+  "ownVetTitle": "Tu veterinario",
+  "ownVetBody": "Suele ser la opción más rápida, y es gratis. Fuera de horario, su teléfono suele indicar un número de urgencias.",
+  "regionTitle": "Teléfonos de intoxicaciones para la región {region}",
+  "noneForRegion": "Todavía no tenemos un teléfono de intoxicaciones comprobado para esta región. Llama a tu veterinario o busca un veterinario de urgencias aquí abajo.",
+  "callA11y": "Llamar a {name}, {number}",
+  "cost_free": "Llamada gratuita",
+  "cost_standard_rate": "Tarifa normal de llamada",
+  "fee_animal_poisonline_gb": "De 35 £ a 45 £ por caso, con tarjeta al llamar",
+  "fee_aspca_apcc_us": "Puede cobrarse una tarifa por consulta",
+  "fee_pet_poison_helpline_us": "89 $ por incidente",
+  "hours24": "Abierto 24 horas",
+  "languages": "Atiende en {languages}",
+  "language_en": "inglés",
+  "language_es": "español",
+  "unverified": "Aún sin verificar. Solo se muestra en versiones de desarrollo.",
+  "findVet": "Buscar un veterinario de urgencias cerca",
+  "findVetQuery": "veterinario de urgencias",
+  "changeRegion": "¿No es tu región? Cámbiala en Ajustes."
+}

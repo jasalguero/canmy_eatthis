@@ -1,6 +1,7 @@
 export * from './schemas/index.js';
 export { normalise } from './normalise.js';
 export { resolveVerdict } from './resolveVerdict.js';
+export { HOTLINES, hotlinesForRegion } from './hotlines.js';
 export {
   BARCODE_TIMEOUT_MS,
   FOOD_FACTS_BASE,

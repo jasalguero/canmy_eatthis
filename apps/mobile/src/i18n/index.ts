@@ -9,6 +9,7 @@ import enConfirm from './locales/en/confirm.json';
 import enErrors from './locales/en/errors.json';
 import enHistory from './locales/en/history.json';
 import enHome from './locales/en/home.json';
+import enHotlines from './locales/en/hotlines.json';
 import enIdentify from './locales/en/identify.json';
 import enLegal from './locales/en/legal.json';
 import enOnboarding from './locales/en/onboarding.json';
@@ -22,6 +23,7 @@ import esConfirm from './locales/es/confirm.json';
 import esErrors from './locales/es/errors.json';
 import esHistory from './locales/es/history.json';
 import esHome from './locales/es/home.json';
+import esHotlines from './locales/es/hotlines.json';
 import esIdentify from './locales/es/identify.json';
 import esLegal from './locales/es/legal.json';
 import esOnboarding from './locales/es/onboarding.json';
@@ -47,6 +49,7 @@ export const en = {
   settings: enSettings,
   camera: enCamera,
   product: enProduct,
+  hotlines: enHotlines,
   vocab: vocabEn,
 };
 export const es = {
@@ -63,6 +66,7 @@ export const es = {
   settings: esSettings,
   camera: esCamera,
   product: esProduct,
+  hotlines: esHotlines,
   vocab: vocabEs,
 };
 
