@@ -11,13 +11,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # pnpm must be on PATH before setup-node, or `cache: pnpm` fails with "Unable to locate
+      # executable file: pnpm". The version comes from `packageManager` in package.json.
+      - uses: pnpm/action-setup@v4
+
       - uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: pnpm
-
-      - name: Enable corepack
-        run: corepack enable
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
