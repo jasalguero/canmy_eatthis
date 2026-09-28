@@ -309,10 +309,8 @@ an explicit `node <path>` rather than executing it directly, which makes Node's 
 the extensionless file as an entry module under this package's `"type": "module"` and reject it.
 Running the same file directly (`node .../typescript/lib/tsc.js`, bypassing the shim) works and
 produces correct output — the compiler itself is fine; only the `.bin` shim's invocation path
-breaks. `pnpm --filter <pkg> run typecheck` / `build` therefore fail in-place. CI pins
-`actions/setup-node@v4` to `node-version: 20`, which resolves to a current 20.x patch — this may
-already be new enough to avoid it (the `expo install` tooling in this same repo separately warns
-it wants `>=20.19.4`), but a local Node under that version will hit this. Until either Node or
+breaks. `pnpm --filter <pkg> run typecheck` / `build` therefore fail in-place. **Superseded by
+D27:** the repo now requires Node 24, which is not affected. On an old Node 20.x this still applies. Until either Node or
 this TypeScript build is updated to close the gap, work around it locally by invoking
 `node node_modules/.pnpm/typescript@7.0.2/node_modules/typescript/lib/tsc.js` directly in place of
 `tsc`.
@@ -769,3 +767,19 @@ tests (113), contrast, UI-hygiene, safe-claims, no-secrets and the web build pas
 **Not done:** `pnpm screenshots` regenerates every set but then fails its pseudo-locale pass on
 `05-result-safe` — `mockEntry()` has no data for the pseudo language. Reproduced on the unmodified
 pre-D26 source, so it is pre-existing and left for a separate fix.
+
+## D27 — Node 24 everywhere (CI, nightly eval, `engines`)
+
+Node 20 reached end of life in April 2026, and GitHub Actions has deprecated it as a runner
+runtime. Development was already happening on Node 24 while CI ran on 20, so the two could
+disagree. Both workflows now use `node-version: 24`, root `package.json` declares
+`"engines": { "node": ">=24" }`, and `.nvmrc` pins 24 for local version managers.
+
+This also makes D19's Node 20.9 `tsc` shim caveat moot, and it satisfies Expo's `>=20.19.4`
+floor.
+
+**Alternatives:** Node 22 (also LTS, but moving to 22 would still leave CI on a different major
+from the one development uses).
+
+**Verified locally on Node 24.11.1:** typecheck, lint, the safe-claims, no-secrets, contrast,
+UI-hygiene and Expo dependency checks, tests, build and the KB snapshot diff all pass.
