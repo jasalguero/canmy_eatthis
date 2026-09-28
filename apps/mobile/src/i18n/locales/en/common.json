@@ -1,5 +1,7 @@
 {
   "appName": "CanMy*EatThis",
+  "appNameSplit1": "CanyMy",
+  "appNameSplit2": "EatThis",
   "species_dog": "Dog",
   "species_cat": "Cat",
   "cancel": "Cancel",
