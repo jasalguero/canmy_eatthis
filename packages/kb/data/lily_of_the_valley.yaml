@@ -1,0 +1,54 @@
+id: lily_of_the_valley
+display_name:
+  en: Lily of the valley
+  es: Lirio de los valles
+category: plant
+aliases:
+  en: [lily of the valley, lily-of-the-valley, convallaria]
+  es: [lirio de los valles, muguete, convalaria]
+confusable_with: [lily]
+is_ingredient: false
+high_risk: true
+species:
+  dog:
+    verdict: toxic
+    severity: severe
+    headline:
+      en: Toxic to dogs. Call your vet now.
+      es: Tóxico para perros. Llama ahora a tu veterinario.
+    summary:
+      en: "Lily of the valley affects the heart and can cause a dangerously irregular heartbeat, which can be fatal. Despite its name it isn't a true lily, and it's dangerous to dogs as well as cats. Call your vet straight away."
+      es: "El lirio de los valles afecta al corazón y puede provocar un ritmo cardíaco irregular peligroso, que puede ser mortal. A pesar de su nombre no es un lirio verdadero, y es peligroso tanto para perros como para gatos. Llama enseguida a tu veterinario."
+    signs: [vomiting, diarrhoea, abdominal_pain, tremors, irregular_heartbeat]
+    onset_hours: null
+    emergency_actions: [call_vet_now, do_not_induce_vomiting, bring_packaging]
+  cat:
+    verdict: toxic
+    severity: severe
+    headline:
+      en: Toxic to cats. Call your vet now.
+      es: Tóxico para gatos. Llama ahora a tu veterinario.
+    summary:
+      en: "Lily of the valley affects the heart and can cause a dangerously irregular heartbeat, which can be fatal. Despite its name it isn't a true lily, and it's dangerous to dogs as well as cats. Call your vet straight away."
+      es: "El lirio de los valles afecta al corazón y puede provocar un ritmo cardíaco irregular peligroso, que puede ser mortal. A pesar de su nombre no es un lirio verdadero, y es peligroso tanto para perros como para gatos. Llama enseguida a tu veterinario."
+    signs: [vomiting, diarrhoea, abdominal_pain, tremors, irregular_heartbeat]
+    onset_hours: null
+    emergency_actions: [call_vet_now, do_not_induce_vomiting, bring_packaging]
+sources:
+  - label: Merck Veterinary Manual — Houseplants and Ornamentals Toxic to Animals
+    url: https://www.merckvetmanual.com/toxicology/poisonous-plants/houseplants-and-ornamentals-toxic-to-animals
+    accessed: 2026-09-28
+  - label: FDA — Potentially Dangerous Items for Your Pet
+    url: https://www.fda.gov/animal-veterinary/animal-health-literacy/potentially-dangerous-items-your-pet
+    accessed: 2026-09-28
+review:
+  reviewed_by: "Jose Salguero"
+  reviewed_at: 2026-09-28
+  status: approved
+translations:
+  es:
+    tier_a: approved
+    tier_b: approved
+    translated_by: "Claude (draft)"
+    reviewed_by: "Jose Salguero"
+    reviewed_at: 2026-09-28

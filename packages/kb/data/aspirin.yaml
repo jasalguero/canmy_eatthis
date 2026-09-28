@@ -1,0 +1,57 @@
+id: aspirin
+display_name:
+  en: Aspirin
+  es: Aspirina
+category: medication
+aliases:
+  en: [aspirin, acetylsalicylic acid]
+  es: [aspirina, ácido acetilsalicílico, adiro]
+confusable_with: []
+is_ingredient: false
+high_risk: true
+species:
+  dog:
+    verdict: toxic
+    severity: moderate
+    headline:
+      en: Toxic to dogs. Call your vet.
+      es: Tóxico para perros. Llama a tu veterinario.
+    summary:
+      en: "Dogs tolerate aspirin better than cats, but an overdose can still cause stomach ulcers, vomiting and fever. Only give it if your vet prescribed it, and call your vet if your dog swallowed tablets."
+      es: "Los perros toleran la aspirina mejor que los gatos, pero una sobredosis puede provocar úlceras de estómago, vómitos y fiebre. Dásela solo si te la ha recetado tu veterinario, y llámale si tu perro se ha tragado pastillas."
+    signs: [vomiting, diarrhoea, blood_in_stool, loss_of_appetite, hyperthermia]
+    onset_hours: null
+    emergency_actions: [call_vet_now, do_not_induce_vomiting, bring_packaging]
+  cat:
+    verdict: toxic
+    severity: severe
+    headline:
+      en: Toxic to cats. Call your vet now.
+      es: Tóxico para gatos. Llama ahora a tu veterinario.
+    summary:
+      en: "Cats are very sensitive to aspirin: their bodies take a very long time to clear it, so even amounts that would be fine for a dog can harm a cat. Call your vet straight away."
+      es: "Los gatos son muy sensibles a la aspirina: su organismo tarda muchísimo en eliminarla, así que incluso cantidades que un perro toleraría pueden hacer daño a un gato. Llama enseguida a tu veterinario."
+    signs: [vomiting, diarrhoea, blood_in_stool, loss_of_appetite, hyperthermia]
+    onset_hours: null
+    emergency_actions: [call_vet_now, do_not_induce_vomiting, bring_packaging]
+sources:
+  - label: Merck Veterinary Manual — Toxicoses From Human Analgesics in Animals
+    url: https://www.merckvetmanual.com/toxicology/toxicoses-from-human-analgesics/toxicoses-from-human-analgesics-in-animals
+    accessed: 2026-09-28
+  - label: FDA — Get the Facts about Pain Relievers for Pets
+    url: https://www.fda.gov/animal-veterinary/animal-health-literacy/get-facts-about-pain-relievers-pets
+    accessed: 2026-09-28
+  - label: Cornell Feline Health Center — Poisons
+    url: https://www.vet.cornell.edu/departments-centers-and-institutes/cornell-feline-health-center/health-information/feline-health-topics/poisons
+    accessed: 2026-09-28
+review:
+  reviewed_by: "Jose Salguero"
+  reviewed_at: 2026-09-28
+  status: approved
+translations:
+  es:
+    tier_a: approved
+    tier_b: approved
+    translated_by: "Claude (draft)"
+    reviewed_by: "Jose Salguero"
+    reviewed_at: 2026-09-28

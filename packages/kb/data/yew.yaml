@@ -1,0 +1,54 @@
+id: yew
+display_name:
+  en: Yew
+  es: Tejo
+category: plant
+aliases:
+  en: [yew, yews, yew tree, yew bush, taxus, english yew, japanese yew]
+  es: [tejo, tejos, taxus]
+confusable_with: []
+is_ingredient: false
+high_risk: true
+species:
+  dog:
+    verdict: toxic
+    severity: severe
+    headline:
+      en: Toxic to dogs. Call your vet now.
+      es: Tóxico para perros. Llama ahora a tu veterinario.
+    summary:
+      en: "Yew is extremely poisonous. It can stop the heart, and once signs appear, treatment often can't help. If your pet has chewed any part of a yew, call your vet immediately, before any signs appear."
+      es: "El tejo es extremadamente venenoso. Puede detener el corazón y, una vez aparecen los signos, el tratamiento a menudo no sirve de nada. Si tu mascota ha mordido cualquier parte de un tejo, llama inmediatamente a tu veterinario, antes de que aparezca ningún signo."
+    signs: [restlessness, tremors, ataxia, difficulty_breathing, collapse, irregular_heartbeat]
+    onset_hours: null
+    emergency_actions: [call_vet_now, do_not_induce_vomiting, bring_packaging]
+  cat:
+    verdict: toxic
+    severity: severe
+    headline:
+      en: Toxic to cats. Call your vet now.
+      es: Tóxico para gatos. Llama ahora a tu veterinario.
+    summary:
+      en: "Yew is extremely poisonous. It can stop the heart, and once signs appear, treatment often can't help. If your pet has chewed any part of a yew, call your vet immediately, before any signs appear."
+      es: "El tejo es extremadamente venenoso. Puede detener el corazón y, una vez aparecen los signos, el tratamiento a menudo no sirve de nada. Si tu mascota ha mordido cualquier parte de un tejo, llama inmediatamente a tu veterinario, antes de que aparezca ningún signo."
+    signs: [restlessness, tremors, ataxia, difficulty_breathing, collapse, irregular_heartbeat]
+    onset_hours: null
+    emergency_actions: [call_vet_now, do_not_induce_vomiting, bring_packaging]
+sources:
+  - label: Merck Veterinary Manual — Houseplants and Ornamentals Toxic to Animals
+    url: https://www.merckvetmanual.com/toxicology/poisonous-plants/houseplants-and-ornamentals-toxic-to-animals
+    accessed: 2026-09-28
+  - label: FDA — Potentially Dangerous Items for Your Pet
+    url: https://www.fda.gov/animal-veterinary/animal-health-literacy/potentially-dangerous-items-your-pet
+    accessed: 2026-09-28
+review:
+  reviewed_by: "Jose Salguero"
+  reviewed_at: 2026-09-28
+  status: approved
+translations:
+  es:
+    tier_a: approved
+    tier_b: approved
+    translated_by: "Claude (draft)"
+    reviewed_by: "Jose Salguero"
+    reviewed_at: 2026-09-28

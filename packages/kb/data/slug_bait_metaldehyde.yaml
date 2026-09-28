@@ -1,0 +1,54 @@
+id: slug_bait_metaldehyde
+display_name:
+  en: Slug and snail bait (metaldehyde)
+  es: Cebo para babosas y caracoles (metaldehído)
+category: chemical
+aliases:
+  en: [slug pellets, slug bait, slug killer, snail bait, snail pellets, metaldehyde]
+  es: [matababosas, cebo para caracoles, cebo para babosas, gránulos antibabosas, metaldehído]
+confusable_with: []
+is_ingredient: false
+high_risk: true
+species:
+  dog:
+    verdict: toxic
+    severity: severe
+    headline:
+      en: Toxic to dogs. Call your vet now.
+      es: Tóxico para perros. Llama ahora a tu veterinario.
+    summary:
+      en: "Most slug and snail baits contain metaldehyde. It causes severe tremors, a dangerously high body temperature and seizures, starting from 30 minutes to a few hours after eating it. It can be life-threatening but responds well to prompt treatment. Call your vet immediately and bring the packaging."
+      es: "La mayoría de los cebos para babosas y caracoles contienen metaldehído. Provoca temblores intensos, una temperatura corporal peligrosamente alta y convulsiones, que empiezan entre 30 minutos y unas horas después de comerlo. Puede ser mortal, pero responde bien a un tratamiento rápido. Llama inmediatamente a tu veterinario y lleva el envase."
+    signs: [tremors, agitation, ataxia, hyperthermia, seizures, vomiting, diarrhoea]
+    onset_hours: { min: 0.5, max: 6 }
+    emergency_actions: [call_vet_now, do_not_induce_vomiting, bring_packaging]
+  cat:
+    verdict: toxic
+    severity: severe
+    headline:
+      en: Toxic to cats. Call your vet now.
+      es: Tóxico para gatos. Llama ahora a tu veterinario.
+    summary:
+      en: "Most slug and snail baits contain metaldehyde, which causes muscle spasms, wobbliness and seizures in cats. It can be life-threatening but responds well to prompt treatment. Call your vet immediately and bring the packaging."
+      es: "La mayoría de los cebos para babosas y caracoles contienen metaldehído, que en los gatos provoca espasmos musculares, falta de coordinación y convulsiones. Puede ser mortal, pero responde bien a un tratamiento rápido. Llama inmediatamente a tu veterinario y lleva el envase."
+    signs: [ataxia, tremors, seizures]
+    onset_hours: null
+    emergency_actions: [call_vet_now, do_not_induce_vomiting, bring_packaging]
+sources:
+  - label: Merck Veterinary Manual — Metaldehyde Poisoning in Animals
+    url: https://www.merckvetmanual.com/toxicology/metaldehyde-poisoning/metaldehyde-poisoning-in-animals
+    accessed: 2026-09-28
+  - label: "\"Metaldehyde Poisoning of Companion Animals: A Three-year Retrospective Study\" — PMC"
+    url: https://pmc.ncbi.nlm.nih.gov/articles/PMC5894430/
+    accessed: 2026-09-28
+review:
+  reviewed_by: "Jose Salguero"
+  reviewed_at: 2026-09-28
+  status: approved
+translations:
+  es:
+    tier_a: approved
+    tier_b: approved
+    translated_by: "Claude (draft)"
+    reviewed_by: "Jose Salguero"
+    reviewed_at: 2026-09-28

@@ -27,7 +27,10 @@
     "coma": "Coma",
     "blood_in_vomit": "Blood in vomit",
     "blood_in_stool": "Blood in stool",
-    "jaundice": "Yellowing of the gums, skin or eyes"
+    "jaundice": "Yellowing of the gums, skin or eyes",
+    "irregular_heartbeat": "Irregular or slow heartbeat",
+    "mouth_irritation": "Pain or swelling in the mouth",
+    "facial_swelling": "Swelling of the face"
   },
   "emergency_actions": {
     "call_vet_now": "Call your vet or an animal poison control line now",

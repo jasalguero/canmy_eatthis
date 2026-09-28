@@ -1,0 +1,57 @@
+id: foxglove
+display_name:
+  en: Foxglove
+  es: Dedalera
+category: plant
+aliases:
+  en: [foxglove, foxgloves, digitalis]
+  es: [dedalera, dedaleras, digital, digitalis]
+confusable_with: []
+is_ingredient: false
+high_risk: true
+species:
+  dog:
+    verdict: toxic
+    severity: severe
+    headline:
+      en: Toxic to dogs. Call your vet now.
+      es: Tóxico para perros. Llama ahora a tu veterinario.
+    summary:
+      en: "Foxglove affects the heart. It can cause stomach pain, vomiting, bloody diarrhoea, a slow or irregular heartbeat, tremors and seizures, and occasionally death. Call your vet straight away."
+      es: "La dedalera afecta al corazón. Puede provocar dolor abdominal, vómitos, diarrea con sangre, un ritmo cardíaco lento o irregular, temblores y convulsiones, y en ocasiones la muerte. Llama enseguida a tu veterinario."
+    signs: [abdominal_pain, vomiting, blood_in_stool, increased_urination, irregular_heartbeat, tremors, seizures]
+    onset_hours: null
+    emergency_actions: [call_vet_now, do_not_induce_vomiting, bring_packaging]
+  cat:
+    verdict: toxic
+    severity: severe
+    headline:
+      en: Toxic to cats. Call your vet now.
+      es: Tóxico para gatos. Llama ahora a tu veterinario.
+    summary:
+      en: "Foxglove affects the heart. It can cause stomach pain, vomiting, bloody diarrhoea, a slow or irregular heartbeat, tremors and seizures, and occasionally death. Call your vet straight away."
+      es: "La dedalera afecta al corazón. Puede provocar dolor abdominal, vómitos, diarrea con sangre, un ritmo cardíaco lento o irregular, temblores y convulsiones, y en ocasiones la muerte. Llama enseguida a tu veterinario."
+    signs: [abdominal_pain, vomiting, blood_in_stool, increased_urination, irregular_heartbeat, tremors, seizures]
+    onset_hours: null
+    emergency_actions: [call_vet_now, do_not_induce_vomiting, bring_packaging]
+sources:
+  - label: Merck Veterinary Manual — Houseplants and Ornamentals Toxic to Animals
+    url: https://www.merckvetmanual.com/toxicology/poisonous-plants/houseplants-and-ornamentals-toxic-to-animals
+    accessed: 2026-09-28
+  - label: FDA — Potentially Dangerous Items for Your Pet
+    url: https://www.fda.gov/animal-veterinary/animal-health-literacy/potentially-dangerous-items-your-pet
+    accessed: 2026-09-28
+  - label: Cornell Feline Health Center — Poisons
+    url: https://www.vet.cornell.edu/departments-centers-and-institutes/cornell-feline-health-center/health-information/feline-health-topics/poisons
+    accessed: 2026-09-28
+review:
+  reviewed_by: "Jose Salguero"
+  reviewed_at: 2026-09-28
+  status: approved
+translations:
+  es:
+    tier_a: approved
+    tier_b: approved
+    translated_by: "Claude (draft)"
+    reviewed_by: "Jose Salguero"
+    reviewed_at: 2026-09-28

@@ -1,0 +1,57 @@
+id: philodendron
+display_name:
+  en: Philodendron
+  es: Filodendro
+category: plant
+aliases:
+  en: [philodendron, philodendrons]
+  es: [filodendro, filodendros, philodendron]
+confusable_with: []
+is_ingredient: false
+high_risk: true
+species:
+  dog:
+    verdict: caution
+    severity: null
+    headline:
+      en: Best kept away from dogs.
+      es: Mejor mantenerlo alejado de los perros.
+    summary:
+      en: "Philodendron contains crystals that cause immediate, intense pain and swelling in the mouth, so most pets stop after a bite. Expect mouth pain, loss of appetite and sometimes vomiting. Serious poisoning is rare, but call your vet if your pet has trouble breathing or swallowing."
+      es: "El filodendro contiene cristales que provocan de inmediato un dolor intenso e hinchazón en la boca, por lo que la mayoría de las mascotas paran tras un mordisco. Es habitual el dolor de boca, la pérdida de apetito y a veces los vómitos. Las intoxicaciones graves son poco frecuentes, pero llama a tu veterinario si a tu mascota le cuesta respirar o tragar."
+    signs: [mouth_irritation, loss_of_appetite, vomiting, diarrhoea, difficulty_breathing]
+    onset_hours: null
+    emergency_actions: []
+  cat:
+    verdict: caution
+    severity: null
+    headline:
+      en: Best kept away from cats.
+      es: Mejor mantenerlo alejado de los gatos.
+    summary:
+      en: "Philodendron contains crystals that cause immediate, intense pain and swelling in the mouth, so most pets stop after a bite. Expect mouth pain, loss of appetite and sometimes vomiting. Serious poisoning is rare, but call your vet if your pet has trouble breathing or swallowing."
+      es: "El filodendro contiene cristales que provocan de inmediato un dolor intenso e hinchazón en la boca, por lo que la mayoría de las mascotas paran tras un mordisco. Es habitual el dolor de boca, la pérdida de apetito y a veces los vómitos. Las intoxicaciones graves son poco frecuentes, pero llama a tu veterinario si a tu mascota le cuesta respirar o tragar."
+    signs: [mouth_irritation, loss_of_appetite, vomiting, diarrhoea, difficulty_breathing]
+    onset_hours: null
+    emergency_actions: []
+sources:
+  - label: Merck Veterinary Manual — Houseplants and Ornamentals Toxic to Animals
+    url: https://www.merckvetmanual.com/toxicology/poisonous-plants/houseplants-and-ornamentals-toxic-to-animals
+    accessed: 2026-09-28
+  - label: Cornell Feline Health Center — Poisons
+    url: https://www.vet.cornell.edu/departments-centers-and-institutes/cornell-feline-health-center/health-information/feline-health-topics/poisons
+    accessed: 2026-09-28
+  - label: FDA — Potentially Dangerous Items for Your Pet
+    url: https://www.fda.gov/animal-veterinary/animal-health-literacy/potentially-dangerous-items-your-pet
+    accessed: 2026-09-28
+review:
+  reviewed_by: "Jose Salguero"
+  reviewed_at: 2026-09-28
+  status: approved
+translations:
+  es:
+    tier_a: approved
+    tier_b: approved
+    translated_by: "Claude (draft)"
+    reviewed_by: "Jose Salguero"
+    reviewed_at: 2026-09-28

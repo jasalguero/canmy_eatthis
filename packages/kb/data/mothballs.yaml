@@ -1,0 +1,54 @@
+id: mothballs
+display_name:
+  en: Mothballs
+  es: Bolas de naftalina
+category: household
+aliases:
+  en: [mothballs, mothball, moth balls, naphthalene, moth repellent]
+  es: [bolas de naftalina, naftalina, antipolillas, bolas antipolillas]
+confusable_with: []
+is_ingredient: false
+high_risk: true
+species:
+  dog:
+    verdict: toxic
+    severity: moderate
+    headline:
+      en: Toxic to dogs. Call your vet.
+      es: Tóxico para perros. Llama a tu veterinario.
+    summary:
+      en: "Mothballs are toxic to all animals. They dissolve slowly, so they can keep causing harm after being eaten. Early signs are vomiting and loss of appetite; more serious poisoning can damage the blood and cause tremors or seizures. Call your vet."
+      es: "Las bolas de naftalina son tóxicas para todos los animales. Se disuelven despacio, así que pueden seguir haciendo daño después de comerlas. Los primeros signos son vómitos y pérdida de apetito; una intoxicación más grave puede dañar la sangre y provocar temblores o convulsiones. Llama a tu veterinario."
+    signs: [vomiting, loss_of_appetite, abdominal_pain, lethargy, tremors, seizures, difficulty_breathing, weakness]
+    onset_hours: null
+    emergency_actions: [call_vet_now, do_not_induce_vomiting, bring_packaging]
+  cat:
+    verdict: toxic
+    severity: severe
+    headline:
+      en: Toxic to cats. Call your vet now.
+      es: Tóxico para gatos. Llama ahora a tu veterinario.
+    summary:
+      en: "Cats are thought to be more sensitive to mothballs than other animals. They dissolve slowly, so they can keep causing harm after being eaten, and serious poisoning can damage the blood and cause tremors or seizures. Call your vet straight away."
+      es: "Se cree que los gatos son más sensibles a las bolas de naftalina que otros animales. Se disuelven despacio, así que pueden seguir haciendo daño después de comerlas, y una intoxicación grave puede dañar la sangre y provocar temblores o convulsiones. Llama enseguida a tu veterinario."
+    signs: [vomiting, loss_of_appetite, abdominal_pain, lethargy, tremors, seizures, difficulty_breathing, weakness]
+    onset_hours: null
+    emergency_actions: [call_vet_now, do_not_induce_vomiting, bring_packaging]
+sources:
+  - label: Merck Veterinary Manual — Toxicosis From Mothballs in Animals
+    url: https://www.merckvetmanual.com/toxicology/toxicoses-from-household-hazards/toxicosis-from-mothballs-in-animals
+    accessed: 2026-09-28
+  - label: FDA — Potentially Dangerous Items for Your Pet
+    url: https://www.fda.gov/animal-veterinary/animal-health-literacy/potentially-dangerous-items-your-pet
+    accessed: 2026-09-28
+review:
+  reviewed_by: "Jose Salguero"
+  reviewed_at: 2026-09-28
+  status: approved
+translations:
+  es:
+    tier_a: approved
+    tier_b: approved
+    translated_by: "Claude (draft)"
+    reviewed_by: "Jose Salguero"
+    reviewed_at: 2026-09-28

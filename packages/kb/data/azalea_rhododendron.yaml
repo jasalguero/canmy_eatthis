@@ -1,0 +1,57 @@
+id: azalea_rhododendron
+display_name:
+  en: Azalea and rhododendron
+  es: Azalea y rododendro
+category: plant
+aliases:
+  en: [azalea, azaleas, rhododendron, rhododendrons]
+  es: [azalea, azaleas, rododendro, rododendros]
+confusable_with: []
+is_ingredient: false
+high_risk: true
+species:
+  dog:
+    verdict: toxic
+    severity: severe
+    headline:
+      en: Toxic to dogs. Call your vet now.
+      es: Tóxico para perros. Llama ahora a tu veterinario.
+    summary:
+      en: "Azaleas and rhododendrons can cause drooling, vomiting and diarrhoea within hours. A larger amount can also affect the heart and nervous system, causing weakness, breathing difficulty, seizures or coma, and can be fatal. A small nibble often has a good outcome with treatment, but you can't judge the amount at home, so call your vet."
+      es: "Las azaleas y los rododendros pueden provocar babeo, vómitos y diarrea en pocas horas. Una cantidad mayor también puede afectar al corazón y al sistema nervioso, con debilidad, dificultad para respirar, convulsiones o coma, y puede ser mortal. Un mordisco pequeño suele tener buen pronóstico con tratamiento, pero en casa no se puede valorar la cantidad, así que llama a tu veterinario."
+    signs: [hypersalivation, vomiting, diarrhoea, difficulty_breathing, weakness, seizures, coma]
+    onset_hours: { min: 1, max: 12 }
+    emergency_actions: [call_vet_now, do_not_induce_vomiting, bring_packaging]
+  cat:
+    verdict: toxic
+    severity: severe
+    headline:
+      en: Toxic to cats. Call your vet now.
+      es: Tóxico para gatos. Llama ahora a tu veterinario.
+    summary:
+      en: "Azaleas and rhododendrons can cause drooling, vomiting and diarrhoea within hours. A larger amount can also affect the heart and nervous system, causing weakness, breathing difficulty, seizures or coma, and can be fatal. A small nibble often has a good outcome with treatment, but you can't judge the amount at home, so call your vet."
+      es: "Las azaleas y los rododendros pueden provocar babeo, vómitos y diarrea en pocas horas. Una cantidad mayor también puede afectar al corazón y al sistema nervioso, con debilidad, dificultad para respirar, convulsiones o coma, y puede ser mortal. Un mordisco pequeño suele tener buen pronóstico con tratamiento, pero en casa no se puede valorar la cantidad, así que llama a tu veterinario."
+    signs: [hypersalivation, vomiting, diarrhoea, difficulty_breathing, weakness, seizures, coma]
+    onset_hours: { min: 1, max: 12 }
+    emergency_actions: [call_vet_now, do_not_induce_vomiting, bring_packaging]
+sources:
+  - label: Merck Veterinary Manual — Houseplants and Ornamentals Toxic to Animals
+    url: https://www.merckvetmanual.com/toxicology/poisonous-plants/houseplants-and-ornamentals-toxic-to-animals
+    accessed: 2026-09-28
+  - label: "Milewski & Khan, \"An overview of potentially life-threatening poisonous plants in dogs and cats\", J Vet Emerg Crit Care (2006)"
+    url: https://doi.org/10.1111/j.1476-4431.2005.00151.x
+    accessed: 2026-09-28
+  - label: FDA — Potentially Dangerous Items for Your Pet
+    url: https://www.fda.gov/animal-veterinary/animal-health-literacy/potentially-dangerous-items-your-pet
+    accessed: 2026-09-28
+review:
+  reviewed_by: "Jose Salguero"
+  reviewed_at: 2026-09-28
+  status: approved
+translations:
+  es:
+    tier_a: approved
+    tier_b: approved
+    translated_by: "Claude (draft)"
+    reviewed_by: "Jose Salguero"
+    reviewed_at: 2026-09-28

@@ -1,0 +1,57 @@
+id: oleander
+display_name:
+  en: Oleander
+  es: Adelfa
+category: plant
+aliases:
+  en: [oleander, oleanders, nerium, nerium oleander]
+  es: [adelfa, adelfas, baladre, laurel rosa, nerium]
+confusable_with: []
+is_ingredient: false
+high_risk: true
+species:
+  dog:
+    verdict: toxic
+    severity: severe
+    headline:
+      en: Toxic to dogs. Call your vet now.
+      es: Tóxico para perros. Llama ahora a tu veterinario.
+    summary:
+      en: "Oleander is one of the most toxic common garden plants. It affects the heart, causing an abnormal heartbeat, and deaths have been reported even with treatment. Call your vet straight away."
+      es: "La adelfa es una de las plantas de jardín comunes más tóxicas. Afecta al corazón y provoca alteraciones del ritmo cardíaco, y se han descrito muertes incluso con tratamiento. Llama enseguida a tu veterinario."
+    signs: [vomiting, diarrhoea, weakness, irregular_heartbeat, tachycardia]
+    onset_hours: null
+    emergency_actions: [call_vet_now, do_not_induce_vomiting, bring_packaging]
+  cat:
+    verdict: toxic
+    severity: severe
+    headline:
+      en: Toxic to cats. Call your vet now.
+      es: Tóxico para gatos. Llama ahora a tu veterinario.
+    summary:
+      en: "Oleander is one of the most toxic common garden plants, for cats as well as dogs. It affects the heart, causing an abnormal heartbeat, and deaths have been reported even with treatment. Call your vet straight away."
+      es: "La adelfa es una de las plantas de jardín comunes más tóxicas, tanto para gatos como para perros. Afecta al corazón y provoca alteraciones del ritmo cardíaco, y se han descrito muertes incluso con tratamiento. Llama enseguida a tu veterinario."
+    signs: [vomiting, diarrhoea, weakness, irregular_heartbeat, tachycardia]
+    onset_hours: null
+    emergency_actions: [call_vet_now, do_not_induce_vomiting, bring_packaging]
+sources:
+  - label: Merck Veterinary Manual — Houseplants and Ornamentals Toxic to Animals
+    url: https://www.merckvetmanual.com/toxicology/poisonous-plants/houseplants-and-ornamentals-toxic-to-animals
+    accessed: 2026-09-28
+  - label: "Milewski & Khan, \"An overview of potentially life-threatening poisonous plants in dogs and cats\", J Vet Emerg Crit Care (2006)"
+    url: https://doi.org/10.1111/j.1476-4431.2005.00151.x
+    accessed: 2026-09-28
+  - label: FDA — Potentially Dangerous Items for Your Pet
+    url: https://www.fda.gov/animal-veterinary/animal-health-literacy/potentially-dangerous-items-your-pet
+    accessed: 2026-09-28
+review:
+  reviewed_by: "Jose Salguero"
+  reviewed_at: 2026-09-28
+  status: approved
+translations:
+  es:
+    tier_a: approved
+    tier_b: approved
+    translated_by: "Claude (draft)"
+    reviewed_by: "Jose Salguero"
+    reviewed_at: 2026-09-28

@@ -1,0 +1,54 @@
+id: salt_dough_rock_salt
+display_name:
+  en: "Play dough, salt dough and rock salt"
+  es: "Plastilina casera, masa de sal y sal gema"
+category: household
+aliases:
+  en: [play dough, playdough, homemade play dough, salt dough, salt dough ornaments, rock salt]
+  es: [plastilina casera, masa de sal, adornos de masa de sal, masa para modelar, sal gema, sal de roca]
+confusable_with: []
+is_ingredient: false
+high_risk: true
+species:
+  dog:
+    verdict: toxic
+    severity: severe
+    headline:
+      en: Toxic to dogs. Call your vet now.
+      es: Tóxico para perros. Llama ahora a tu veterinario.
+    summary:
+      en: "Homemade play dough, salt dough and rock salt contain a lot of salt, and eating them can cause salt poisoning. Vomiting usually starts within a few hours and can progress to tremors and seizures, which can be fatal. Call your vet straight away."
+      es: "La plastilina casera, la masa de sal y la sal gema contienen mucha sal, y comerlas puede provocar una intoxicación por sal. Los vómitos suelen empezar en pocas horas y pueden progresar a temblores y convulsiones, que pueden ser mortales. Llama enseguida a tu veterinario."
+    signs: [vomiting, diarrhoea, weakness, tremors, seizures]
+    onset_hours: null
+    emergency_actions: [call_vet_now, do_not_induce_vomiting, bring_packaging]
+  cat:
+    verdict: toxic
+    severity: severe
+    headline:
+      en: Toxic to cats. Call your vet now.
+      es: Tóxico para gatos. Llama ahora a tu veterinario.
+    summary:
+      en: "Homemade play dough, salt dough and rock salt contain a lot of salt, and eating them can cause salt poisoning, which can be fatal. Call your vet straight away."
+      es: "La plastilina casera, la masa de sal y la sal gema contienen mucha sal, y comerlas puede provocar una intoxicación por sal, que puede ser mortal. Llama enseguida a tu veterinario."
+    signs: [vomiting, diarrhoea, weakness, tremors, seizures]
+    onset_hours: null
+    emergency_actions: [call_vet_now, do_not_induce_vomiting, bring_packaging]
+sources:
+  - label: Merck Veterinary Manual — Salt Toxicosis in Animals
+    url: https://www.merckvetmanual.com/toxicology/salt-toxicosis/salt-toxicosis-in-animals
+    accessed: 2026-09-28
+  - label: FDA — Potentially Dangerous Items for Your Pet
+    url: https://www.fda.gov/animal-veterinary/animal-health-literacy/potentially-dangerous-items-your-pet
+    accessed: 2026-09-28
+review:
+  reviewed_by: "Jose Salguero"
+  reviewed_at: 2026-09-28
+  status: approved
+translations:
+  es:
+    tier_a: approved
+    tier_b: approved
+    translated_by: "Claude (draft)"
+    reviewed_by: "Jose Salguero"
+    reviewed_at: 2026-09-28

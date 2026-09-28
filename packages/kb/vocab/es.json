@@ -27,7 +27,10 @@
     "coma": "Coma",
     "blood_in_vomit": "Sangre en el vómito",
     "blood_in_stool": "Sangre en las heces",
-    "jaundice": "Color amarillento en encías, piel u ojos"
+    "jaundice": "Color amarillento en encías, piel u ojos",
+    "irregular_heartbeat": "Latido cardíaco irregular o lento",
+    "mouth_irritation": "Dolor o hinchazón en la boca",
+    "facial_swelling": "Hinchazón de la cara"
   },
   "emergency_actions": {
     "call_vet_now": "Llama ahora a tu veterinario o a una línea de control de intoxicaciones",

@@ -1,0 +1,54 @@
+id: vitamin_d_supplements
+display_name:
+  en: Vitamin D supplements
+  es: Suplementos de vitamina D
+category: medication
+aliases:
+  en: [vitamin d, vitamin d3, vitamin d tablets, vitamin d supplement, cholecalciferol]
+  es: [vitamina d, vitamina d3, pastillas de vitamina d, suplemento de vitamina d, colecalciferol]
+confusable_with: []
+is_ingredient: false
+high_risk: true
+species:
+  dog:
+    verdict: toxic
+    severity: severe
+    headline:
+      en: Toxic to dogs. Call your vet now.
+      es: Tóxico para perros. Llama ahora a tu veterinario.
+    summary:
+      en: "Vitamin D supplements can raise blood calcium to dangerous levels and cause kidney failure, which can be fatal. Vomiting, tiredness, and increased thirst and urination usually start 12 to 48 hours after eating them. Call your vet even if your pet seems fine."
+      es: "Los suplementos de vitamina D pueden elevar el calcio en sangre a niveles peligrosos y provocar un fallo renal, que puede ser mortal. Los vómitos, el cansancio y el aumento de la sed y de la micción suelen empezar entre 12 y 48 horas después de comerlos. Llama a tu veterinario aunque tu mascota parezca estar bien."
+    signs: [vomiting, lethargy, loss_of_appetite, increased_thirst, increased_urination, hypersalivation, kidney_failure_signs]
+    onset_hours: { min: 12, max: 48 }
+    emergency_actions: [call_vet_now, do_not_induce_vomiting, bring_packaging]
+  cat:
+    verdict: toxic
+    severity: severe
+    headline:
+      en: Toxic to cats. Call your vet now.
+      es: Tóxico para gatos. Llama ahora a tu veterinario.
+    summary:
+      en: "Vitamin D supplements can raise blood calcium to dangerous levels and cause kidney failure, which can be fatal. Vomiting, tiredness, and increased thirst and urination usually start 12 to 48 hours after eating them. Call your vet even if your pet seems fine."
+      es: "Los suplementos de vitamina D pueden elevar el calcio en sangre a niveles peligrosos y provocar un fallo renal, que puede ser mortal. Los vómitos, el cansancio y el aumento de la sed y de la micción suelen empezar entre 12 y 48 horas después de comerlos. Llama a tu veterinario aunque tu mascota parezca estar bien."
+    signs: [vomiting, lethargy, loss_of_appetite, increased_thirst, increased_urination, hypersalivation, kidney_failure_signs]
+    onset_hours: { min: 12, max: 48 }
+    emergency_actions: [call_vet_now, do_not_induce_vomiting, bring_packaging]
+sources:
+  - label: Merck Veterinary Manual — Toxicoses in Animals From Human Multivitamins and Supplements
+    url: https://www.merckvetmanual.com/toxicology/toxicoses-from-human-vitamins-minerals-and-dietary-supplements/toxicoses-in-animals-from-human-multivitamins-and-supplements
+    accessed: 2026-09-28
+  - label: FDA — Vitamin D Toxicity in Dogs
+    url: https://www.fda.gov/animal-veterinary/animal-health-literacy/vitamin-d-toxicity-dogs
+    accessed: 2026-09-28
+review:
+  reviewed_by: "Jose Salguero"
+  reviewed_at: 2026-09-28
+  status: approved
+translations:
+  es:
+    tier_a: approved
+    tier_b: approved
+    translated_by: "Claude (draft)"
+    reviewed_by: "Jose Salguero"
+    reviewed_at: 2026-09-28

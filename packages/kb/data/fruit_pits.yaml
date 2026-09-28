@@ -1,0 +1,54 @@
+id: fruit_pits
+display_name:
+  en: "Fruit pits (cherry, peach, plum, apricot)"
+  es: "Huesos de fruta (cereza, melocotón, ciruela, albaricoque)"
+category: food
+aliases:
+  en: [fruit pit, fruit pits, cherry pit, cherry pits, cherry stone, peach pit, peach stone, plum pit, plum stone, apricot pit, apricot kernel, nectarine pit]
+  es: [huesos de fruta, hueso de cereza, huesos de cereza, hueso de melocotón, hueso de ciruela, hueso de albaricoque, hueso de nectarina]
+confusable_with: []
+is_ingredient: false
+high_risk: false
+species:
+  dog:
+    verdict: caution
+    severity: null
+    headline:
+      en: Best kept away from dogs.
+      es: Mejor mantenerlo alejado de los perros.
+    summary:
+      en: "The main risk from fruit pits is a blocked gut. The pits also contain cyanide, but it's only released when they're crushed or chewed, so poisoning is rare unless a pet chews up a lot of them. Call your vet if your pet swallowed a pit whole or chewed several."
+      es: "El principal riesgo de los huesos de fruta es que obstruyan el intestino. También contienen cianuro, pero solo se libera al triturarlos o masticarlos, así que la intoxicación es rara salvo que la mascota mastique muchos. Llama a tu veterinario si tu mascota se ha tragado un hueso entero o ha masticado varios."
+    signs: []
+    onset_hours: null
+    emergency_actions: []
+  cat:
+    verdict: caution
+    severity: null
+    headline:
+      en: Best kept away from cats.
+      es: Mejor mantenerlo alejado de los gatos.
+    summary:
+      en: "The main risk from fruit pits is a blocked gut. The pits also contain cyanide, but it's only released when they're crushed or chewed, so poisoning is rare unless a pet chews up a lot of them. Call your vet if your pet swallowed a pit whole or chewed several."
+      es: "El principal riesgo de los huesos de fruta es que obstruyan el intestino. También contienen cianuro, pero solo se libera al triturarlos o masticarlos, así que la intoxicación es rara salvo que la mascota mastique muchos. Llama a tu veterinario si tu mascota se ha tragado un hueso entero o ha masticado varios."
+    signs: []
+    onset_hours: null
+    emergency_actions: []
+sources:
+  - label: FDA — Potentially Dangerous Items for Your Pet
+    url: https://www.fda.gov/animal-veterinary/animal-health-literacy/potentially-dangerous-items-your-pet
+    accessed: 2026-09-28
+  - label: Merck Veterinary Manual — Cyanide Poisoning in Animals
+    url: https://www.merckvetmanual.com/toxicology/cyanide-poisoning/cyanide-poisoning-in-animals
+    accessed: 2026-09-28
+review:
+  reviewed_by: "Jose Salguero"
+  reviewed_at: 2026-09-28
+  status: approved
+translations:
+  es:
+    tier_a: approved
+    tier_b: approved
+    translated_by: "Claude (draft)"
+    reviewed_by: "Jose Salguero"
+    reviewed_at: 2026-09-28

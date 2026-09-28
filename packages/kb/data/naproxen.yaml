@@ -1,0 +1,54 @@
+id: naproxen
+display_name:
+  en: Naproxen
+  es: Naproxeno
+category: medication
+aliases:
+  en: [naproxen, aleve, naprosyn]
+  es: [naproxeno]
+confusable_with: []
+is_ingredient: false
+high_risk: true
+species:
+  dog:
+    verdict: toxic
+    severity: severe
+    headline:
+      en: Toxic to dogs. Call your vet now.
+      es: Tóxico para perros. Llama ahora a tu veterinario.
+    summary:
+      en: "Naproxen stays in a dog's body for a long time, so its effects last. It can cause vomiting, stomach bleeding, pale gums and weakness. Only give it if your vet prescribed it, and call your vet if your dog swallowed any."
+      es: "El naproxeno permanece mucho tiempo en el cuerpo del perro, así que sus efectos duran. Puede provocar vómitos, sangrado en el estómago, encías pálidas y debilidad. Dáselo solo si te lo ha recetado tu veterinario, y llámale si tu perro se ha tragado alguno."
+    signs: [vomiting, blood_in_stool, pale_gums, weakness]
+    onset_hours: null
+    emergency_actions: [call_vet_now, do_not_induce_vomiting, bring_packaging]
+  cat:
+    verdict: toxic
+    severity: severe
+    headline:
+      en: Toxic to cats. Call your vet now.
+      es: Tóxico para gatos. Llama ahora a tu veterinario.
+    summary:
+      en: "Cats may be even more sensitive to naproxen than dogs. It can cause vomiting, stomach bleeding and weakness. Call your vet straight away."
+      es: "Los gatos pueden ser aún más sensibles al naproxeno que los perros. Puede provocar vómitos, sangrado en el estómago y debilidad. Llama enseguida a tu veterinario."
+    signs: [vomiting, blood_in_stool, pale_gums, weakness]
+    onset_hours: null
+    emergency_actions: [call_vet_now, do_not_induce_vomiting, bring_packaging]
+sources:
+  - label: Merck Veterinary Manual — Toxicoses From Human Analgesics in Animals
+    url: https://www.merckvetmanual.com/toxicology/toxicoses-from-human-analgesics/toxicoses-from-human-analgesics-in-animals
+    accessed: 2026-09-28
+  - label: FDA — Get the Facts about Pain Relievers for Pets
+    url: https://www.fda.gov/animal-veterinary/animal-health-literacy/get-facts-about-pain-relievers-pets
+    accessed: 2026-09-28
+review:
+  reviewed_by: "Jose Salguero"
+  reviewed_at: 2026-09-28
+  status: approved
+translations:
+  es:
+    tier_a: approved
+    tier_b: approved
+    translated_by: "Claude (draft)"
+    reviewed_by: "Jose Salguero"
+    reviewed_at: 2026-09-28

@@ -1,0 +1,54 @@
+id: cannabis
+display_name:
+  en: Cannabis
+  es: Cannabis
+category: other
+aliases:
+  en: [cannabis, marijuana, marihuana, weed, thc, cannabis edibles, hash]
+  es: [cannabis, marihuana, porro, hachís, thc, comestibles de cannabis]
+confusable_with: []
+is_ingredient: false
+high_risk: false
+species:
+  dog:
+    verdict: toxic
+    severity: moderate
+    headline:
+      en: Toxic to dogs. Call your vet.
+      es: Tóxico para perros. Llama a tu veterinario.
+    summary:
+      en: "Cannabis makes dogs sleepy and wobbly, and can cause vomiting, trembling and dribbling urine. Signs usually start one to two hours after eating it and can last one to three days. Deaths are extremely rare, but your dog needs to see a vet."
+      es: "El cannabis deja a los perros adormilados y sin coordinación, y puede provocar vómitos, temblores y pérdidas de orina. Los signos suelen empezar una o dos horas después de comerlo y pueden durar de uno a tres días. Las muertes son rarísimas, pero tu perro necesita que lo vea un veterinario."
+    signs: [lethargy, ataxia, vomiting, tremors]
+    onset_hours: { min: 1, max: 4 }
+    emergency_actions: [call_vet_now, do_not_induce_vomiting, bring_packaging]
+  cat:
+    verdict: toxic
+    severity: moderate
+    headline:
+      en: Toxic to cats. Call your vet.
+      es: Tóxico para gatos. Llama a tu veterinario.
+    summary:
+      en: "Cannabis makes cats sleepy and wobbly, and can cause vomiting and trembling. Signs usually start within a few hours and can last one to three days. Deaths are extremely rare, but your cat needs to see a vet."
+      es: "El cannabis deja a los gatos adormilados y sin coordinación, y puede provocar vómitos y temblores. Los signos suelen empezar en pocas horas y pueden durar de uno a tres días. Las muertes son rarísimas, pero tu gato necesita que lo vea un veterinario."
+    signs: [lethargy, ataxia, vomiting, tremors]
+    onset_hours: null
+    emergency_actions: [call_vet_now, do_not_induce_vomiting, bring_packaging]
+sources:
+  - label: Merck Veterinary Manual — Toxicosis in Dogs and Cats From Tetrahydrocannabinol (THC)
+    url: https://www.merckvetmanual.com/toxicology/toxicoses-from-human-recreational-drugs/toxicosis-in-dogs-and-cats-from-tetrahydrocannabinol-thc
+    accessed: 2026-09-28
+  - label: FDA — Potentially Dangerous Items for Your Pet
+    url: https://www.fda.gov/animal-veterinary/animal-health-literacy/potentially-dangerous-items-your-pet
+    accessed: 2026-09-28
+review:
+  reviewed_by: "Jose Salguero"
+  reviewed_at: 2026-09-28
+  status: approved
+translations:
+  es:
+    tier_a: approved
+    tier_b: approved
+    translated_by: "Claude (draft)"
+    reviewed_by: "Jose Salguero"
+    reviewed_at: 2026-09-28

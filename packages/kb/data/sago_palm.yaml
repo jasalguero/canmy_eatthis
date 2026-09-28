@@ -1,0 +1,54 @@
+id: sago_palm
+display_name:
+  en: Sago palm
+  es: Palma de sagú
+category: plant
+aliases:
+  en: [sago palm, sago palms, king sago palm, cycad, cycads, cycas]
+  es: [palma de sagú, palmera de sagú, cica, cicas, cycas]
+confusable_with: []
+is_ingredient: false
+high_risk: true
+species:
+  dog:
+    verdict: toxic
+    severity: severe
+    headline:
+      en: Toxic to dogs. Call your vet now.
+      es: Tóxico para perros. Llama ahora a tu veterinario.
+    summary:
+      en: "Dogs are extremely sensitive to sago palms (cycads). Eating one can cause severe vomiting and diarrhoea, followed by liver failure. The first signs often appear within a few hours and liver damage can follow over the next two to three days, so call your vet straight away, even if your dog seems fine."
+      es: "Los perros son extremadamente sensibles a la palma de sagú (cicas). Comerla puede provocar vómitos y diarrea intensos, seguidos de un fallo hepático. Los primeros signos suelen aparecer en pocas horas y el daño en el hígado puede llegar en los dos o tres días siguientes, así que llama enseguida a tu veterinario, aunque tu perro parezca estar bien."
+    signs: [vomiting, diarrhoea, blood_in_stool, loss_of_appetite, lethargy, abdominal_pain, ataxia, tremors, seizures, jaundice]
+    onset_hours: { min: 0, max: 4 }
+    emergency_actions: [call_vet_now, do_not_induce_vomiting, bring_packaging]
+  cat:
+    verdict: toxic
+    severity: severe
+    headline:
+      en: Toxic to cats. Call your vet now.
+      es: Tóxico para gatos. Llama ahora a tu veterinario.
+    summary:
+      en: "Sago palm is one of the plants reported to cause life-threatening poisoning in cats as well as dogs. Early signs such as vomiting or drooling don't show how serious it is, and liver damage can appear a day or two later. Call your vet straight away."
+      es: "La palma de sagú es una de las plantas que se han descrito como causa de intoxicaciones potencialmente mortales en gatos, además de en perros. Los primeros signos, como vómitos o babeo, no reflejan su gravedad, y el daño en el hígado puede aparecer uno o dos días después. Llama enseguida a tu veterinario."
+    signs: [vomiting, hypersalivation, lethargy, loss_of_appetite, diarrhoea]
+    onset_hours: null
+    emergency_actions: [call_vet_now, do_not_induce_vomiting, bring_packaging]
+sources:
+  - label: Merck Veterinary Manual — Houseplants and Ornamentals Toxic to Animals
+    url: https://www.merckvetmanual.com/toxicology/poisonous-plants/houseplants-and-ornamentals-toxic-to-animals
+    accessed: 2026-09-28
+  - label: "Milewski & Khan, \"An overview of potentially life-threatening poisonous plants in dogs and cats\", J Vet Emerg Crit Care (2006)"
+    url: https://doi.org/10.1111/j.1476-4431.2005.00151.x
+    accessed: 2026-09-28
+review:
+  reviewed_by: "Jose Salguero"
+  reviewed_at: 2026-09-28
+  status: approved
+translations:
+  es:
+    tier_a: approved
+    tier_b: approved
+    translated_by: "Claude (draft)"
+    reviewed_by: "Jose Salguero"
+    reviewed_at: 2026-09-28

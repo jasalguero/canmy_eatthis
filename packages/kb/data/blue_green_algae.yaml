@@ -1,0 +1,54 @@
+id: blue_green_algae
+display_name:
+  en: Blue-green algae
+  es: Algas verdeazuladas
+category: other
+aliases:
+  en: [blue-green algae, blue green algae, cyanobacteria, algal bloom, toxic algae, pond scum]
+  es: [algas verdeazuladas, cianobacterias, floración de algas, algas tóxicas]
+confusable_with: []
+is_ingredient: false
+high_risk: true
+species:
+  dog:
+    verdict: toxic
+    severity: severe
+    headline:
+      en: Toxic to dogs. Call your vet now.
+      es: Tóxico para perros. Llama ahora a tu veterinario.
+    summary:
+      en: "Water with a blue-green algae bloom can poison a dog and kill it within hours, from drinking it, swimming in it or licking it off their fur. There's no antidote. Rinse your dog with clean water straight away and call your vet."
+      es: "El agua con una floración de algas verdeazuladas puede intoxicar a un perro y matarlo en pocas horas, tanto si la bebe como si se baña en ella o se la lame del pelo. No existe antídoto. Aclara enseguida a tu perro con agua limpia y llama a tu veterinario."
+    signs: [lethargy, loss_of_appetite, vomiting, diarrhoea, ataxia, hypersalivation, tremors, seizures, weakness]
+    onset_hours: { min: 0, max: 24 }
+    emergency_actions: [call_vet_now, do_not_induce_vomiting, bring_packaging]
+  cat:
+    verdict: toxic
+    severity: severe
+    headline:
+      en: Toxic to cats. Call your vet now.
+      es: Tóxico para gatos. Llama ahora a tu veterinario.
+    summary:
+      en: "Water with a blue-green algae bloom can poison a cat and kill it within hours, including from grooming contaminated fur. There's no antidote. Rinse your cat with clean water straight away and call your vet."
+      es: "El agua con una floración de algas verdeazuladas puede intoxicar a un gato y matarlo en pocas horas, también al lamerse el pelo contaminado. No existe antídoto. Aclara enseguida a tu gato con agua limpia y llama a tu veterinario."
+    signs: [lethargy, loss_of_appetite, vomiting, diarrhoea, ataxia, hypersalivation, tremors, seizures, weakness]
+    onset_hours: { min: 0, max: 24 }
+    emergency_actions: [call_vet_now, do_not_induce_vomiting, bring_packaging]
+sources:
+  - label: Merck Veterinary Manual — Algal Poisoning of Animals
+    url: https://www.merckvetmanual.com/toxicology/algal-poisoning/algal-poisoning-of-animals
+    accessed: 2026-09-28
+  - label: CDC — Preventing Pet and Livestock Illnesses Caused by Harmful Algal Blooms
+    url: https://www.cdc.gov/harmful-algal-blooms/prevention/preventing-pet-and-livestock-illnesses.html
+    accessed: 2026-09-28
+review:
+  reviewed_by: "Jose Salguero"
+  reviewed_at: 2026-09-28
+  status: approved
+translations:
+  es:
+    tier_a: approved
+    tier_b: approved
+    translated_by: "Claude (draft)"
+    reviewed_by: "Jose Salguero"
+    reviewed_at: 2026-09-28

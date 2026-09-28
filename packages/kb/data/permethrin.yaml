@@ -1,0 +1,57 @@
+id: permethrin
+display_name:
+  en: Permethrin (dog flea and tick treatments)
+  es: Permetrina (antiparasitarios para perros)
+category: chemical
+aliases:
+  en: [permethrin, pyrethroid, dog flea treatment, dog flea spot-on, flea and tick treatment for dogs]
+  es: [permetrina, piretroide, pipeta antipulgas para perros, antiparasitario para perros]
+confusable_with: []
+is_ingredient: false
+high_risk: true
+species:
+  dog:
+    verdict: unknown
+    severity: null
+    headline:
+      en: Not sure — ask your vet.
+      es: No estoy seguro — consulta a tu veterinario.
+    summary:
+      en: "Our sources describe how dangerous these products are to cats, but don't cover a dog licking or swallowing them. If that happened, call your vet and have the packaging to hand."
+      es: "Nuestras fuentes describen lo peligrosos que son estos productos para los gatos, pero no tratan el caso de un perro que los lame o se los traga. Si ha ocurrido, llama a tu veterinario y ten el envase a mano."
+    signs: []
+    onset_hours: null
+    emergency_actions: []
+  cat:
+    verdict: toxic
+    severity: severe
+    headline:
+      en: Toxic to cats. Call your vet now.
+      es: Tóxico para gatos. Llama ahora a tu veterinario.
+    summary:
+      en: "Many flea and tick treatments made for dogs contain permethrin or similar insecticides, which can be deadly to cats. Never use a dog product on a cat. Signs include drooling, vomiting, twitching and seizures. Call your vet immediately."
+      es: "Muchos antiparasitarios para perros contienen permetrina u otros insecticidas parecidos, que pueden ser mortales para los gatos. Nunca uses un producto para perros en un gato. Los signos incluyen babeo, vómitos, temblores y convulsiones. Llama inmediatamente a tu veterinario."
+    signs: [hypersalivation, vomiting, agitation, tremors, seizures, difficulty_breathing, weakness]
+    onset_hours: null
+    emergency_actions: [call_vet_now, do_not_induce_vomiting, bring_packaging]
+sources:
+  - label: Merck Veterinary Manual — Plant-Derived Insecticide Toxicosis in Animals
+    url: https://www.merckvetmanual.com/toxicology/insecticide-and-acaricide-organic-toxicity/plant-derived-insecticide-toxicosis-in-animals
+    accessed: 2026-09-28
+  - label: Cornell Feline Health Center — Poisons
+    url: https://www.vet.cornell.edu/departments-centers-and-institutes/cornell-feline-health-center/health-information/feline-health-topics/poisons
+    accessed: 2026-09-28
+  - label: FDA — Potentially Dangerous Items for Your Pet
+    url: https://www.fda.gov/animal-veterinary/animal-health-literacy/potentially-dangerous-items-your-pet
+    accessed: 2026-09-28
+review:
+  reviewed_by: "Jose Salguero"
+  reviewed_at: 2026-09-28
+  status: approved
+translations:
+  es:
+    tier_a: approved
+    tier_b: approved
+    translated_by: "Claude (draft)"
+    reviewed_by: "Jose Salguero"
+    reviewed_at: 2026-09-28

@@ -1,0 +1,54 @@
+id: aloe
+display_name:
+  en: Aloe plant
+  es: Planta de aloe
+category: plant
+aliases:
+  en: [aloe, aloe vera, aloe plant]
+  es: [aloe, aloe vera, áloe, sábila, planta de aloe]
+confusable_with: []
+is_ingredient: false
+high_risk: true
+species:
+  dog:
+    verdict: caution
+    severity: null
+    headline:
+      en: Best kept away from dogs.
+      es: Mejor mantenerlo alejado de los perros.
+    summary:
+      en: "Eating an aloe plant can cause sudden, severe diarrhoea, sometimes with vomiting, and it can lower blood sugar. Keep the plant out of reach, and call your vet if your pet shows these signs."
+      es: "Comer una planta de aloe puede provocar una diarrea repentina e intensa, a veces con vómitos, y puede bajar el azúcar en sangre. Mantén la planta fuera de su alcance y llama a tu veterinario si tu mascota presenta estos signos."
+    signs: [diarrhoea, vomiting, low_blood_sugar_signs]
+    onset_hours: null
+    emergency_actions: []
+  cat:
+    verdict: caution
+    severity: null
+    headline:
+      en: Best kept away from cats.
+      es: Mejor mantenerlo alejado de los gatos.
+    summary:
+      en: "Eating an aloe plant can cause sudden, severe diarrhoea, sometimes with vomiting, and it can lower blood sugar. Keep the plant out of reach, and call your vet if your pet shows these signs."
+      es: "Comer una planta de aloe puede provocar una diarrea repentina e intensa, a veces con vómitos, y puede bajar el azúcar en sangre. Mantén la planta fuera de su alcance y llama a tu veterinario si tu mascota presenta estos signos."
+    signs: [diarrhoea, vomiting, low_blood_sugar_signs]
+    onset_hours: null
+    emergency_actions: []
+sources:
+  - label: Merck Veterinary Manual — Houseplants and Ornamentals Toxic to Animals
+    url: https://www.merckvetmanual.com/toxicology/poisonous-plants/houseplants-and-ornamentals-toxic-to-animals
+    accessed: 2026-09-28
+  - label: FDA — Potentially Dangerous Items for Your Pet
+    url: https://www.fda.gov/animal-veterinary/animal-health-literacy/potentially-dangerous-items-your-pet
+    accessed: 2026-09-28
+review:
+  reviewed_by: "Jose Salguero"
+  reviewed_at: 2026-09-28
+  status: approved
+translations:
+  es:
+    tier_a: approved
+    tier_b: approved
+    translated_by: "Claude (draft)"
+    reviewed_by: "Jose Salguero"
+    reviewed_at: 2026-09-28

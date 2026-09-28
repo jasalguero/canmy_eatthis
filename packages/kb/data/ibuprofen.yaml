@@ -1,0 +1,57 @@
+id: ibuprofen
+display_name:
+  en: Ibuprofen
+  es: Ibuprofeno
+category: medication
+aliases:
+  en: [ibuprofen, advil, nurofen, motrin]
+  es: [ibuprofeno, neobrufen, espidifen]
+confusable_with: []
+is_ingredient: false
+high_risk: true
+species:
+  dog:
+    verdict: toxic
+    severity: severe
+    headline:
+      en: Toxic to dogs. Call your vet now.
+      es: Tóxico para perros. Llama ahora a tu veterinario.
+    summary:
+      en: "Even a fairly small amount of ibuprofen can harm a dog, causing stomach ulcers and bleeding, and kidney damage at higher amounts. Only give it if your vet prescribed it, and call your vet if your dog swallowed any."
+      es: "Incluso una cantidad bastante pequeña de ibuprofeno puede hacer daño a un perro: provoca úlceras y sangrado en el estómago y, en cantidades mayores, daño renal. Dáselo solo si te lo ha recetado tu veterinario, y llámale si tu perro se ha tragado alguno."
+    signs: [vomiting, diarrhoea, abdominal_pain, blood_in_stool, loss_of_appetite, lethargy, kidney_failure_signs]
+    onset_hours: null
+    emergency_actions: [call_vet_now, do_not_induce_vomiting, bring_packaging]
+  cat:
+    verdict: toxic
+    severity: severe
+    headline:
+      en: Toxic to cats. Call your vet now.
+      es: Tóxico para gatos. Llama ahora a tu veterinario.
+    summary:
+      en: "Cats are even more sensitive to ibuprofen than dogs, reacting to about half the amount. It can cause stomach bleeding and kidney damage. Call your vet straight away."
+      es: "Los gatos son aún más sensibles al ibuprofeno que los perros: les afecta aproximadamente la mitad de cantidad. Puede provocar sangrado en el estómago y daño renal. Llama enseguida a tu veterinario."
+    signs: [vomiting, diarrhoea, abdominal_pain, blood_in_stool, loss_of_appetite, lethargy, kidney_failure_signs]
+    onset_hours: null
+    emergency_actions: [call_vet_now, do_not_induce_vomiting, bring_packaging]
+sources:
+  - label: Merck Veterinary Manual — Toxicoses From Human Analgesics in Animals
+    url: https://www.merckvetmanual.com/toxicology/toxicoses-from-human-analgesics/toxicoses-from-human-analgesics-in-animals
+    accessed: 2026-09-28
+  - label: FDA — Get the Facts about Pain Relievers for Pets
+    url: https://www.fda.gov/animal-veterinary/animal-health-literacy/get-facts-about-pain-relievers-pets
+    accessed: 2026-09-28
+  - label: Cornell Feline Health Center — Poisons
+    url: https://www.vet.cornell.edu/departments-centers-and-institutes/cornell-feline-health-center/health-information/feline-health-topics/poisons
+    accessed: 2026-09-28
+review:
+  reviewed_by: "Jose Salguero"
+  reviewed_at: 2026-09-28
+  status: approved
+translations:
+  es:
+    tier_a: approved
+    tier_b: approved
+    translated_by: "Claude (draft)"
+    reviewed_by: "Jose Salguero"
+    reviewed_at: 2026-09-28

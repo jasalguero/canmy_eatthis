@@ -1,0 +1,57 @@
+id: kalanchoe
+display_name:
+  en: Kalanchoe
+  es: Kalanchoe
+category: plant
+aliases:
+  en: [kalanchoe, kalanchoes, flaming katy, mother of millions]
+  es: [kalanchoe, kalanchoes, calanchoe, madre de miles, aranto]
+confusable_with: []
+is_ingredient: false
+high_risk: true
+species:
+  dog:
+    verdict: toxic
+    severity: severe
+    headline:
+      en: Toxic to dogs. Call your vet now.
+      es: Tóxico para perros. Llama ahora a tu veterinario.
+    summary:
+      en: "Kalanchoe is one of the plants most often reported to cause serious, sometimes life-threatening, poisoning in dogs and cats. Early signs such as vomiting, drooling or tiredness don't show how serious it may become, so call your vet."
+      es: "El kalanchoe es una de las plantas que con más frecuencia se asocian a intoxicaciones graves, a veces mortales, en perros y gatos. Los primeros signos, como vómitos, babeo o cansancio, no reflejan hasta dónde puede llegar, así que llama a tu veterinario."
+    signs: [vomiting, hypersalivation, lethargy, loss_of_appetite, diarrhoea]
+    onset_hours: null
+    emergency_actions: [call_vet_now, do_not_induce_vomiting, bring_packaging]
+  cat:
+    verdict: toxic
+    severity: severe
+    headline:
+      en: Toxic to cats. Call your vet now.
+      es: Tóxico para gatos. Llama ahora a tu veterinario.
+    summary:
+      en: "Kalanchoe is one of the plants most often reported to cause serious, sometimes life-threatening, poisoning in dogs and cats. Early signs such as vomiting, drooling or tiredness don't show how serious it may become, so call your vet."
+      es: "El kalanchoe es una de las plantas que con más frecuencia se asocian a intoxicaciones graves, a veces mortales, en perros y gatos. Los primeros signos, como vómitos, babeo o cansancio, no reflejan hasta dónde puede llegar, así que llama a tu veterinario."
+    signs: [vomiting, hypersalivation, lethargy, loss_of_appetite, diarrhoea]
+    onset_hours: null
+    emergency_actions: [call_vet_now, do_not_induce_vomiting, bring_packaging]
+sources:
+  - label: Merck Veterinary Manual — Houseplants and Ornamentals Toxic to Animals
+    url: https://www.merckvetmanual.com/toxicology/poisonous-plants/houseplants-and-ornamentals-toxic-to-animals
+    accessed: 2026-09-28
+  - label: "Milewski & Khan, \"An overview of potentially life-threatening poisonous plants in dogs and cats\", J Vet Emerg Crit Care (2006)"
+    url: https://doi.org/10.1111/j.1476-4431.2005.00151.x
+    accessed: 2026-09-28
+  - label: FDA — Potentially Dangerous Items for Your Pet
+    url: https://www.fda.gov/animal-veterinary/animal-health-literacy/potentially-dangerous-items-your-pet
+    accessed: 2026-09-28
+review:
+  reviewed_by: "Jose Salguero"
+  reviewed_at: 2026-09-28
+  status: approved
+translations:
+  es:
+    tier_a: approved
+    tier_b: approved
+    translated_by: "Claude (draft)"
+    reviewed_by: "Jose Salguero"
+    reviewed_at: 2026-09-28

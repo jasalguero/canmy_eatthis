@@ -38,6 +38,9 @@ export const SIGN_IDS = [
   'blood_in_vomit',
   'blood_in_stool',
   'jaundice',
+  'irregular_heartbeat',
+  'mouth_irritation',
+  'facial_swelling',
 ] as const;
 export type SignId = (typeof SIGN_IDS)[number];
 export const SignIdSchema = z.enum(SIGN_IDS);

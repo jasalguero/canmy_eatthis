@@ -1,0 +1,72 @@
+id: autumn_crocus
+display_name:
+  en: Autumn crocus
+  es: Cólquico
+category: plant
+aliases:
+  en: [autumn crocus, meadow saffron, colchicum]
+  es: [cólquico, azafrán de otoño, azafrán silvestre, colchicum, mataperros]
+confusable_with: []
+is_ingredient: false
+high_risk: true
+species:
+  dog:
+    verdict: toxic
+    severity: severe
+    headline:
+      en: Toxic to dogs. Call your vet now.
+      es: Tóxico para perros. Llama ahora a tu veterinario.
+    summary:
+      en: "Autumn crocus is severely poisonous. Within hours it can cause heavy vomiting and diarrhoea, stomach pain, weakness and shock, and it can be fatal. Call your vet straight away."
+      es: "El cólquico es muy venenoso. En pocas horas puede provocar vómitos y diarrea intensos, dolor abdominal, debilidad y shock, y puede ser mortal. Llama enseguida a tu veterinario."
+    signs:
+      [
+        increased_thirst,
+        abdominal_pain,
+        vomiting,
+        diarrhoea,
+        weakness,
+        collapse,
+        difficulty_breathing,
+      ]
+    onset_hours: null
+    emergency_actions: [call_vet_now, do_not_induce_vomiting, bring_packaging]
+  cat:
+    verdict: toxic
+    severity: severe
+    headline:
+      en: Toxic to cats. Call your vet now.
+      es: Tóxico para gatos. Llama ahora a tu veterinario.
+    summary:
+      en: "Autumn crocus is severely poisonous. Within hours it can cause heavy vomiting and diarrhoea, stomach pain, weakness and shock, and it can be fatal. Call your vet straight away."
+      es: "El cólquico es muy venenoso. En pocas horas puede provocar vómitos y diarrea intensos, dolor abdominal, debilidad y shock, y puede ser mortal. Llama enseguida a tu veterinario."
+    signs:
+      [
+        increased_thirst,
+        abdominal_pain,
+        vomiting,
+        diarrhoea,
+        weakness,
+        collapse,
+        difficulty_breathing,
+      ]
+    onset_hours: null
+    emergency_actions: [call_vet_now, do_not_induce_vomiting, bring_packaging]
+sources:
+  - label: Merck Veterinary Manual — Houseplants and Ornamentals Toxic to Animals
+    url: https://www.merckvetmanual.com/toxicology/poisonous-plants/houseplants-and-ornamentals-toxic-to-animals
+    accessed: 2026-09-28
+  - label: 'Milewski & Khan, "An overview of potentially life-threatening poisonous plants in dogs and cats", J Vet Emerg Crit Care (2006)'
+    url: https://doi.org/10.1111/j.1476-4431.2005.00151.x
+    accessed: 2026-09-28
+review:
+  reviewed_by: "Jose Salguero"
+  reviewed_at: 2026-09-28
+  status: approved
+translations:
+  es:
+    tier_a: approved
+    tier_b: approved
+    translated_by: "Claude (draft)"
+    reviewed_by: "Jose Salguero"
+    reviewed_at: 2026-09-28

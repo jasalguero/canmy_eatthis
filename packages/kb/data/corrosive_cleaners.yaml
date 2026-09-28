@@ -1,0 +1,54 @@
+id: corrosive_cleaners
+display_name:
+  en: "Drain, toilet and dishwasher cleaners"
+  es: Desatascadores y limpiadores de inodoro y lavavajillas
+category: household
+aliases:
+  en: [drain cleaner, drain opener, caustic soda, lye, toilet bowl cleaner, toilet cleaner, dishwasher detergent, dishwasher tablet]
+  es: [desatascador, desatascadores, sosa cáustica, limpiador de inodoros, detergente para lavavajillas, pastilla de lavavajillas]
+confusable_with: []
+is_ingredient: false
+high_risk: true
+species:
+  dog:
+    verdict: toxic
+    severity: severe
+    headline:
+      en: Toxic to dogs. Call your vet now.
+      es: Tóxico para perros. Llama ahora a tu veterinario.
+    summary:
+      en: "These cleaners are corrosive and can burn the mouth, throat and stomach. Burns can take up to 12 hours to show fully. Don't try to make your pet vomit, as that exposes them to the cleaner a second time. Call your vet straight away and bring the packaging."
+      es: "Estos limpiadores son corrosivos y pueden quemar la boca, la garganta y el estómago. Las quemaduras pueden tardar hasta 12 horas en verse del todo. No intentes que tu mascota vomite, porque eso la expone al producto por segunda vez. Llama enseguida a tu veterinario y lleva el envase."
+    signs: [hypersalivation, vomiting, mouth_irritation, abdominal_pain]
+    onset_hours: { min: 0, max: 12 }
+    emergency_actions: [call_vet_now, do_not_induce_vomiting, bring_packaging]
+  cat:
+    verdict: toxic
+    severity: severe
+    headline:
+      en: Toxic to cats. Call your vet now.
+      es: Tóxico para gatos. Llama ahora a tu veterinario.
+    summary:
+      en: "These cleaners are corrosive and can burn the mouth, throat and stomach. Burns can take up to 12 hours to show fully. Don't try to make your pet vomit, as that exposes them to the cleaner a second time. Call your vet straight away and bring the packaging."
+      es: "Estos limpiadores son corrosivos y pueden quemar la boca, la garganta y el estómago. Las quemaduras pueden tardar hasta 12 horas en verse del todo. No intentes que tu mascota vomite, porque eso la expone al producto por segunda vez. Llama enseguida a tu veterinario y lleva el envase."
+    signs: [hypersalivation, vomiting, mouth_irritation, abdominal_pain]
+    onset_hours: { min: 0, max: 12 }
+    emergency_actions: [call_vet_now, do_not_induce_vomiting, bring_packaging]
+sources:
+  - label: Merck Veterinary Manual — Toxicoses From Corrosive Agents in Animals
+    url: https://www.merckvetmanual.com/toxicology/toxicoses-from-household-hazards/toxicoses-from-corrosive-agents-in-animals
+    accessed: 2026-09-28
+  - label: FDA — Potentially Dangerous Items for Your Pet
+    url: https://www.fda.gov/animal-veterinary/animal-health-literacy/potentially-dangerous-items-your-pet
+    accessed: 2026-09-28
+review:
+  reviewed_by: "Jose Salguero"
+  reviewed_at: 2026-09-28
+  status: approved
+translations:
+  es:
+    tier_a: approved
+    tier_b: approved
+    translated_by: "Claude (draft)"
+    reviewed_by: "Jose Salguero"
+    reviewed_at: 2026-09-28

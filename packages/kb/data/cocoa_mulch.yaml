@@ -1,0 +1,54 @@
+id: cocoa_mulch
+display_name:
+  en: Cocoa mulch
+  es: Mantillo de cacao
+category: other
+aliases:
+  en: [cocoa mulch, cocoa bean mulch, cocoa shell mulch, cocoa hulls]
+  es: [mantillo de cacao, acolchado de cacao, cáscara de cacao]
+confusable_with: []
+is_ingredient: false
+high_risk: true
+species:
+  dog:
+    verdict: toxic
+    severity: severe
+    headline:
+      en: Toxic to dogs. Call your vet now.
+      es: Tóxico para perros. Llama ahora a tu veterinario.
+    summary:
+      en: "Garden mulch made from cocoa bean shells contains the same substances that make chocolate toxic, and deaths have been reported in animals that ate it. Call your vet if your dog ate some."
+      es: "El mantillo de jardín hecho con cáscara de cacao contiene las mismas sustancias que hacen tóxico el chocolate, y se han descrito muertes en animales que lo comieron. Llama a tu veterinario si tu perro ha comido."
+    signs: [vomiting, diarrhoea, restlessness, tachycardia, tremors, seizures]
+    onset_hours: null
+    emergency_actions: [call_vet_now, do_not_induce_vomiting, bring_packaging]
+  cat:
+    verdict: toxic
+    severity: severe
+    headline:
+      en: Toxic to cats. Call your vet now.
+      es: Tóxico para gatos. Llama ahora a tu veterinario.
+    summary:
+      en: "Garden mulch made from cocoa bean shells contains the same substances that make chocolate toxic, and deaths have been reported in animals that ate it. Call your vet if your cat ate some."
+      es: "El mantillo de jardín hecho con cáscara de cacao contiene las mismas sustancias que hacen tóxico el chocolate, y se han descrito muertes en animales que lo comieron. Llama a tu veterinario si tu gato ha comido."
+    signs: [vomiting, diarrhoea, restlessness, tachycardia, tremors, seizures]
+    onset_hours: null
+    emergency_actions: [call_vet_now, do_not_induce_vomiting, bring_packaging]
+sources:
+  - label: Merck Veterinary Manual — Chocolate Toxicosis in Animals
+    url: https://www.merckvetmanual.com/toxicology/food-hazards/chocolate-toxicosis-in-animals
+    accessed: 2026-09-28
+  - label: FDA — Potentially Dangerous Items for Your Pet
+    url: https://www.fda.gov/animal-veterinary/animal-health-literacy/potentially-dangerous-items-your-pet
+    accessed: 2026-09-28
+review:
+  reviewed_by: "Jose Salguero"
+  reviewed_at: 2026-09-28
+  status: approved
+translations:
+  es:
+    tier_a: approved
+    tier_b: approved
+    translated_by: "Claude (draft)"
+    reviewed_by: "Jose Salguero"
+    reviewed_at: 2026-09-28

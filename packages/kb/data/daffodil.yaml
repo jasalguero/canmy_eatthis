@@ -1,0 +1,54 @@
+id: daffodil
+display_name:
+  en: Daffodil
+  es: Narciso
+category: plant
+aliases:
+  en: [daffodil, daffodils, daffodil bulb, narcissus, jonquil, paperwhite]
+  es: [narciso, narcisos, bulbo de narciso, junquillo]
+confusable_with: []
+is_ingredient: false
+high_risk: true
+species:
+  dog:
+    verdict: caution
+    severity: null
+    headline:
+      en: Best kept away from dogs.
+      es: Mejor mantenerlo alejado de los perros.
+    summary:
+      en: "Daffodil bulbs are poisonous. A small nibble usually causes few or no signs, but eating more, especially a bulb, can cause vomiting, stomach pain and diarrhoea, which can lead to dehydration. Call your vet if your pet ate a bulb or shows these signs."
+      es: "Los bulbos de narciso son venenosos. Un mordisco pequeño suele causar pocos signos o ninguno, pero comer más, sobre todo un bulbo, puede provocar vómitos, dolor abdominal y diarrea, que pueden llevar a la deshidratación. Llama a tu veterinario si tu mascota se ha comido un bulbo o presenta estos signos."
+    signs: [vomiting, abdominal_pain, diarrhoea]
+    onset_hours: null
+    emergency_actions: []
+  cat:
+    verdict: caution
+    severity: null
+    headline:
+      en: Best kept away from cats.
+      es: Mejor mantenerlo alejado de los gatos.
+    summary:
+      en: "Daffodil bulbs are poisonous. A small nibble usually causes few or no signs, but eating more, especially a bulb, can cause vomiting, stomach pain and diarrhoea, which can lead to dehydration. Call your vet if your pet ate a bulb or shows these signs."
+      es: "Los bulbos de narciso son venenosos. Un mordisco pequeño suele causar pocos signos o ninguno, pero comer más, sobre todo un bulbo, puede provocar vómitos, dolor abdominal y diarrea, que pueden llevar a la deshidratación. Llama a tu veterinario si tu mascota se ha comido un bulbo o presenta estos signos."
+    signs: [vomiting, abdominal_pain, diarrhoea]
+    onset_hours: null
+    emergency_actions: []
+sources:
+  - label: Merck Veterinary Manual — Houseplants and Ornamentals Toxic to Animals
+    url: https://www.merckvetmanual.com/toxicology/poisonous-plants/houseplants-and-ornamentals-toxic-to-animals
+    accessed: 2026-09-28
+  - label: FDA — Potentially Dangerous Items for Your Pet
+    url: https://www.fda.gov/animal-veterinary/animal-health-literacy/potentially-dangerous-items-your-pet
+    accessed: 2026-09-28
+review:
+  reviewed_by: "Jose Salguero"
+  reviewed_at: 2026-09-28
+  status: approved
+translations:
+  es:
+    tier_a: approved
+    tier_b: approved
+    translated_by: "Claude (draft)"
+    reviewed_by: "Jose Salguero"
+    reviewed_at: 2026-09-28

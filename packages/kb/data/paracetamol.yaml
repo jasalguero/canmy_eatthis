@@ -1,0 +1,54 @@
+id: paracetamol
+display_name:
+  en: Paracetamol (acetaminophen)
+  es: Paracetamol
+category: medication
+aliases:
+  en: [paracetamol, acetaminophen, tylenol, panadol]
+  es: [paracetamol, acetaminofén, gelocatil, termalgin]
+confusable_with: []
+is_ingredient: false
+high_risk: true
+species:
+  dog:
+    verdict: toxic
+    severity: moderate
+    headline:
+      en: Toxic to dogs. Call your vet.
+      es: Tóxico para perros. Llama a tu veterinario.
+    summary:
+      en: "Paracetamol can damage a dog's liver and blood. Dogs are less sensitive to it than cats, but only give it if your vet prescribed it, and call your vet if your dog swallowed tablets."
+      es: "El paracetamol puede dañar el hígado y la sangre de un perro. Los perros son menos sensibles que los gatos, pero dáselo solo si te lo ha recetado tu veterinario, y llámale si tu perro se ha tragado pastillas."
+    signs: [loss_of_appetite, vomiting, lethargy, facial_swelling]
+    onset_hours: null
+    emergency_actions: [call_vet_now, do_not_induce_vomiting, bring_packaging]
+  cat:
+    verdict: toxic
+    severity: severe
+    headline:
+      en: Toxic to cats. Call your vet now.
+      es: Tóxico para gatos. Llama ahora a tu veterinario.
+    summary:
+      en: "Paracetamol is fatal to cats: they can't break it down, and even a small amount is dangerous. Signs can appear within a few hours. Never give it to a cat, and call your vet immediately if your cat swallowed any, even if it seems fine."
+      es: "El paracetamol es mortal para los gatos: no pueden eliminarlo y hasta una cantidad pequeña es peligrosa. Los signos pueden aparecer en pocas horas. Nunca se lo des a un gato, y llama inmediatamente a tu veterinario si tu gato ha tragado algo, aunque parezca estar bien."
+    signs: [loss_of_appetite, vomiting, lethargy, facial_swelling]
+    onset_hours: null
+    emergency_actions: [call_vet_now, do_not_induce_vomiting, bring_packaging]
+sources:
+  - label: Merck Veterinary Manual — Toxicoses From Human Analgesics in Animals
+    url: https://www.merckvetmanual.com/toxicology/toxicoses-from-human-analgesics/toxicoses-from-human-analgesics-in-animals
+    accessed: 2026-09-28
+  - label: FDA — Get the Facts about Pain Relievers for Pets
+    url: https://www.fda.gov/animal-veterinary/animal-health-literacy/get-facts-about-pain-relievers-pets
+    accessed: 2026-09-28
+review:
+  reviewed_by: "Jose Salguero"
+  reviewed_at: 2026-09-28
+  status: approved
+translations:
+  es:
+    tier_a: approved
+    tier_b: approved
+    translated_by: "Claude (draft)"
+    reviewed_by: "Jose Salguero"
+    reviewed_at: 2026-09-28
