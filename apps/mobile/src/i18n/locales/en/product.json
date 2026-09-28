@@ -1,0 +1,20 @@
+{
+  "lookingUp": "Looking up this product…",
+  "unnamedProduct": "Unnamed product",
+  "barcodeLine": "Barcode {code}",
+  "matchesTitle": "Ingredients we have an answer for",
+  "matchesNote": "Only these ingredients are in our list. The others aren't, and that doesn't mean they're harmless.",
+  "noMatchesTitle": "None of its ingredients are in our list",
+  "noMatchesBody": "That doesn't mean this product is harmless for your {species, select, cat {cat} other {dog}}. If they ate a lot of it, or seem unwell, call your vet.",
+  "ingredientsSection": "Full ingredient list",
+  "noIngredientsTitle": "No ingredient list for this product",
+  "noIngredientsBody": "Open Food Facts knows this product but has no ingredient list for it. Type what it is, or its main ingredients, instead.",
+  "notFoundTitle": "We couldn't find this product",
+  "notFoundBody": "It isn't in Open Food Facts yet. Type what it is, or its main ingredients, instead.",
+  "unavailableTitle": "Can't look up barcodes right now",
+  "unavailableBody": "Looking up a barcode needs a connection. Typed lookups work offline and give the same answers.",
+  "typeInstead": "Type it instead",
+  "retry": "Try again",
+  "scanAnother": "Scan another barcode",
+  "attribution": "Product data from Open Food Facts, available under the Open Database License."
+}

@@ -8,8 +8,9 @@ import native from './src/theme/native.json';
  *
  * Every build links `expo-camera` and `expo-image-picker`, so every build carries both iOS
  * purpose strings: Apple rejects an upload whose binary references camera or photo-library APIs
- * without one. Each string describes only what that build actually does. On Android, the
- * permissions a build does not use are blocked outright.
+ * without one. Each string describes only what that build actually does. Every build scans
+ * barcodes (D29), so the camera is always in use; on Android, the photo-library permissions are
+ * blocked in a build without photo identification.
  *
  * Expo loads this file without resolving other TypeScript modules, so the flag parsing below
  * mirrors `src/lib/features.ts` rather than importing it (`features.test.ts` keeps them equal),
@@ -17,24 +18,19 @@ import native from './src/theme/native.json';
  */
 interface Features {
   photoId: boolean;
-  barcode: boolean;
 }
 
 const parseFlag = (value: string | undefined) => value === '1' || value === 'true';
 
 const flags: Features = {
   photoId: parseFlag(process.env.EXPO_PUBLIC_FEATURE_PHOTO_ID),
-  barcode: parseFlag(process.env.EXPO_PUBLIC_FEATURE_BARCODE),
 };
-
-const usesCamera = (f: Features) => f.photoId || f.barcode;
 
 function cameraPermission(f: Features): string {
   if (f.photoId) {
-    return 'CanMy*EatThis uses your camera to identify what your pet might have eaten.';
+    return 'CanMy*EatThis uses your camera to scan product barcodes and to identify what your pet might have eaten.';
   }
-  if (f.barcode) return 'CanMy*EatThis uses your camera to scan product barcodes.';
-  return 'CanMy*EatThis only uses your camera if you choose to scan or photograph something.';
+  return 'CanMy*EatThis uses your camera to scan product barcodes.';
 }
 
 function photosPermission(f: Features): string {
@@ -45,7 +41,6 @@ function photosPermission(f: Features): string {
 }
 
 const blockedPermissions = [
-  ...(usesCamera(flags) ? [] : ['android.permission.CAMERA']),
   ...(flags.photoId
     ? []
     : [

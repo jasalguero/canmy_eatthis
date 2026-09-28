@@ -2,7 +2,7 @@ import type { ExpoConfig } from 'expo/config';
 
 import native from '../theme/native.json';
 import { tokens } from '../theme/tokens';
-import { parseFlag, usesCamera } from './features';
+import { parseFlag } from './features';
 
 describe('parseFlag', () => {
   it('is on only for "1" or "true"', () => {
@@ -14,25 +14,16 @@ describe('parseFlag', () => {
   });
 });
 
-describe('usesCamera', () => {
-  it('needs the camera for either feature, and not for a text-only build', () => {
-    expect(usesCamera({ photoId: false, barcode: false })).toBe(false);
-    expect(usesCamera({ photoId: true, barcode: false })).toBe(true);
-    expect(usesCamera({ photoId: false, barcode: true })).toBe(true);
-  });
-});
-
 /**
  * `app.config.ts` cannot import `features.ts` (Expo loads it without resolving TypeScript
  * modules), so it repeats the flag parsing. These tests keep the two in step, and pin what each
  * build declares to the stores.
  */
-const ENV_KEYS = ['EXPO_PUBLIC_FEATURE_PHOTO_ID', 'EXPO_PUBLIC_FEATURE_BARCODE'] as const;
-const savedEnv = Object.fromEntries(ENV_KEYS.map((key) => [key, process.env[key]]));
+const ENV_KEY = 'EXPO_PUBLIC_FEATURE_PHOTO_ID';
+const savedEnv = process.env[ENV_KEY];
 
-function loadConfig(env: { photoId?: string; barcode?: string }): ExpoConfig {
-  process.env.EXPO_PUBLIC_FEATURE_PHOTO_ID = env.photoId ?? '';
-  process.env.EXPO_PUBLIC_FEATURE_BARCODE = env.barcode ?? '';
+function loadConfig(photoId?: string): ExpoConfig {
+  process.env[ENV_KEY] = photoId ?? '';
   let config: ExpoConfig | undefined;
   jest.isolateModules(() => {
     const build = require('../../app.config').default;
@@ -48,41 +39,33 @@ function cameraText(config: ExpoConfig): string {
 
 describe('app.config.ts', () => {
   afterEach(() => {
-    for (const key of ENV_KEYS) {
-      if (savedEnv[key] === undefined) delete process.env[key];
-      else process.env[key] = savedEnv[key];
-    }
+    if (savedEnv === undefined) delete process.env[ENV_KEY];
+    else process.env[ENV_KEY] = savedEnv;
   });
 
-  it('defaults to text-only: no camera or media permissions on Android', () => {
-    const config = loadConfig({});
-    expect(config.extra?.features).toEqual({ photoId: false, barcode: false });
-    expect(config.android?.blockedPermissions).toEqual(
-      expect.arrayContaining(['android.permission.CAMERA', 'android.permission.READ_MEDIA_IMAGES']),
-    );
-    expect(cameraText(config)).not.toMatch(/identify|barcode/i);
-  });
-
-  it('allows the camera for barcode scanning, and says that is what it is for', () => {
-    const config = loadConfig({ barcode: '1' });
+  it('defaults to the release build: camera for barcodes, no photo library', () => {
+    const config = loadConfig();
+    expect(config.extra?.features).toEqual({ photoId: false });
     expect(config.android?.blockedPermissions).not.toContain('android.permission.CAMERA');
     expect(config.android?.blockedPermissions).toContain('android.permission.READ_MEDIA_IMAGES');
     expect(cameraText(config)).toMatch(/barcode/i);
+    expect(cameraText(config)).not.toMatch(/identify/i);
   });
 
-  it('allows the camera and photo library for photo identification', () => {
-    const config = loadConfig({ photoId: 'true' });
-    expect(config.android?.blockedPermissions).not.toContain('android.permission.CAMERA');
+  it('allows the photo library and says the camera also identifies, with photo ID on', () => {
+    const config = loadConfig('true');
     expect(config.android?.blockedPermissions).not.toContain(
       'android.permission.READ_MEDIA_IMAGES',
     );
+    expect(cameraText(config)).toMatch(/barcode/i);
     expect(cameraText(config)).toMatch(/identify/i);
   });
 
   it('never allows the microphone', () => {
-    for (const env of [{}, { barcode: '1' }, { photoId: '1', barcode: '1' }]) {
-      const config = loadConfig(env);
-      expect(config.android?.blockedPermissions).toContain('android.permission.RECORD_AUDIO');
+    for (const env of [undefined, '1']) {
+      expect(loadConfig(env).android?.blockedPermissions).toContain(
+        'android.permission.RECORD_AUDIO',
+      );
     }
   });
 });

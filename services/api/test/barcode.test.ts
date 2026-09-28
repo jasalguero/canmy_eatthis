@@ -11,7 +11,7 @@ afterEach(() => {
   vi.unstubAllGlobals();
 });
 
-function mockFetchSequence(responses: Array<{ ok: boolean; body?: unknown }>) {
+function mockFetchSequence(responses: Array<{ ok: boolean; status?: number; body?: unknown }>) {
   let call = 0;
   vi.stubGlobal(
     'fetch',
@@ -20,6 +20,7 @@ function mockFetchSequence(responses: Array<{ ok: boolean; body?: unknown }>) {
       call++;
       return {
         ok: next?.ok ?? false,
+        status: next?.status ?? (next?.ok ? 200 : 500),
         json: async () => next?.body,
       } as Response;
     }),
@@ -61,9 +62,18 @@ describe('lookupBarcode', () => {
     expect(await lookupBarcode('0000000000000')).toBeNull();
   });
 
-  it('returns null on a non-OK HTTP response rather than throwing', async () => {
-    mockFetchSequence([{ ok: false }, { ok: false }]);
-    expect(await lookupBarcode('0000000000000')).toBeNull();
+  it('returns null when both databases answer 404, which is how they report an unknown product', async () => {
+    mockFetchSequence([
+      { ok: false, status: 404, body: { status: 0 } },
+      { ok: false, status: 404, body: { status: 0 } },
+    ]);
+    expect(await lookupBarcode('4006381333932')).toBeNull();
+  });
+
+  // It used to return null here too, which reported a database outage as "product not found".
+  it('throws on a server error, so an outage is never reported as "not found"', async () => {
+    mockFetchSequence([{ ok: false, status: 503 }]);
+    await expect(lookupBarcode('3017620422003')).rejects.toThrow('HTTP 503');
   });
 });
 
@@ -84,6 +94,16 @@ describe('matchIngredientsAgainstKb', () => {
 
   it('never fuzzy-matches an ingredient line — "salt" must not become avocado ("palta")', () => {
     expect(matchIngredientsAgainstKb('salt, sugar, sal, azúcar', 'en')).toEqual([]);
+  });
+
+  // Pet foods list vitamin D3 as an ordinary ingredient; only `is_ingredient` entries may match.
+  it('does not match entries that are not ingredients, like vitamin D supplements', () => {
+    expect(matchIngredientsAgainstKb('chicken, rice, vitamin D3, vitamin D', 'en')).toEqual([]);
+  });
+
+  it('matches through brackets and percentages', () => {
+    const matches = matchIngredientsAgainstKb('flour, fruit (raisins 12%), water', 'en');
+    expect(matches.map((m) => m.kbId)).toEqual(['grapes_raisins']);
   });
 
   it('resolves in the requested language', () => {

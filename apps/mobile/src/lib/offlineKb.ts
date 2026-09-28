@@ -1,8 +1,8 @@
 import {
   type AliasIndex,
   type AliasSearchIndex,
-  type ResolvedKbEntry,
-  ResolvedKbEntrySchema,
+  type ResolvedKbEntryWithMeta,
+  ResolvedKbEntryWithMetaSchema,
   type TextResolution,
   buildAliasSearchIndex,
   resolveText,
@@ -36,7 +36,7 @@ const ALIAS_INDEX: AliasIndex = (kbIndexArtifact as { index: AliasIndex }).index
 
 interface EntryMap {
   version: string;
-  byId: Map<string, ResolvedKbEntry>;
+  byId: Map<string, ResolvedKbEntryWithMeta>;
 }
 
 const entryMapCache: Partial<Record<SupportedLanguage, EntryMap>> = {};
@@ -52,9 +52,11 @@ function getEntryMap(language: SupportedLanguage): EntryMap {
   if (cached) return cached;
 
   const raw = RAW_BY_LANGUAGE[language];
-  const byId = new Map<string, ResolvedKbEntry>();
+  const byId = new Map<string, ResolvedKbEntryWithMeta>();
   for (const rawEntry of raw.entries) {
-    const entry = ResolvedKbEntrySchema.parse(rawEntry);
+    // With the metadata (`isIngredient`, …): barcode matching needs it, and the base schema
+    // would strip it.
+    const entry = ResolvedKbEntryWithMetaSchema.parse(rawEntry);
     byId.set(entry.id, entry);
   }
   const built: EntryMap = { version: raw.version, byId };
@@ -70,7 +72,10 @@ function getSearchIndex(): AliasSearchIndex {
   return searchIndex;
 }
 
-export function getKbEntry(kbId: string, language: SupportedLanguage): ResolvedKbEntry | undefined {
+export function getKbEntry(
+  kbId: string,
+  language: SupportedLanguage,
+): ResolvedKbEntryWithMeta | undefined {
   return getEntryMap(language).byId.get(kbId);
 }
 
@@ -88,4 +93,14 @@ export function getKbVersion(language: SupportedLanguage): string {
  */
 export function resolveOffline(query: string): TextResolution {
   return resolveText(query, ALIAS_INDEX, getSearchIndex());
+}
+
+/**
+ * Exact (alias) resolution only, for text nobody typed — an ingredient line from a product
+ * database. Fuzzy matching is for a person's typos; applied to an ingredient list it produces
+ * confident verdicts for things the product doesn't contain ("salt" → "palta", avocado).
+ */
+export function resolveExactOffline(text: string): string | null {
+  const resolution = resolveOffline(text);
+  return resolution.type === 'exact' ? resolution.kbId : null;
 }

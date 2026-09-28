@@ -796,6 +796,8 @@ branch would drift from the screens and stores it shares with the rest of the ap
   turns one on; unset means off, so a build that forgets them is text-only. They are set per EAS
   profile in `apps/mobile/eas.json`: `development` has both on, `preview` and `production` both
   off. A local `expo start` without them is text-only too; set them to work on those paths.
+  **Update (D29):** the barcode flag is gone. Barcode scanning ships in every build now that its
+  lookup exists, so only the photo flag remains.
 - **No runtime or remote switch.** Code shipped switched off and turned on later would be a
   hidden feature, which App Store guideline 2.3.1 forbids.
 - **What the flags gate:** the photo tray and source sheet on Home (with barcode alone, a single
@@ -823,3 +825,38 @@ permissions for it.
 (guideline 2.3.1); excluding the native modules per build (possible, but needs a build-time
 `package.json` patch and can only be checked with a native build — worth revisiting if a store
 objects to the unused purpose strings).
+
+## D29 — Barcode lookup from the app, not the Worker, for the first release
+
+D8 put the Open Food Facts lookup in the Worker. The first release has no Worker (D28, docs/10
+§7), and barcode scanning is in it, so the app now looks products up itself. Neither database
+needs a key or an account, so this adds no secret and no spend.
+
+- **One implementation, in `packages/shared/src/barcode.ts`:** the lookup (Open Pet Food Facts,
+  then Open Food Facts), its response parsing, and the ingredient matching. The app
+  (`apps/mobile/src/lib/barcode.ts`) and the Worker (`services/api/src/barcode.ts`) both call it,
+  with their own `fetch` (AGENTS.md #5).
+- **Only `is_ingredient` entries match.** The matcher used to try every alias, so an entry such
+  as vitamin D supplements would have matched the "vitamin D3" that pet foods list as an
+  ordinary ingredient. Matching stays exact-alias only, never fuzzy.
+- **Ingredient lists are split on brackets as well as commas and semicolons, and percentages are
+  dropped first**, so "fruit (raisins 12,5 %)" reaches the "raisins" alias.
+- **"Not found" and "unreachable" are different answers.** Both databases answer an unknown
+  product with HTTP 404 and `status: 0` (checked 2026-09-28); any other error now throws. The
+  Worker used to return "not found" for every non-OK response, so an outage read as an unknown
+  product.
+- **The product screen** (`apps/mobile/src/app/product.tsx`) leads with the product's name, so
+  the user can check it is what they are holding, then shows each recognised ingredient's verdict,
+  worst first. It says that unrecognised ingredients are not in the list, which says nothing about
+  harm; a product with no matches is `unknown`. Unreachable, not-found and no-ingredient-list each
+  have their own state, all leading back to typed lookup. A toxic ingredient shows the emergency
+  call button.
+
+**Privacy and licensing.** A scan sends the barcode, and with it the device's IP address, to
+Open Food Facts. The privacy policy must say so. Their data is under the Open Database License,
+which requires attribution; the product screen credits them, and the store listing and About
+section should too.
+
+**Alternatives:** keep the lookup in the Worker (needs the Worker in v1, which D28 defers);
+bundle a product database (Open Food Facts is millions of products, far beyond an app bundle);
+leave barcode out of v1 (declined — it is the fastest way to answer "what's in this?").

@@ -1,0 +1,20 @@
+{
+  "lookingUp": "Buscando este producto…",
+  "unnamedProduct": "Producto sin nombre",
+  "barcodeLine": "Código de barras {code}",
+  "matchesTitle": "Ingredientes sobre los que tenemos respuesta",
+  "matchesNote": "Solo estos ingredientes están en nuestra lista. Los demás no, y eso no significa que sean inofensivos.",
+  "noMatchesTitle": "Ninguno de sus ingredientes está en nuestra lista",
+  "noMatchesBody": "Eso no significa que este producto sea inofensivo para tu {species, select, cat {gato} other {perro}}. Si ha comido mucho o no se encuentra bien, llama a tu veterinario.",
+  "ingredientsSection": "Lista completa de ingredientes",
+  "noIngredientsTitle": "Este producto no tiene lista de ingredientes",
+  "noIngredientsBody": "Open Food Facts conoce este producto, pero no tiene su lista de ingredientes. Escribe qué es, o sus ingredientes principales.",
+  "notFoundTitle": "No hemos encontrado este producto",
+  "notFoundBody": "Todavía no está en Open Food Facts. Escribe qué es, o sus ingredientes principales.",
+  "unavailableTitle": "Ahora no se pueden buscar códigos de barras",
+  "unavailableBody": "Buscar un código de barras necesita conexión. Las búsquedas escritas funcionan sin conexión y dan las mismas respuestas.",
+  "typeInstead": "Escribirlo en su lugar",
+  "retry": "Reintentar",
+  "scanAnother": "Escanear otro código de barras",
+  "attribution": "Datos del producto de Open Food Facts, disponibles bajo la Open Database License."
+}

@@ -12,6 +12,7 @@ import enHome from './locales/en/home.json';
 import enIdentify from './locales/en/identify.json';
 import enLegal from './locales/en/legal.json';
 import enOnboarding from './locales/en/onboarding.json';
+import enProduct from './locales/en/product.json';
 import enProfile from './locales/en/profile.json';
 import enResult from './locales/en/result.json';
 import enSettings from './locales/en/settings.json';
@@ -24,6 +25,7 @@ import esHome from './locales/es/home.json';
 import esIdentify from './locales/es/identify.json';
 import esLegal from './locales/es/legal.json';
 import esOnboarding from './locales/es/onboarding.json';
+import esProduct from './locales/es/product.json';
 import esProfile from './locales/es/profile.json';
 import esResult from './locales/es/result.json';
 import esSettings from './locales/es/settings.json';
@@ -44,6 +46,7 @@ export const en = {
   profile: enProfile,
   settings: enSettings,
   camera: enCamera,
+  product: enProduct,
   vocab: vocabEn,
 };
 export const es = {
@@ -59,6 +62,7 @@ export const es = {
   profile: esProfile,
   settings: esSettings,
   camera: esCamera,
+  product: esProduct,
   vocab: vocabEs,
 };
 

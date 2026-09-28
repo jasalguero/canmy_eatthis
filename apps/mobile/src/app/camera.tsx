@@ -1,3 +1,4 @@
+import { isPlausibleBarcode } from '@canmyeatthis/shared';
 import { type BarcodeScanningResult, CameraView, useCameraPermissions } from 'expo-camera';
 import { Redirect, router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
@@ -14,10 +15,10 @@ import { openAppSettings, permissionUiState } from '@/lib/permissions';
 import { sizes } from '@/theme/tokens';
 
 /**
- * The camera capture modal (docs/07 Phase 3), reached from `PhotoSourceSheet`. `mode=barcode`
- * switches it into barcode-scanning mode; the resulting value goes into the description field as
- * plain text for now — the actual Open Food Facts lookup is the Worker's job (docs/07 Phase 5,
- * H4), which does not exist yet. This screen's job in H3 is real capture, not identification.
+ * The camera capture modal (docs/07 Phase 3), reached from `PhotoSourceSheet` or Home's scan
+ * button. `mode=barcode` switches it into barcode-scanning mode: a plausible code replaces this
+ * screen with the product lookup (`product.tsx`, D29); anything else is ignored and scanning
+ * carries on.
  *
  * Permission handling covers all three states docs/07 Phase 3 asks for: granted, denied
  * (re-askable) and denied-permanently (Settings deep link) — and in every one of them, backing
@@ -25,11 +26,11 @@ import { sizes } from '@/theme/tokens';
  */
 const BARCODE_TYPES = ['ean13', 'ean8', 'upc_a', 'upc_e'] as const;
 
-/** Each mode exists only in a build with its feature (`lib/features.ts`, D28). */
+/** Barcode mode is in every build (D29); photo mode only with photo identification (D28). */
 export default function CameraRoute() {
   const params = useLocalSearchParams<{ mode?: string }>();
   const isBarcode = params.mode === 'barcode';
-  if (!(isBarcode ? features.barcode : features.photoId)) return <Redirect href="/" />;
+  if (!isBarcode && !features.photoId) return <Redirect href="/" />;
   return <CameraScreen isBarcode={isBarcode} />;
 }
 
@@ -44,8 +45,7 @@ function CameraScreen({ isBarcode }: { isBarcode: boolean }) {
 
   const photos = useDraftStore((state) => state.photos);
   const addPhoto = useDraftStore((state) => state.addPhoto);
-  const description = useDraftStore((state) => state.description);
-  const setDescription = useDraftStore((state) => state.setDescription);
+  const species = useDraftStore((state) => state.species);
 
   const state = permission === null ? null : permissionUiState(permission);
 
@@ -64,8 +64,12 @@ function CameraScreen({ isBarcode }: { isBarcode: boolean }) {
         <Text variant="body" tone="secondary">
           {t(
             state === 'denied-permanently'
-              ? 'camera:permissionDeniedPermanentlyBody'
-              : 'camera:permissionDeniedBody',
+              ? isBarcode
+                ? 'camera:permissionDeniedPermanentlyBodyBarcode'
+                : 'camera:permissionDeniedPermanentlyBody'
+              : isBarcode
+                ? 'camera:permissionDeniedBodyBarcode'
+                : 'camera:permissionDeniedBody',
           )}
         </Text>
         {state === 'denied-permanently' ? (
@@ -96,10 +100,11 @@ function CameraScreen({ isBarcode }: { isBarcode: boolean }) {
   }
 
   function handleBarcode(result: BarcodeScanningResult) {
-    if (scanned) return;
+    // The scanner fires for every frame it can read; act on the first plausible product code
+    // only, and keep scanning past anything else.
+    if (scanned || !isPlausibleBarcode(result.data)) return;
     setScanned(true);
-    setDescription(description ? `${description} ${result.data}` : result.data);
-    router.back();
+    router.replace({ pathname: '/product', params: { code: result.data, species } });
   }
 
   return (

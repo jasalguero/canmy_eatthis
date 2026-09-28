@@ -20,5 +20,7 @@
   "typeInstead": "Type it instead",
   "previewTitle": "{index} of {total}",
   "moveLeftA11y": "Move this photo earlier",
-  "moveRightA11y": "Move this photo later"
+  "moveRightA11y": "Move this photo later",
+  "permissionDeniedBodyBarcode": "Turn on camera access to scan barcodes. Meanwhile, you can type what it is.",
+  "permissionDeniedPermanentlyBodyBarcode": "Camera access was turned off in Settings. Meanwhile, you can type what it is."
 }

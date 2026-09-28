@@ -11,21 +11,18 @@
         "simulator": true
       },
       "env": {
-        "EXPO_PUBLIC_FEATURE_PHOTO_ID": "1",
-        "EXPO_PUBLIC_FEATURE_BARCODE": "1"
+        "EXPO_PUBLIC_FEATURE_PHOTO_ID": "1"
       }
     },
     "preview": {
       "distribution": "internal",
       "env": {
-        "EXPO_PUBLIC_FEATURE_PHOTO_ID": "0",
-        "EXPO_PUBLIC_FEATURE_BARCODE": "0"
+        "EXPO_PUBLIC_FEATURE_PHOTO_ID": "0"
       }
     },
     "production": {
       "env": {
-        "EXPO_PUBLIC_FEATURE_PHOTO_ID": "0",
-        "EXPO_PUBLIC_FEATURE_BARCODE": "0"
+        "EXPO_PUBLIC_FEATURE_PHOTO_ID": "0"
       }
     }
   },

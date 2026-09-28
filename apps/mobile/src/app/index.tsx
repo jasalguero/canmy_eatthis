@@ -47,9 +47,9 @@ import { tokens } from '@/theme/tokens';
  * text the way the design canvas draws it, so a long `es` translation at 200% font scale pushes
  * the mascot down as the title wraps instead of the mascot ever sitting on top of it.
  *
- * What the input area offers follows the build's feature flags (`lib/features.ts`, D28): the
- * photo tray only with photo identification, a single scan button with barcode scanning alone,
- * and in a text-only build just the description field.
+ * What the input area offers follows the build's feature flags (`lib/features.ts`, D28): with
+ * photo identification, the photo tray, whose `[+]` sheet also offers barcode scanning; without
+ * it, a single "Scan a barcode" button (D29) above the description field.
  *
  * Home is also where a first launch is sent to the first-run flow, once persisted settings have
  * loaded — before that, `onboarded` reads false for everyone.
@@ -160,13 +160,13 @@ function HomeScreen() {
                   }
                 />
               </View>
-            ) : features.barcode ? (
+            ) : (
               <Button
                 label={t('home:scanBarcode')}
                 variant="secondary"
                 onPress={() => router.push({ pathname: '/camera', params: { mode: 'barcode' } })}
               />
-            ) : null}
+            )}
 
             <DescriptionInput value={description} onChangeText={setDescription} />
           </View>
@@ -192,11 +192,7 @@ function HomeScreen() {
           onClose={() => setSourceSheetVisible(false)}
           onSelectCamera={() => router.push('/camera')}
           onSelectLibrary={() => void pickFromLibrary()}
-          onSelectBarcode={
-            features.barcode
-              ? () => router.push({ pathname: '/camera', params: { mode: 'barcode' } })
-              : undefined
-          }
+          onSelectBarcode={() => router.push({ pathname: '/camera', params: { mode: 'barcode' } })}
         />
       ) : null}
     </Screen>
