@@ -82,16 +82,34 @@ function icuArguments(message: string): Set<string> {
 
 describe('initI18n', () => {
   it('initialises once and never switches language on a later call', () => {
-    // Regression guard. `initI18n` is called from a `useMemo` in the root layout, i.e. during
-    // render. It used to call `changeLanguage` when the language prop differed, and because
-    // i18next notifies every `useTranslation` subscriber, that set state on other components
-    // mid-render — React's "Cannot update a component while rendering a different component".
-    // Switching language is an effect's job (see src/app/_layout.tsx); this function must stay
-    // inert on re-entry.
+    // Regression guard. `initI18n` used to call `changeLanguage` when re-entered with a
+    // different language, and because i18next notifies every `useTranslation` subscriber, that
+    // set state on other components mid-render — React's "Cannot update a component while
+    // rendering a different component". Switching language is an effect's job (see
+    // src/app/_layout.tsx); this function must stay inert on re-entry.
     const first = initI18n('en');
     const second = initI18n('es');
     expect(second).toBe(first);
     expect(first.language).toBe('en');
+  });
+
+  it('once i18next is initialised, neither re-runs init nor emits anything', () => {
+    // Regression guard for the Fast Refresh case. "Already initialised" used to be a flag in the
+    // i18n module; re-running that module (any catalogue edit) reset it, so the next call ran
+    // `init` again, whose `languageChanged` updated every mounted `useTranslation` subscriber
+    // mid-render. The guard now reads i18next's own state, which a module re-run cannot reset.
+    const instance = initI18n('en');
+    expect(instance.isInitialized).toBe(true);
+    const init = jest.spyOn(instance, 'init');
+    const emit = jest.spyOn(instance, 'emit');
+    try {
+      initI18n('es');
+      expect(init).not.toHaveBeenCalled();
+      expect(emit).not.toHaveBeenCalled();
+    } finally {
+      init.mockRestore();
+      emit.mockRestore();
+    }
   });
 });
 

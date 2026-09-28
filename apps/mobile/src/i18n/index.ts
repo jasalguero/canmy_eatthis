@@ -82,22 +82,24 @@ export function deviceDefaultLanguage(): SupportedLanguage {
     : 'en';
 }
 
-let initialized = false;
-
 /**
- * Initialises the i18next singleton, once. Safe to call on every render: after the first call it
- * returns the existing instance and does nothing else.
+ * Initialises the i18next singleton, once. After the first call it returns the existing instance
+ * and does nothing else.
  *
  * It deliberately does **not** switch language when called again with a different one.
- * `changeLanguage` makes i18next notify every `useTranslation` subscriber, so calling it from
- * here — which runs inside a `useMemo`, during render — set state on other components mid-render
- * and produced React's "Cannot update a component while rendering a different component"
- * warning. Switching language is a side effect and belongs in an effect: see the one in
- * `src/app/_layout.tsx` that owns it.
+ * `changeLanguage` makes i18next notify every `useTranslation` subscriber, and doing that during
+ * a render updates other components mid-render — React's "Cannot update a component while
+ * rendering a different component". Switching language is a side effect and belongs in an
+ * effect: see the one in `src/app/_layout.tsx` that owns it.
+ *
+ * `init` itself calls `changeLanguage`, so the first call must not happen during a render either:
+ * `_layout.tsx` calls this at module scope. And "already initialised" is read from i18next itself,
+ * not from a flag in this module — Fast Refresh re-runs this module whenever a catalogue changes,
+ * which reset such a flag and re-ran `init` inside the next render, with every mounted
+ * `useTranslation` subscriber getting updated mid-render.
  */
 export function initI18n(initialLanguage: SupportedLanguage): typeof i18next {
-  if (initialized) return i18next;
-  initialized = true;
+  if (i18next.isInitialized) return i18next;
 
   i18next
     .use(ICU)
