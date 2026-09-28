@@ -6,6 +6,7 @@ import { Pressable, Switch, View } from 'react-native';
 import { ScrollScreen, Section } from '@/components/layout';
 import { Button, Divider, Text } from '@/components/primitives';
 import { SUPPORTED_LANGUAGES, type SupportedLanguage } from '@/i18n/namespaces';
+import { features } from '@/lib/features';
 import { type Appearance, useSettingsStore } from '@/lib/settings';
 import { MOCK_KB_VERSION } from '@/mock/kbEntries';
 import { sizes } from '@/theme/tokens';
@@ -145,23 +146,28 @@ export default function Settings() {
 
       <Divider />
 
-      <Section title={t('settings:photoIdLabel')}>
-        <View className="flex-row items-center justify-between gap-3">
-          <Text variant="body" tone="primary" className="flex-1">
-            {t('settings:photoIdLabel')}
-          </Text>
-          <Switch
-            accessibilityLabel={t('settings:photoIdLabel')}
-            value={photoIdConsent}
-            onValueChange={setPhotoIdConsent}
-          />
-        </View>
-        <Text variant="caption" tone="tertiary">
-          {t('settings:photoIdHint')}
-        </Text>
-      </Section>
+      {/* Only a build with photo identification has anything to consent to (D28). */}
+      {features.photoId ? (
+        <>
+          <Section title={t('settings:photoIdLabel')}>
+            <View className="flex-row items-center justify-between gap-3">
+              <Text variant="body" tone="primary" className="flex-1">
+                {t('settings:photoIdLabel')}
+              </Text>
+              <Switch
+                accessibilityLabel={t('settings:photoIdLabel')}
+                value={photoIdConsent}
+                onValueChange={setPhotoIdConsent}
+              />
+            </View>
+            <Text variant="caption" tone="tertiary">
+              {t('settings:photoIdHint')}
+            </Text>
+          </Section>
 
-      <Divider />
+          <Divider />
+        </>
+      ) : null}
 
       <Section title={t('settings:legalSection')}>
         <Text variant="body" tone="secondary">

@@ -8,11 +8,14 @@
   "removePhoto": "Quitar esta foto",
   "photoCount": "{count, plural, one {# foto} other {# fotos}}",
   "photoLimitReached": "Puedes añadir hasta {max, plural, one {# foto} other {# fotos}}.",
+  "scanBarcode": "Escanear un código de barras",
   "descriptionLabel": "O descríbelo",
+  "descriptionLabelTextOnly": "Descríbelo",
   "descriptionPlaceholder": "Por ejemplo: chocolate negro, un puñado de uvas, las flores blancas de la ventana",
   "charCount": "{count} de {max} caracteres",
   "check": "Comprobar",
   "checkDisabledReason": "Añade una foto o escribe al menos 2 caracteres.",
+  "checkDisabledReasonTextOnly": "Escribe al menos 2 caracteres.",
   "openHistory": "Consultas recientes",
   "openSettings": "Ajustes"
 }

@@ -18,6 +18,7 @@ import {
   useMotionEnabled,
 } from '@/components/primitives';
 import { useDraftStore } from '@/lib/draft';
+import { features } from '@/lib/features';
 import { resolveOffline } from '@/lib/offlineKb';
 import { MOCK_PHOTO_URI } from '@/mock/photos';
 import { useTheme } from '@/theme/ThemeProvider';
@@ -74,7 +75,8 @@ const STAGE_MS = 900;
 export default function Identifying() {
   const { t } = useTranslation();
   const params = useLocalSearchParams<{ species?: string; hasPhoto?: string }>();
-  const hasPhoto = params.hasPhoto === '1';
+  // A photo path only exists with photo identification (`lib/features.ts`, D28).
+  const hasPhoto = features.photoId && params.hasPhoto === '1';
   const species: Species = params.species === 'cat' ? 'cat' : 'dog';
   const [stage, setStage] = useState(0);
   const stageKeys = hasPhoto ? PHOTO_STAGE_KEYS : TEXT_STAGE_KEYS;

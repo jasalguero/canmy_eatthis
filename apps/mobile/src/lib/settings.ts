@@ -1,5 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Localization from 'expo-localization';
+import { useEffect, useState } from 'react';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 
@@ -74,5 +75,19 @@ export const useSettingsStore = create<SettingsState>()(
     },
   ),
 );
+
+/**
+ * Whether persisted settings have been read back from storage. Until then every field holds its
+ * default — `onboarded` is false even for a returning user — so anything that routes on a
+ * persisted value has to wait for this.
+ */
+export function useSettingsHydrated(): boolean {
+  const [hydrated, setHydrated] = useState(() => useSettingsStore.persist.hasHydrated());
+  useEffect(() => {
+    if (useSettingsStore.persist.hasHydrated()) setHydrated(true);
+    return useSettingsStore.persist.onFinishHydration(() => setHydrated(true));
+  }, []);
+  return hydrated;
+}
 
 export { SUPPORTED_LANGUAGES };

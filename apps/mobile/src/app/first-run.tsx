@@ -4,10 +4,11 @@ import { View } from 'react-native';
 
 import { ScrollScreen, Section, StickyFooter } from '@/components/layout';
 import { Button, Card, Text } from '@/components/primitives';
+import { features } from '@/lib/features';
 import { useSettingsStore } from '@/lib/settings';
 
 /**
- * First run (docs/07 Phase 7, docs/10 §5).
+ * First run (docs/07 Phase 7, docs/10 §5). Home redirects here until it has been completed.
  *
  * Three things, in this order: what this is, what it is not, and consent to the AI step. The
  * middle one is not padding — an app that looks up poisons has to be explicit that it is not a
@@ -16,6 +17,9 @@ import { useSettingsStore } from '@/lib/settings';
  * **Declining leaves a fully working app.** That is a requirement, not a courtesy (docs/07
  * Phase 7 acceptance), so "Use typed lookups only" is a real choice with its consequence stated,
  * rendered at the same weight as accepting — not a greyed-out escape hatch.
+ *
+ * A build without photo identification (`lib/features.ts`, D28) sends nothing anywhere, so it
+ * asks for no consent: the AI card is not shown, and one "Continue" finishes with consent off.
  */
 export default function FirstRun() {
   const { t } = useTranslation();
@@ -25,7 +29,8 @@ export default function FirstRun() {
   const finish = (consent: boolean) => {
     setPhotoIdConsent(consent);
     setOnboarded(true);
-    router.dismissTo('/');
+    // `replace`, not `dismissTo`: on a first launch this screen is the only one in the stack.
+    router.replace('/');
   };
 
   return (
@@ -50,32 +55,38 @@ export default function FirstRun() {
           </Text>
         </Section>
 
-        <Card className="gap-3">
-          <Text variant="headline" tone="primary" accessibilityRole="header">
-            {t('onboarding:aiConsentTitle')}
-          </Text>
-          <Text variant="body" tone="secondary">
-            {t('onboarding:aiConsentBody')}
-          </Text>
-          <Text variant="caption" tone="tertiary">
-            {t('onboarding:aiConsentDeclineNote')}
-          </Text>
-        </Card>
+        {features.photoId ? (
+          <Card className="gap-3">
+            <Text variant="headline" tone="primary" accessibilityRole="header">
+              {t('onboarding:aiConsentTitle')}
+            </Text>
+            <Text variant="body" tone="secondary">
+              {t('onboarding:aiConsentBody')}
+            </Text>
+            <Text variant="caption" tone="tertiary">
+              {t('onboarding:aiConsentDeclineNote')}
+            </Text>
+          </Card>
+        ) : null}
       </ScrollScreen>
 
       <StickyFooter>
-        <View className="gap-2">
-          <Button
-            label={t('onboarding:aiConsentAccept')}
-            size="large"
-            onPress={() => finish(true)}
-          />
-          <Button
-            label={t('onboarding:aiConsentDecline')}
-            variant="secondary"
-            onPress={() => finish(false)}
-          />
-        </View>
+        {features.photoId ? (
+          <View className="gap-2">
+            <Button
+              label={t('onboarding:aiConsentAccept')}
+              size="large"
+              onPress={() => finish(true)}
+            />
+            <Button
+              label={t('onboarding:aiConsentDecline')}
+              variant="secondary"
+              onPress={() => finish(false)}
+            />
+          </View>
+        ) : (
+          <Button label={t('onboarding:continueCta')} size="large" onPress={() => finish(false)} />
+        )}
       </StickyFooter>
     </>
   );

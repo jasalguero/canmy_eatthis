@@ -8,11 +8,14 @@
   "removePhoto": "Remove this photo",
   "photoCount": "{count, plural, one {# photo} other {# photos}}",
   "photoLimitReached": "You can add up to {max, plural, one {# photo} other {# photos}}.",
+  "scanBarcode": "Scan a barcode",
   "descriptionLabel": "Or describe it",
+  "descriptionLabelTextOnly": "Describe it",
   "descriptionPlaceholder": "For example: dark chocolate, a handful of grapes, the white flowers on the windowsill",
   "charCount": "{count} of {max} characters",
   "check": "Check",
   "checkDisabledReason": "Add a photo, or type at least 2 characters.",
+  "checkDisabledReasonTextOnly": "Type at least 2 characters.",
   "openHistory": "Recent checks",
   "openSettings": "Settings"
 }

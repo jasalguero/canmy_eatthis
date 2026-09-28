@@ -14,7 +14,8 @@ export interface PhotoSourceSheetProps {
   onClose: () => void;
   onSelectCamera: () => void;
   onSelectLibrary: () => void;
-  onSelectBarcode: () => void;
+  /** Omitted when the build has no barcode scanning (`lib/features.ts`), which hides the row. */
+  onSelectBarcode?: () => void;
 }
 
 export function PhotoSourceSheet({
@@ -29,7 +30,7 @@ export function PhotoSourceSheet({
   const options: { label: string; onPress: () => void }[] = [
     { label: t('camera:sourceCamera'), onPress: onSelectCamera },
     { label: t('camera:sourceLibrary'), onPress: onSelectLibrary },
-    { label: t('camera:sourceBarcode'), onPress: onSelectBarcode },
+    ...(onSelectBarcode ? [{ label: t('camera:sourceBarcode'), onPress: onSelectBarcode }] : []),
   ];
 
   return (

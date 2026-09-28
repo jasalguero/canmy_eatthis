@@ -1,5 +1,5 @@
 import * as ImagePicker from 'expo-image-picker';
-import { router } from 'expo-router';
+import { Redirect, router } from 'expo-router';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { KeyboardAvoidingView, Platform, ScrollView, View } from 'react-native';
@@ -13,9 +13,18 @@ import {
   SpeciesToggle,
 } from '@/components/inputs';
 import { Screen, StickyFooter } from '@/components/layout';
-import { Enter, HistoryIcon, IconButton, SettingsIcon, Text } from '@/components/primitives';
+import {
+  Button,
+  Enter,
+  HistoryIcon,
+  IconButton,
+  SettingsIcon,
+  Text,
+} from '@/components/primitives';
 import { MAX_PHOTOS, useDraftStore } from '@/lib/draft';
+import { features } from '@/lib/features';
 import { processImage } from '@/lib/imagePipeline';
+import { useSettingsHydrated, useSettingsStore } from '@/lib/settings';
 import { useTheme } from '@/theme/ThemeProvider';
 import { tokens } from '@/theme/tokens';
 
@@ -37,8 +46,24 @@ import { tokens } from '@/theme/tokens';
  * the mascot beside it is a flex sibling with a fixed size, not absolutely positioned over the
  * text the way the design canvas draws it, so a long `es` translation at 200% font scale pushes
  * the mascot down as the title wraps instead of the mascot ever sitting on top of it.
+ *
+ * What the input area offers follows the build's feature flags (`lib/features.ts`, D28): the
+ * photo tray only with photo identification, a single scan button with barcode scanning alone,
+ * and in a text-only build just the description field.
+ *
+ * Home is also where a first launch is sent to the first-run flow, once persisted settings have
+ * loaded — before that, `onboarded` reads false for everyone.
  */
 export default function Home() {
+  const hydrated = useSettingsHydrated();
+  const onboarded = useSettingsStore((state) => state.onboarded);
+
+  if (!hydrated) return null;
+  if (!onboarded) return <Redirect href="/first-run" />;
+  return <HomeScreen />;
+}
+
+function HomeScreen() {
   const { t } = useTranslation();
   const { theme } = useTheme();
   const species = useDraftStore((state) => state.species);
@@ -120,20 +145,28 @@ export default function Home() {
 
             <SpeciesToggle value={species} onChange={setSpecies} />
 
-            <View className="gap-2">
-              <Text variant="label" tone="secondary" accessibilityRole="header">
-                {t('home:photosLabel')}
-              </Text>
-              <PhotoTray
-                uris={photos}
-                max={MAX_PHOTOS}
-                onAdd={() => setSourceSheetVisible(true)}
-                onRemove={removePhoto}
-                onPressPhoto={(index) =>
-                  router.push({ pathname: '/photo-preview', params: { index } })
-                }
+            {features.photoId ? (
+              <View className="gap-2">
+                <Text variant="label" tone="secondary" accessibilityRole="header">
+                  {t('home:photosLabel')}
+                </Text>
+                <PhotoTray
+                  uris={photos}
+                  max={MAX_PHOTOS}
+                  onAdd={() => setSourceSheetVisible(true)}
+                  onRemove={removePhoto}
+                  onPressPhoto={(index) =>
+                    router.push({ pathname: '/photo-preview', params: { index } })
+                  }
+                />
+              </View>
+            ) : features.barcode ? (
+              <Button
+                label={t('home:scanBarcode')}
+                variant="secondary"
+                onPress={() => router.push({ pathname: '/camera', params: { mode: 'barcode' } })}
               />
-            </View>
+            ) : null}
 
             <DescriptionInput value={description} onChangeText={setDescription} />
           </View>
@@ -153,13 +186,19 @@ export default function Home() {
         </StickyFooter>
       </KeyboardAvoidingView>
 
-      <PhotoSourceSheet
-        visible={sourceSheetVisible}
-        onClose={() => setSourceSheetVisible(false)}
-        onSelectCamera={() => router.push('/camera')}
-        onSelectLibrary={() => void pickFromLibrary()}
-        onSelectBarcode={() => router.push({ pathname: '/camera', params: { mode: 'barcode' } })}
-      />
+      {features.photoId ? (
+        <PhotoSourceSheet
+          visible={sourceSheetVisible}
+          onClose={() => setSourceSheetVisible(false)}
+          onSelectCamera={() => router.push('/camera')}
+          onSelectLibrary={() => void pickFromLibrary()}
+          onSelectBarcode={
+            features.barcode
+              ? () => router.push({ pathname: '/camera', params: { mode: 'barcode' } })
+              : undefined
+          }
+        />
+      ) : null}
     </Screen>
   );
 }

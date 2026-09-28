@@ -783,3 +783,43 @@ from the one development uses).
 
 **Verified locally on Node 24.11.1:** typecheck, lint, the safe-claims, no-secrets, contrast,
 UI-hygiene and Expo dependency checks, tests, build and the KB snapshot diff all pass.
+
+## D28 — Build-time feature flags; the first release is text-only
+
+Following `docs/10-hobby-scope.md` §7, the first store release is the offline typed-lookup app,
+without photo identification. Barcode scanning comes later, once its lookup exists. The photo
+and barcode code stays on `main` behind two flags rather than on a branch, because a long-lived
+branch would drift from the screens and stores it shares with the rest of the app.
+
+- **`EXPO_PUBLIC_FEATURE_PHOTO_ID` and `EXPO_PUBLIC_FEATURE_BARCODE`**, read in
+  `apps/mobile/src/lib/features.ts`. Expo inlines them at build time. Only `"1"` or `"true"`
+  turns one on; unset means off, so a build that forgets them is text-only. They are set per EAS
+  profile in `apps/mobile/eas.json`: `development` has both on, `preview` and `production` both
+  off. A local `expo start` without them is text-only too; set them to work on those paths.
+- **No runtime or remote switch.** Code shipped switched off and turned on later would be a
+  hidden feature, which App Store guideline 2.3.1 forbids.
+- **What the flags gate:** the photo tray and source sheet on Home (with barcode alone, a single
+  scan button instead), the camera, photo-preview and photo-Confirm routes (each redirects Home
+  when its feature is off), the AI consent card on first run, and the consent toggle in
+  Settings. Typed fuzzy matches still use Confirm. First run is now shown to every new user: Home
+  redirects there until it is completed.
+- **`app.json` became `app.config.ts`**, so the native side follows the flags too. Each iOS
+  purpose string describes what that build does, and Android blocks the permissions a build does
+  not use (`blockedPermissions`); the microphone is blocked in every build. Expo loads this file
+  without resolving other TypeScript modules, so it repeats the flag parsing and reads the splash
+  colour from `src/theme/native.json`; `features.test.ts` keeps both in step.
+
+**Native modules stay linked in every build.** Expo autolinking reads exclusions only from
+`package.json` or CLI arguments, so dropping `expo-camera` and `expo-image-picker` from a
+text-only build would mean patching `package.json` inside the EAS build, and making sure no route
+imports them at startup. Instead both stay linked and both iOS purpose strings are always
+present, since Apple rejects an upload whose binary references those APIs without one.
+
+**To verify on the first real build:** that TestFlight accepts the text-only upload without an
+ITMS-90683 purpose-string rejection, and that the Play Console shows no camera or media
+permissions for it.
+
+**Alternatives:** a release branch (drift; two apps to maintain); a runtime or remote flag
+(guideline 2.3.1); excluding the native modules per build (possible, but needs a build-time
+`package.json` patch and can only be checked with a native build — worth revisiting if a store
+objects to the unused purpose strings).

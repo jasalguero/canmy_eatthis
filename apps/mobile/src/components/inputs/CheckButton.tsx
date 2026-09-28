@@ -2,6 +2,7 @@ import { useTranslation } from 'react-i18next';
 
 import { Button } from '@/components/primitives';
 import { type CheckInput, canCheck } from '@/lib/checkInput';
+import { features } from '@/lib/features';
 
 /**
  * The Home screen's primary action (docs/06 §4): full width, 56pt tall, radius `lg`, pinned to
@@ -34,7 +35,9 @@ export function CheckButton({
       onPress={onPress}
       loading={loading}
       disabled={!enabled}
-      disabledReason={t('home:checkDisabledReason')}
+      disabledReason={t(
+        features.photoId ? 'home:checkDisabledReason' : 'home:checkDisabledReasonTextOnly',
+      )}
       className={className}
     />
   );

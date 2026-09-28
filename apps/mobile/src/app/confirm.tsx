@@ -1,5 +1,5 @@
 import type { Candidate, Species } from '@canmyeatthis/shared';
-import { router, useLocalSearchParams } from 'expo-router';
+import { Redirect, router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Image, KeyboardAvoidingView, Platform, Pressable, View } from 'react-native';
@@ -9,6 +9,7 @@ import { DescriptionInput } from '@/components/inputs';
 import { ScrollScreen, Section, StickyFooter } from '@/components/layout';
 import { Button, Card, Text } from '@/components/primitives';
 import { useDraftStore } from '@/lib/draft';
+import { features } from '@/lib/features';
 import { getKbEntry } from '@/lib/offlineKb';
 import { useSettingsStore } from '@/lib/settings';
 import { MOCK_ALTERNATES, MOCK_CANDIDATES, MOCK_PLANT_CANDIDATE } from '@/mock/cases';
@@ -29,8 +30,17 @@ import { sizes } from '@/theme/tokens';
  * `?kbId=...` (H3) is the real path: `identifying.tsx`'s fuzzy-match branch landed here with one
  * real on-device candidate, no alternates (the fuzzy resolver returns one match or none — there
  * is nothing else to offer), and no photo, since this only happens for a typed query.
+ *
+ * Without `kbId` this is the photo path, which exists only in a build with photo identification
+ * (`lib/features.ts`, D28) — or in development, where the gallery opens its mock states.
  */
-export default function Confirm() {
+export default function ConfirmRoute() {
+  const params = useLocalSearchParams<{ kbId?: string }>();
+  if (!params.kbId && !features.photoId && !__DEV__) return <Redirect href="/" />;
+  return <Confirm />;
+}
+
+function Confirm() {
   const { t } = useTranslation();
   const params = useLocalSearchParams<{ plant?: string; kbId?: string; species?: string }>();
   const isPlant = params.plant === '1';

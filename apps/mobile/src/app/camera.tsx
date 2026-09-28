@@ -1,5 +1,5 @@
 import { type BarcodeScanningResult, CameraView, useCameraPermissions } from 'expo-camera';
-import { router, useLocalSearchParams } from 'expo-router';
+import { Redirect, router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Pressable, View } from 'react-native';
@@ -8,6 +8,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Screen } from '@/components/layout';
 import { Button, IconButton, Text } from '@/components/primitives';
 import { MAX_PHOTOS, useDraftStore } from '@/lib/draft';
+import { features } from '@/lib/features';
 import { processImage } from '@/lib/imagePipeline';
 import { openAppSettings, permissionUiState } from '@/lib/permissions';
 import { sizes } from '@/theme/tokens';
@@ -24,10 +25,16 @@ import { sizes } from '@/theme/tokens';
  */
 const BARCODE_TYPES = ['ean13', 'ean8', 'upc_a', 'upc_e'] as const;
 
-export default function CameraScreen() {
-  const { t } = useTranslation();
+/** Each mode exists only in a build with its feature (`lib/features.ts`, D28). */
+export default function CameraRoute() {
   const params = useLocalSearchParams<{ mode?: string }>();
   const isBarcode = params.mode === 'barcode';
+  if (!(isBarcode ? features.barcode : features.photoId)) return <Redirect href="/" />;
+  return <CameraScreen isBarcode={isBarcode} />;
+}
+
+function CameraScreen({ isBarcode }: { isBarcode: boolean }) {
+  const { t } = useTranslation();
   const insets = useSafeAreaInsets();
 
   const [permission, requestPermission] = useCameraPermissions();

@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { TextInput, View } from 'react-native';
 
 import { Text } from '@/components/primitives';
+import { features } from '@/lib/features';
 import { useTheme } from '@/theme/ThemeProvider';
 import { hardShadow, typography } from '@/theme/tokens';
 
@@ -33,14 +34,16 @@ export function DescriptionInput({ value, onChangeText, className }: Description
   const [focused, setFocused] = useState(false);
 
   const lineHeight = typography.body.lineHeight;
+  // "Or describe it" only makes sense beside photos (`lib/features.ts`, D28).
+  const label = t(features.photoId ? 'home:descriptionLabel' : 'home:descriptionLabelTextOnly');
 
   return (
     <View className={['gap-2', className ?? ''].filter(Boolean).join(' ')}>
       <Text variant="label" tone="secondary" accessibilityRole="header">
-        {t('home:descriptionLabel')}
+        {label}
       </Text>
       <TextInput
-        accessibilityLabel={t('home:descriptionLabel')}
+        accessibilityLabel={label}
         multiline
         textAlignVertical="top"
         value={value}

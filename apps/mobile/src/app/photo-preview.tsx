@@ -1,4 +1,4 @@
-import { router, useLocalSearchParams } from 'expo-router';
+import { Redirect, router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Image, View } from 'react-native';
@@ -6,6 +6,13 @@ import { Image, View } from 'react-native';
 import { Screen } from '@/components/layout';
 import { Button, IconButton, Text } from '@/components/primitives';
 import { useDraftStore } from '@/lib/draft';
+import { features } from '@/lib/features';
+
+/** Photos exist only in a build with photo identification (`lib/features.ts`, D28). */
+export default function PhotoPreviewRoute() {
+  if (!features.photoId) return <Redirect href="/" />;
+  return <PhotoPreview />;
+}
 
 /**
  * Full-screen photo preview (docs/00-product-spec.md: "Tap a thumb → full screen, with
@@ -13,7 +20,7 @@ import { useDraftStore } from '@/lib/draft';
  * the current photo one slot at a time, gesture-free and screen-reader reachable, which is what
  * "reordering" in docs/07 Phase 3 needs to mean given nothing here justifies a drag library.
  */
-export default function PhotoPreview() {
+function PhotoPreview() {
   const { t } = useTranslation();
   const params = useLocalSearchParams<{ index?: string }>();
   const [index, setIndex] = useState(() => Number(params.index ?? '0'));
