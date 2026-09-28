@@ -1,7 +1,7 @@
 import type { Species } from '@canmyeatthis/shared';
 import * as Haptics from 'expo-haptics';
 import { router, useLocalSearchParams } from 'expo-router';
-import { useEffect } from 'react';
+import { type ReactNode, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ScrollView, View } from 'react-native';
 import { useReducedMotion } from 'react-native-reanimated';
@@ -14,12 +14,13 @@ import {
   VerdictBanner,
 } from '@/components/feedback';
 import { Collapsible, Section, StickyFooter } from '@/components/layout';
-import { Button, Text } from '@/components/primitives';
+import { Button, Enter, MotionStill, Text } from '@/components/primitives';
 import { useDraftStore } from '@/lib/draft';
 import { useSettingsStore } from '@/lib/settings';
 import { buildRealVerdict, buildUnknownVerdict } from '@/lib/verdict';
 import { MOCK_CASES, MOCK_HOTLINE, findMockCase, mockVerdict } from '@/mock/cases';
 import type { MockLanguage } from '@/mock/kbEntries';
+import { RESULT_STAGGER, VERDICT_MOTION } from '@/theme/motion';
 import { VERDICT_CLASSES } from '@/theme/verdict';
 
 /**
@@ -102,6 +103,14 @@ export default function Result() {
   const signs = payload.signs.map((id) => t(`vocab:signs.${id}`));
   const actions = payload.emergencyActions.map((id) => t(`vocab:emergency_actions.${id}`));
 
+  // The canvas's A4 stagger: under a no-known-toxicity banner, the content rises in after it.
+  // Every other verdict shows its content from the first frame (`VERDICT_MOTION`, docs/02 D26).
+  const stagger = VERDICT_MOTION[payload.verdict].stagger;
+  const rise = (index: number) =>
+    stagger
+      ? ({ kind: 'rise', delay: RESULT_STAGGER.firstCard + index * RESULT_STAGGER.step } as const)
+      : null;
+
   const onsetLine = payload.onsetHours
     ? payload.onsetHours.min === payload.onsetHours.max
       ? t('result:onsetRangeSingle', { min: payload.onsetHours.min })
@@ -112,7 +121,7 @@ export default function Result() {
     : null;
 
   return (
-    <>
+    <MotionStill still={still}>
       {/* `edges` omits `top`: the banner is full-bleed to the top edge (docs/06 §4). */}
       <SafeAreaView edges={['bottom']} className="flex-1 bg-surface-base">
         <ScrollView contentContainerStyle={{ flexGrow: 1 }} className="flex-1">
@@ -132,18 +141,22 @@ export default function Result() {
           ) : null}
 
           <View className="gap-5 px-4 pb-6 pt-5">
-            <Text variant="headline" tone="primary">
-              {payload.headline}
-            </Text>
+            <Staggered enter={stagger ? { kind: 'rise', delay: RESULT_STAGGER.headline } : null}>
+              <Text variant="headline" tone="primary">
+                {payload.headline}
+              </Text>
+            </Staggered>
 
             {/* The app's actual claim, above every section (docs/10 §4). */}
             {payload.sources[0] ? (
-              <SourceCite
-                source={payload.sources[0]}
-                itemName={payload.displayName}
-                verdict={payload.verdict}
-                species={payload.species}
-              />
+              <Staggered enter={rise(0)}>
+                <SourceCite
+                  source={payload.sources[0]}
+                  itemName={payload.displayName}
+                  verdict={payload.verdict}
+                  species={payload.species}
+                />
+              </Staggered>
             ) : null}
 
             {/* Severe: the action is reachable without scrolling. */}
@@ -168,49 +181,55 @@ export default function Result() {
               </Text>
             ) : null}
 
-            <Collapsible title={t('result:sectionSigns')} defaultOpen={isToxic}>
-              <View className="gap-1">
-                {signs.length > 0 ? (
-                  signs.map((sign) => (
-                    <Text key={sign} variant="body" tone="secondary">
-                      {`• ${sign}`}
+            <Staggered enter={rise(1)}>
+              <Collapsible title={t('result:sectionSigns')} defaultOpen={isToxic}>
+                <View className="gap-1">
+                  {signs.length > 0 ? (
+                    signs.map((sign) => (
+                      <Text key={sign} variant="body" tone="secondary">
+                        {`• ${sign}`}
+                      </Text>
+                    ))
+                  ) : (
+                    <Text variant="body" tone="secondary">
+                      {t('result:noSignsListed')}
                     </Text>
-                  ))
-                ) : (
-                  <Text variant="body" tone="secondary">
-                    {t('result:noSignsListed')}
-                  </Text>
-                )}
-                {onsetLine ? (
-                  <Text variant="body" tone="secondary" className="mt-2">
-                    {onsetLine}
-                  </Text>
-                ) : null}
-              </View>
-            </Collapsible>
+                  )}
+                  {onsetLine ? (
+                    <Text variant="body" tone="secondary" className="mt-2">
+                      {onsetLine}
+                    </Text>
+                  ) : null}
+                </View>
+              </Collapsible>
+            </Staggered>
 
-            <Collapsible title={t('result:sectionSummary')}>
-              <Text variant="body" tone="secondary">
-                {payload.summary}
-              </Text>
-            </Collapsible>
-
-            <Collapsible title={t('result:sectionSources')}>
-              <Section className="gap-3">
-                {payload.sources.map((source) => (
-                  <SourceCite
-                    key={source.url}
-                    source={source}
-                    itemName={payload.displayName}
-                    verdict={payload.verdict}
-                    species={payload.species}
-                  />
-                ))}
-                <Text variant="caption" tone="tertiary">
-                  {t('result:kbVersion', { version: payload.kbVersion })}
+            <Staggered enter={rise(2)}>
+              <Collapsible title={t('result:sectionSummary')}>
+                <Text variant="body" tone="secondary">
+                  {payload.summary}
                 </Text>
-              </Section>
-            </Collapsible>
+              </Collapsible>
+            </Staggered>
+
+            <Staggered enter={rise(3)}>
+              <Collapsible title={t('result:sectionSources')}>
+                <Section className="gap-3">
+                  {payload.sources.map((source) => (
+                    <SourceCite
+                      key={source.url}
+                      source={source}
+                      itemName={payload.displayName}
+                      verdict={payload.verdict}
+                      species={payload.species}
+                    />
+                  ))}
+                  <Text variant="caption" tone="tertiary">
+                    {t('result:kbVersion', { version: payload.kbVersion })}
+                  </Text>
+                </Section>
+              </Collapsible>
+            </Staggered>
 
             {/* Always visible, never collapsed. */}
             <DisclaimerFooter text={payload.disclaimer} />
@@ -239,6 +258,22 @@ export default function Result() {
           <EmergencyCallButton phoneNumber={MOCK_HOTLINE} />
         </StickyFooter>
       ) : null}
-    </>
+    </MotionStill>
+  );
+}
+
+/** Rises `children` in when `enter` is set; renders them untouched otherwise. */
+function Staggered({
+  enter,
+  children,
+}: {
+  enter: { kind: 'rise'; delay: number } | null;
+  children: ReactNode;
+}) {
+  if (!enter) return <>{children}</>;
+  return (
+    <Enter kind={enter.kind} delay={enter.delay}>
+      {children}
+    </Enter>
   );
 }

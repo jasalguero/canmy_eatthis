@@ -696,3 +696,76 @@ build) found:
   Unicode category as `⚙`. Worth a look if this comes up again, but out of scope to change
   unprompted: those glyphs are asserted for distinctness in `verdict.test.ts` and used throughout
   the KB/result rendering, unlike the Home settings icon, which had exactly one call site.
+
+## D26 — Bold Ink motion on core `Animated`, and an animated boot splash
+
+**Decided 2026-09-25.** The user asked for the design canvas's animations (row A, "Bold Ink") to
+be implemented, and for a splash screen at boot. D25 had shipped only two of the canvas's ~20
+motions (the toggle's `LayoutAnimation` slide and a two-frame sniff flipbook) because D23 had
+found `react-native-reanimated` unreliable and no simulator was available to test anything else.
+A simulator now is (D25 addendum), so this reopens the *mechanism* — not D23's conclusion.
+
+1. **Engine: React Native's own `Animated` API with the native driver — still not Reanimated.**
+   D23's failure was specific to Reanimated's worklet → UI-thread style commit. Core `Animated`
+   is a different pipeline (the animation graph is handed to the platform once), and it is used
+   here only for `transform` and `opacity`, the two properties the native driver owns. No colour,
+   size or layout property is animated anywhere, so D23's worst case — the verdict banner
+   rendering with no colour — cannot recur through this path: the banner's `backgroundColor` is
+   still a plain, unconditional style, and the drop moves the banner as a whole.
+2. **The canvas's keyframes are data** (`apps/mobile/src/theme/motion.ts`), ported one-for-one
+   from its `@keyframes a-*` rules — offsets, values, durations, delays and its two named curves
+   (`firm` = `cubic-bezier(.2,.8,.2,1)`, `overshoot` = `cubic-bezier(.34,1.56,.64,1)`).
+   `components/primitives/Motion.tsx` turns a spec into an interpolation (`Enter` for one-shot
+   entrances, `Loop` for idles). What moved: the verdict banner drop / firm drop, glyph badge
+   pop / thud, staggered rise, mascot pop / fade, mascot idle rig (head bob, blink, dog ear sway,
+   cat ear twitch, sniffing nose and puffs, worried sweat drop, confused "?" wobble), sparkles on
+   no-known-toxicity, the call button's ringing handset, the scanning screen's tilted photo with
+   a sweeping scan band and wandering magnifier plus per-stage bouncing dots and popping ticks,
+   the Home mascot's pop on species change, the camera badge's bob, and the logo coin's dog↔cat
+   flip (`MascotCoin`).
+3. **Safety properties, each with a test rather than an assertion:**
+   - *Verdict choreography is per verdict* (`VERDICT_MOTION`). Only `safe` bounces, pops or
+     sparkles. `toxic` follows the canvas's "2 a.m." artboard: firm 320ms drop, a thud, a mascot
+     that fades in and stays calm, and nothing below the banner waits. `caution` and `unknown`
+     aren't drawn on the canvas; they take the firm path (AGENTS.md #2 — nothing about `unknown`
+     may read as good news). `motion.test.ts` asserts this and a ≤500ms full toxic reveal.
+   - *Every entrance ends on the ordinary layout* (`motion.test.ts`), and `useEntrance` forces
+     that frame on a timer after the animation should have finished, whether or not it ever ran.
+   - *AGENTS.md #4*: `emergencyMotion.test.tsx` renders the toxic banner and the call button with
+     motion on, with reduced motion, and with every animation stubbed to never run (the D23
+     failure mode), and checks the verdict and the working `tel:` button are there from the first
+     render and fully visible and in place afterwards. A mutation check confirmed the
+     never-runs case fails if the timer backstop is removed. It runs the JS driver
+     (`nativeDriver()` is read lazily for this): a test renderer never sees native-driven values.
+   - *Motion off is no animated style at all*, not a zero-length animation. Reduced motion and
+     `MotionStill` (the gallery, `?still=1`) render exactly the pre-D26 tree; the mascot is still
+     one flat `Svg` then. The screenshot script runs under reduced motion, so the committed set
+     is the still path.
+4. **The mascot became layered.** To move an ear or the nose with a native-driver transform, each
+   moving part is its own same-size `Svg` in an `Animated.View`, with the canvas's
+   `transform-origin` resolved to points (`transformOrigin`, not a `react-native-svg` prop — no
+   per-frame SVG re-render). The blink is a 150ms state swap every 4.2s, not a transform, because
+   an eye-only layer per mood isn't worth it for that.
+5. **The boot splash is an overlay, not a gate** (`BootSplash.tsx`). The native splash hands over
+   to it once fonts load; the coin pops, flips dog→cat, the name rises, and it fades off the
+   *already mounted* first screen after 1.25s (+250ms fade; `motion.test.ts` caps the total under
+   1.6s). A tap dismisses it. It is never rendered under reduced motion, and it removes itself as
+   soon as a screen reader is detected — it's hidden from assistive tech, so it must not cover
+   what that user is navigating. Its background is `surface.base`, which matches the native
+   splash's cream in light mode. No new strings: it shows `common:appName`.
+6. **Deliberate deviations from the canvas.** The toggle keeps D25's `LayoutAnimation` spring
+   (it's proven and has D23's snap-to-correct property); its tint cross-fade isn't animated
+   (colour). The canvas's outlined blue wordmark text can't be reproduced (no text stroke in RN),
+   so the splash name is ink with a brand-blue hard text shadow. The glyph badge keeps its round
+   shape on `toxic` (the canvas squares it — a shape change, not motion).
+
+**Verified on a real iOS Simulator** (iPhone 17, iOS 27, Expo Go), frame bursts captured with
+`simctl io screenshot`: the splash's pop → flip → rise → fade onto Home; the safe banner dropping
+with its badge popping and content rising, then settling with a sparkle; the toxic result with the
+verdict word, source and both call buttons in the very first captured frame and the badge/mascot
+arriving after; the scanning screen's band, magnifier, dots and ticks moving. Typecheck, lint,
+tests (113), contrast, UI-hygiene, safe-claims, no-secrets and the web build pass.
+
+**Not done:** `pnpm screenshots` regenerates every set but then fails its pseudo-locale pass on
+`05-result-safe` — `mockEntry()` has no data for the pseudo language. Reproduced on the unmodified
+pre-D26 source, so it is pre-existing and left for a separate fix.

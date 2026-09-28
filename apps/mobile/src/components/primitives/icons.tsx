@@ -76,3 +76,84 @@ export function CameraIcon({ size = 26, color }: IconProps) {
     </Svg>
   );
 }
+
+/** A handset — the emergency call button's icon, which rings (docs/02 D26, the canvas's A5). */
+export function PhoneIcon({ size = 26, color }: IconProps) {
+  return (
+    <Svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke={color}
+      strokeWidth={2.8}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <Path d="M6.8 3.6h2.5l1.5 4.1-1.9 1.3a10.4 10.4 0 0 0 6.1 6.1l1.3-1.9 4.1 1.5v2.5a2 2 0 0 1-2.1 2A16.4 16.4 0 0 1 4.8 5.7a2 2 0 0 1 2-2.1z" />
+    </Svg>
+  );
+}
+
+/** A tick — a finished scanning stage. */
+export function CheckIcon({ size = 18, color }: IconProps) {
+  return (
+    <Svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke={color}
+      strokeWidth={3.4}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <Path d="M5 12.5l4.5 4.5L19 7.5" />
+    </Svg>
+  );
+}
+
+/** A four-point sparkle, for the no-known-toxicity mascot. Filled, with an ink outline. */
+export function SparkleIcon({ size = 22, color, outline }: IconProps & { outline: string }) {
+  return (
+    <Svg width={size} height={size} viewBox="0 0 24 24">
+      <Path
+        d="M12 1.5 C13 8 16 11 22.5 12 C16 13 13 16 12 22.5 C11 16 8 13 1.5 12 C8 11 11 8 12 1.5 Z"
+        fill={color}
+        stroke={outline}
+        strokeWidth={1.6}
+        strokeLinejoin="round"
+      />
+    </Svg>
+  );
+}
+
+/** The scanning screen's magnifier (the canvas's A3), drawn in the design's own 86pt box. */
+export function MagnifierIcon({
+  size = 86,
+  ink,
+  handle,
+  lens,
+  glint,
+}: {
+  size?: number;
+  ink: string;
+  handle: string;
+  lens: string;
+  glint: string;
+}) {
+  return (
+    <Svg width={size} height={size} viewBox="0 0 86 86">
+      <Path d="M58 58 L78 78" stroke={ink} strokeWidth={15} strokeLinecap="round" />
+      <Path d="M58 58 L78 78" stroke={handle} strokeWidth={7} strokeLinecap="round" />
+      <Circle cx={36} cy={36} r={27} fill={lens} fillOpacity={0.35} stroke={ink} strokeWidth={5} />
+      <Path
+        d="M22 28 Q27 19 37 18"
+        fill="none"
+        stroke={glint}
+        strokeWidth={5}
+        strokeLinecap="round"
+      />
+    </Svg>
+  );
+}

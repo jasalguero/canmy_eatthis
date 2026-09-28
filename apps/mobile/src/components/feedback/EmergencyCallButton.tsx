@@ -1,9 +1,9 @@
 import { useTranslation } from 'react-i18next';
-import { Linking, Pressable } from 'react-native';
+import { Linking, Pressable, View } from 'react-native';
 
-import { Text } from '@/components/primitives';
+import { Loop, PhoneIcon, Text } from '@/components/primitives';
 import { useTheme } from '@/theme/ThemeProvider';
-import { hardShadow, sizes } from '@/theme/tokens';
+import { hardShadow, sizes, tokens } from '@/theme/tokens';
 import { VERDICT_CLASSES } from '@/theme/verdict';
 
 /**
@@ -19,12 +19,20 @@ import { VERDICT_CLASSES } from '@/theme/verdict';
  * Reachability: docs/06 §5 requires this to be within two moves of a toxic result for keyboard
  * and switch control. It is rendered in a sticky footer, so it is the last focusable element on
  * the screen regardless of how long the content above it is.
+ *
+ * The handset icon rings (the canvas's A5 `.ring`, docs/02 D26) — a `Loop` around the icon only.
+ * The button itself, its colour, label and `onPress` are never inside an animation, so nothing
+ * about motion can change whether it renders or works (AGENTS.md #4); with reduced motion the
+ * icon simply sits still.
  */
 export interface EmergencyCallButtonProps {
   /** A regional hotline number. The registry itself lands in H5 (docs/10 §7). */
   phoneNumber: string;
   className?: string;
 }
+
+/** The canvas's `animation-delay: 1.2s` — the banner has landed before the phone starts. */
+const RING_DELAY_MS = 1200;
 
 export function EmergencyCallButton({ phoneNumber, className }: EmergencyCallButtonProps) {
   const { t } = useTranslation();
@@ -48,9 +56,16 @@ export function EmergencyCallButton({ phoneNumber, className }: EmergencyCallBut
         .filter(Boolean)
         .join(' ')}
     >
-      <Text variant="headline" className={`text-center ${classes.onAccentText}`}>
-        {t('result:emergencyCall')}
-      </Text>
+      <View className="flex-row items-center justify-center gap-3">
+        <Loop kind="ring" delay={RING_DELAY_MS} origin="50% 60%" pointerEvents="none">
+          <View accessibilityElementsHidden importantForAccessibility="no-hide-descendants">
+            <PhoneIcon size={26} color={tokens[theme].verdict.toxic.onAccent} />
+          </View>
+        </Loop>
+        <Text variant="headline" className={`shrink text-center ${classes.onAccentText}`}>
+          {t('result:emergencyCall')}
+        </Text>
+      </View>
     </Pressable>
   );
 }

@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { Pressable, ScrollView, View } from 'react-native';
 
-import { CameraIcon, Text } from '@/components/primitives';
+import { CameraIcon, Loop, Text } from '@/components/primitives';
 import { useTheme } from '@/theme/ThemeProvider';
 import { hardShadow, radius, sizes, tokens } from '@/theme/tokens';
 import { PhotoThumb } from './PhotoThumb';
@@ -47,21 +47,24 @@ export function PhotoTray({ uris, max, onAdd, onRemove, onPressPhoto, className 
           .filter(Boolean)
           .join(' ')}
       >
-        <View
-          style={{
-            width: 62,
-            height: 62,
-            borderRadius: radius.full,
-            borderWidth: 3,
-            borderColor: t_.border.strong,
-            backgroundColor: t_.brand.tint,
-            alignItems: 'center',
-            justifyContent: 'center',
-            ...hardShadow[1][theme],
-          }}
-        >
-          <CameraIcon size={28} color={t_.text.primary} />
-        </View>
+        {/* `.a-cam`: the badge breathes (docs/02 D26). */}
+        <Loop kind="bob" pointerEvents="none">
+          <View
+            style={{
+              width: 62,
+              height: 62,
+              borderRadius: radius.full,
+              borderWidth: 3,
+              borderColor: t_.border.strong,
+              backgroundColor: t_.brand.tint,
+              alignItems: 'center',
+              justifyContent: 'center',
+              ...hardShadow[1][theme],
+            }}
+          >
+            <CameraIcon size={28} color={t_.text.primary} />
+          </View>
+        </Loop>
         <Text variant="label" tone="secondary">
           {t('home:addPhoto')}
         </Text>

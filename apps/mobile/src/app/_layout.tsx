@@ -3,10 +3,12 @@ import '../../global.css';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { I18nextProvider } from 'react-i18next';
+import { useReducedMotion } from 'react-native-reanimated';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
+import { BootSplash } from '@/components/feedback';
 import { initI18n } from '@/i18n';
 import { useSettingsStore } from '@/lib/settings';
 import { ThemeProvider, useTheme } from '@/theme/ThemeProvider';
@@ -60,6 +62,11 @@ function ThemedRootLayout() {
   // `system` means "no override", which is what ThemeProvider's undefined `theme` prop means.
   const themeOverride = appearance === 'system' ? undefined : appearance;
 
+  // The animated boot splash (docs/02 D26) — an overlay on top of the already-mounted router,
+  // never a gate in front of it. Decided once, on the first render: reduced motion never sees it.
+  const reducedMotion = useReducedMotion();
+  const [showSplash, setShowSplash] = useState(() => !reducedMotion);
+
   return (
     <SafeAreaProvider>
       <I18nextProvider i18n={i18n}>
@@ -67,6 +74,7 @@ function ThemedRootLayout() {
           {/* Inside the provider so useTheme() resolves the real theme, not the context default. */}
           <StatusBarThemer>
             <Stack screenOptions={{ headerShown: false }} />
+            {showSplash ? <BootSplash onDone={() => setShowSplash(false)} /> : null}
           </StatusBarThemer>
         </ThemeProvider>
       </I18nextProvider>

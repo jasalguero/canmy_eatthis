@@ -80,6 +80,10 @@ Two elevation levels only, both defined per-platform (iOS shadow, Android elevat
 
 ### Motion
 
+> **Superseded in part by docs/02-tech-decisions.md D23/D26:** motion runs on React Native's core
+> `Animated` API (native driver, `transform`/`opacity` only), never `react-native-reanimated`. The
+> keyframes are the Bold Ink canvas's own, in `apps/mobile/src/theme/motion.ts`.
+
 `react-native-reanimated` v4, everything on the UI thread. Durations `fast 150 / base 250 / slow 400`.
 Spring for anything the finger drives, timing for everything else. **Honour
 `useReducedMotion()`** — disable the shimmer and the verdict reveal animation when it is set.

@@ -1,12 +1,20 @@
 import type { Species, Verdict } from '@canmyeatthis/shared';
-import { useEffect } from 'react';
+import { type ReactNode, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { AccessibilityInfo, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { Text } from '@/components/primitives';
+import {
+  Enter,
+  Loop,
+  MotionStill,
+  SparkleIcon,
+  Text,
+  useMotionEnabled,
+} from '@/components/primitives';
 import { useTheme } from '@/theme/ThemeProvider';
-import { VERDICT_MASCOT_MOOD } from '@/theme/mascot';
+import { MASCOT_EYE_HIGHLIGHT, MASCOT_INK, VERDICT_MASCOT_MOOD } from '@/theme/mascot';
+import { RESULT_STAGGER, VERDICT_MOTION } from '@/theme/motion';
 import { hardShadow, radius, sizes, tokens, verdictBadge } from '@/theme/tokens';
 import { VERDICT_CLASSES, VERDICT_GLYPH, verdictWordKey } from '@/theme/verdict';
 import { Mascot } from './Mascot';
@@ -39,7 +47,14 @@ import { Mascot } from './Mascot';
  * component adds nothing that touches it.** D23 found that a `react-native-reanimated`-driven
  * wash-in did not reach a real device at all — the banner rendered with no colour, the single
  * highest-stakes failure this app can have (AGENTS.md #2). The badge and mascot below are pure
- * addition: static, decorative, and irrelevant to whether the banner itself renders correctly.
+ * addition: decorative, and irrelevant to whether the banner itself renders correctly.
+ *
+ * **Motion (docs/02 D26)** is the canvas's A4/A5 choreography, chosen per verdict by
+ * `VERDICT_MOTION`: `safe` drops in with a bounce, pops its badge and rises its text; every other
+ * verdict lands firmly (`dropFirm`, `thud`, a mascot that fades in and stays calm on `toxic`) and
+ * shows its word from the first frame. It only ever moves the banner as a whole or the pieces
+ * inside it — `Enter` guarantees each ends on its ordinary layout, and `still` / reduced motion
+ * render the banner exactly as it was before any of this.
  */
 export interface VerdictBannerProps {
   verdict: Verdict;
@@ -77,63 +92,147 @@ export function VerdictBanner({
     );
   }, [still, t, verdictWord, itemName, species]);
 
+  const m = VERDICT_MOTION[verdict];
+  const rise = (delay: number) => (m.stagger ? { kind: 'rise' as const, delay } : null);
+
   return (
-    // `backgroundColor` explicit, from `tokens` — see the doc comment above (D23).
-    // `paddingTop` adds the safe-area inset on top of the visual 24pt gap (the pre-inset value)
-    // — this banner opts out of the screen's own top safe area (docs/06 §4: full-bleed), so it
-    // has to reserve that space itself or it renders under the status bar/notch.
-    <View
-      style={{ backgroundColor: tokens[theme].verdict[verdict].bg, paddingTop: insets.top + 24 }}
-      className="w-full px-5 pb-6"
-    >
-      <View className="flex-row flex-wrap items-start justify-between gap-3">
+    <MotionStill still={still}>
+      {/* The drop moves the banner as a whole — its colour is never touched (D23, above). */}
+      <Enter kind={m.banner} distance={sizes.bannerDropDistance}>
+        {/* `backgroundColor` explicit, from `tokens` — see the doc comment above (D23).
+            `paddingTop` adds the safe-area inset on top of the visual 24pt gap (the pre-inset
+            value) — this banner opts out of the screen's own top safe area (docs/06 §4:
+            full-bleed), so it has to reserve that space itself or it renders under the notch. */}
         <View
-          // One accessibility node, read in one breath, verdict word first.
-          accessible
-          accessibilityRole="header"
-          accessibilityLiveRegion="assertive"
-          accessibilityLabel={t('result:a11yVerdictAnnouncement', {
-            verdictWord,
-            item: itemName,
-            species,
-          })}
-          className="min-w-0 flex-1 gap-2"
+          style={{
+            backgroundColor: tokens[theme].verdict[verdict].bg,
+            paddingTop: insets.top + 24,
+          }}
+          className="w-full px-5 pb-6"
         >
-          {/* The glyph's white "sticker" badge (docs/02 D25) — a minimum, not a fixed, size. */}
-          <View
-            accessibilityElementsHidden
-            importantForAccessibility="no-hide-descendants"
-            style={{
-              minWidth: sizes.verdictBadge,
-              minHeight: sizes.verdictBadge,
-              borderRadius: radius.full,
-              borderWidth: 3,
-              borderColor: verdictBadge.border,
-              backgroundColor: verdictBadge.bg,
-              alignItems: 'center',
-              justifyContent: 'center',
-              paddingHorizontal: 8,
-              ...hardShadow[1][theme],
-            }}
-          >
-            <Text variant="title" style={{ color: verdictBadge.ink }}>
-              {VERDICT_GLYPH[verdict]}
-            </Text>
+          <View className="flex-row flex-wrap items-start justify-between gap-3">
+            <View
+              // One accessibility node, read in one breath, verdict word first.
+              accessible
+              accessibilityRole="header"
+              accessibilityLiveRegion="assertive"
+              accessibilityLabel={t('result:a11yVerdictAnnouncement', {
+                verdictWord,
+                item: itemName,
+                species,
+              })}
+              className="min-w-0 flex-1 gap-2"
+            >
+              {/* The glyph's white "sticker" badge (docs/02 D25) — a minimum, not a fixed, size. */}
+              <Enter kind={m.badge} delay={m.badgeDelay} style={{ alignSelf: 'flex-start' }}>
+                <View
+                  accessibilityElementsHidden
+                  importantForAccessibility="no-hide-descendants"
+                  style={{
+                    minWidth: sizes.verdictBadge,
+                    minHeight: sizes.verdictBadge,
+                    borderRadius: radius.full,
+                    borderWidth: 3,
+                    borderColor: verdictBadge.border,
+                    backgroundColor: verdictBadge.bg,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    paddingHorizontal: 8,
+                    ...hardShadow[1][theme],
+                  }}
+                >
+                  <Text variant="title" style={{ color: verdictBadge.ink }}>
+                    {VERDICT_GLYPH[verdict]}
+                  </Text>
+                </View>
+              </Enter>
+              <MaybeRise enter={rise(RESULT_STAGGER.verdictWord)}>
+                <Text variant="display" className={classes.onBgText}>
+                  {verdictWord}
+                </Text>
+              </MaybeRise>
+              <MaybeRise enter={rise(RESULT_STAGGER.itemName)}>
+                <Text variant="title" className={classes.onBgText}>
+                  {itemName}
+                </Text>
+              </MaybeRise>
+              <MaybeRise enter={rise(RESULT_STAGGER.subject)}>
+                <Text variant="body" className={`${classes.onBgText} opacity-80`}>
+                  {subject}
+                </Text>
+              </MaybeRise>
+            </View>
+            {/* Decorative — the mood is a real signal (see doc comment) but never the only one,
+                and the glyph/word above already carry it for assistive tech. */}
+            <Enter kind={m.mascot} delay={m.mascotDelay}>
+              <Mascot
+                species={species}
+                mood={VERDICT_MASCOT_MOOD[verdict]}
+                size={sizes.mascotBanner}
+                animated
+                calm={!m.mascotIdle}
+              />
+              {m.sparkles ? <Sparkles size={sizes.mascotBanner} /> : null}
+            </Enter>
           </View>
-          <Text variant="display" className={classes.onBgText}>
-            {verdictWord}
-          </Text>
-          <Text variant="title" className={classes.onBgText}>
-            {itemName}
-          </Text>
-          <Text variant="body" className={`${classes.onBgText} opacity-80`}>
-            {subject}
-          </Text>
         </View>
-        {/* Decorative — the mood is a real signal (see doc comment) but never the only one, and
-            the glyph/word above already carry it for assistive tech. */}
-        <Mascot species={species} mood={VERDICT_MASCOT_MOOD[verdict]} size={sizes.mascotBanner} />
-      </View>
-    </View>
+      </Enter>
+    </MotionStill>
+  );
+}
+
+/** Wraps `children` in a staggered rise when `enter` is set; otherwise renders them as they are. */
+function MaybeRise({
+  enter,
+  children,
+}: {
+  enter: { kind: 'rise'; delay: number } | null;
+  children: ReactNode;
+}) {
+  if (!enter) return <>{children}</>;
+  return (
+    <Enter kind={enter.kind} delay={enter.delay}>
+      {children}
+    </Enter>
+  );
+}
+
+/**
+ * The twinkling sparkles around the no-known-toxicity mascot (the canvas's A4 `.spark`s), placed
+ * relative to the mascot box at the canvas's proportions. Motion-only: with motion off they are
+ * not drawn at all, since a frozen sparkle is just clutter.
+ */
+const SPARKS = [
+  { top: 0.03, start: -0.03, size: 0.125, delay: 200 },
+  { top: 0.23, end: -0.02, size: 0.09, delay: 900 },
+  { top: 0.55, start: -0.11, size: 0.08, delay: 1400 },
+] as const;
+
+function Sparkles({ size }: { size: number }) {
+  if (!useMotionEnabled()) return null;
+  return (
+    <>
+      {SPARKS.map((s) => (
+        <Loop
+          key={s.delay}
+          kind="twinkle"
+          delay={s.delay}
+          pointerEvents="none"
+          style={{
+            position: 'absolute',
+            top: s.top * size,
+            ...('start' in s
+              ? { insetInlineStart: s.start * size }
+              : { insetInlineEnd: s.end * size }),
+          }}
+        >
+          <SparkleIcon
+            size={Math.max(12, s.size * size * 1.6)}
+            color={MASCOT_EYE_HIGHLIGHT}
+            outline={MASCOT_INK}
+          />
+        </Loop>
+      ))}
+    </>
   );
 }

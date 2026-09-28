@@ -13,7 +13,7 @@ import {
   SpeciesToggle,
 } from '@/components/inputs';
 import { Screen, StickyFooter } from '@/components/layout';
-import { HistoryIcon, IconButton, SettingsIcon, Text } from '@/components/primitives';
+import { Enter, HistoryIcon, IconButton, SettingsIcon, Text } from '@/components/primitives';
 import { MAX_PHOTOS, useDraftStore } from '@/lib/draft';
 import { processImage } from '@/lib/imagePipeline';
 import { useTheme } from '@/theme/ThemeProvider';
@@ -111,7 +111,11 @@ export default function Home() {
               >
                 {t('home:title')}
               </Text>
-              <Mascot species={species} pose="peek" size={130} />
+              {/* `m-pop` on arrival and on every species change (the canvas's A2) — the new
+                  animal jumps in. Decorative; the toggle below carries the state. */}
+              <Enter kind="mpop" replayKey={species}>
+                <Mascot species={species} pose="peek" size={130} animated />
+              </Enter>
             </View>
 
             <SpeciesToggle value={species} onChange={setSpecies} />

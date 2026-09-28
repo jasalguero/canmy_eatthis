@@ -294,7 +294,8 @@ export const verdictBadge = {
  * reach a real device; that usage was removed in D23 and never restored. `durationFast`/`Base`/
  * `Slow` are used with `LayoutAnimation` instead (D25), which IS proven working in this codebase
  * (`Collapsible`). Left here for a future agent who re-establishes a `react-native-reanimated`
- * animation actually reaches a device — do not wire it up before that.
+ * animation actually reaches a device — do not wire it up before that. The Bold Ink canvas's own
+ * keyframes (entrances, idles, the splash) live in `theme/motion.ts` (D26), on core `Animated`.
  */
 export const motion = {
   durationFast: 150,
@@ -341,6 +342,11 @@ export const sizes = {
   verdictGlyph: 64,
   /** The mascot art next to the verdict banner text (docs/02 D25). */
   mascotBanner: 96,
+  /** How far above its resting place the verdict banner starts its drop (docs/02 D26) — about
+   *  one banner height, the canvas's `translateY(-105%)`, without waiting for a layout pass. */
+  bannerDropDistance: 320,
+  /** The splash screen's mascot coin (docs/02 D26). */
+  splashCoin: 132,
   /** The verdict banner's glyph badge — a minimum, not a fixed size, so it can grow rather than
    *  clip the glyph at 200% font scale (docs/06 §5, docs/02 D25). */
   verdictBadge: 58,
@@ -348,6 +354,10 @@ export const sizes = {
   mascotToggle: 28,
   /** The mascot art on the Identifying screen (docs/02 D25). */
   mascotIdentifying: 132,
+  /** How far the scanning mascot hangs below the photo's bottom edge (the canvas's A3). */
+  scanMascotOverhang: 44,
+  /** A scanning stage's round indicator (the canvas's `.a-ind`). */
+  stageIndicator: 34,
   /**
    * Camera shutter (docs/07 Phase 3). Explicit, not a Tailwind `h-20`/`w-20` class: this
    * project's `spacing` scale (see `tailwind.config.js`) is fully replaced with the 0–9 index

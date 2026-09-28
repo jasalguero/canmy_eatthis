@@ -1,17 +1,29 @@
 import type { Species } from '@canmyeatthis/shared';
 import { router, useLocalSearchParams } from 'expo-router';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Image, View } from 'react-native';
-import { useReducedMotion } from 'react-native-reanimated';
+import { Animated, Image, type LayoutChangeEvent, View } from 'react-native';
 
 import { Mascot } from '@/components/feedback';
 import { Screen } from '@/components/layout';
-import { Button, Text } from '@/components/primitives';
+import {
+  Button,
+  CheckIcon,
+  Enter,
+  Loop,
+  MagnifierIcon,
+  Text,
+  keyframeStyle,
+  useLoop,
+  useMotionEnabled,
+} from '@/components/primitives';
 import { useDraftStore } from '@/lib/draft';
 import { resolveOffline } from '@/lib/offlineKb';
 import { MOCK_PHOTO_URI } from '@/mock/photos';
-import { sizes } from '@/theme/tokens';
+import { useTheme } from '@/theme/ThemeProvider';
+import { MAGNIFIER_COLORS } from '@/theme/mascot';
+import { type Keyframes, MAGNIFIER, SCAN } from '@/theme/motion';
+import { hardShadow, radius, sizes, tokens } from '@/theme/tokens';
 
 /**
  * Signature interaction #2 (docs/06 §2): the scanning state.
@@ -25,12 +37,12 @@ import { sizes } from '@/theme/tokens';
  * (docs/02-tech-decisions.md D23) — the `react-native-reanimated`-driven animation did not
  * reliably render on a real device, the same failure found in `SpeciesToggle`/`VerdictBanner`.
  *
- * **The mascot's "sniffing" is a flipbook, not an animation library (docs/02 D25).** It swaps
- * between two static moods on a plain `setInterval`/`setState` — the exact mechanism the stage
- * list below already uses successfully in this file — rather than through `react-native-
- * reanimated`, which is what actually failed in D23. `useReducedMotion()` freezes it on `idle`
- * rather than skipping the interval silently, so there is nothing left running that a reader
- * sensitive to motion would notice.
+ * **Motion is the canvas's A3 artboard (docs/02 D26)**: the photo tilted in an ink frame with a
+ * scan band sweeping it and a magnifier wandering over it, the mascot hooked over its corner with
+ * its nose going, and each stage's indicator bouncing dots while active and popping a tick when
+ * done. All of it through `components/primitives/Motion.tsx` (core `Animated`, never
+ * `react-native-reanimated` — D23), all of it decorative, and all of it still under reduced
+ * motion, where the mascot's face goes back to `idle` rather than a frozen sniff.
  *
  * The stages still advance on a fixed timer — for a typed query the real, synchronous on-device
  * resolution (H3) finishes well under `STAGE_MS`, so the timer is what keeps the moment readable
@@ -59,9 +71,6 @@ const TEXT_STAGE_KEYS = ['identify:stage_reading', 'identify:stage_matching'] as
 /** Long enough to read, short enough not to feel stuck. */
 const STAGE_MS = 900;
 
-/** The sniff flipbook's frame length — quick enough to read as a repeated gesture. */
-const SNIFF_MS = 500;
-
 export default function Identifying() {
   const { t } = useTranslation();
   const params = useLocalSearchParams<{ species?: string; hasPhoto?: string }>();
@@ -73,16 +82,9 @@ export default function Identifying() {
   const draftPhotos = useDraftStore((state) => state.photos);
   const previewUri = draftPhotos[0] ?? MOCK_PHOTO_URI;
 
-  const reducedMotion = useReducedMotion();
-  const [sniffing, setSniffing] = useState(false);
-
-  useEffect(() => {
-    // Only for a photo: "sniffing" is a metaphor for examining the picture, and doesn't fit a
-    // typed lookup, which never leaves the device (see the doc comment above).
-    if (!hasPhoto || reducedMotion) return;
-    const id = setInterval(() => setSniffing((s) => !s), SNIFF_MS);
-    return () => clearInterval(id);
-  }, [hasPhoto, reducedMotion]);
+  // Only a photo is "sniffed": it's a metaphor for examining the picture, and doesn't fit a
+  // typed lookup, which never leaves the device (see the doc comment above).
+  const motionOn = useMotionEnabled();
 
   useEffect(() => {
     if (stage < stageKeys.length - 1) {
@@ -137,49 +139,230 @@ export default function Identifying() {
         </Text>
 
         {/* Decorative — the stage list below carries the actual progress information for
-            assistive tech (docs/06 §5), so the mascot stays out of the accessibility tree. */}
-        <View className="items-center">
-          <Mascot
-            species={species}
-            mood={hasPhoto && sniffing ? 'sniff' : 'idle'}
-            pose="peek"
-            size={sizes.mascotIdentifying}
-          />
-        </View>
-
+            assistive tech (docs/06 §5), so the mascot and the photo stay out of the tree. */}
         {hasPhoto ? (
-          <View className="aspect-[3/2] w-full overflow-hidden rounded-md bg-surface-sunken">
-            <Image
-              source={{ uri: previewUri }}
-              resizeMode="cover"
-              className="h-full w-full"
-              accessibilityElementsHidden
-              importantForAccessibility="no-hide-descendants"
+          <ScanningPhoto uri={previewUri} species={species} sniffing={motionOn} />
+        ) : (
+          <View className="items-center">
+            <Mascot
+              species={species}
+              mood="idle"
+              pose="peek"
+              size={sizes.mascotIdentifying}
+              animated
             />
           </View>
-        ) : null}
+        )}
 
         <View
           accessibilityLiveRegion="polite"
           accessibilityLabel={t('identify:a11yBusy')}
           accessibilityRole="progressbar"
           accessibilityState={{ busy: true }}
-          className="gap-2"
+          className="gap-3"
+          style={hasPhoto ? { marginTop: sizes.scanMascotOverhang } : undefined}
         >
           {stageKeys.map((key, i) => (
-            <Text
-              key={key}
-              variant="body"
-              tone={i === stage ? 'primary' : 'tertiary'}
-              className={i > stage ? 'opacity-40' : ''}
-            >
-              {t(key)}
-            </Text>
+            <View key={key} className="flex-row items-center gap-3">
+              <StageIndicator state={i < stage ? 'done' : i === stage ? 'active' : 'pending'} />
+              <Text
+                variant="label"
+                tone="primary"
+                className={['shrink', i > stage ? 'opacity-50' : i < stage ? 'opacity-80' : '']
+                  .filter(Boolean)
+                  .join(' ')}
+              >
+                {t(key)}
+              </Text>
+            </View>
           ))}
         </View>
       </View>
 
       <Button label={t('identify:cancel')} variant="secondary" onPress={() => router.back()} />
     </Screen>
+  );
+}
+
+/**
+ * The photo being examined (the canvas's A3): tilted like a print on the table, a scan band
+ * sweeping it (`a-scan`), a magnifier wandering over it (`a-mag`), and the mascot hooked over its
+ * corner, sniffing. All decorative; all of it holds still under reduced motion, where only the
+ * band and the magnifier disappear.
+ */
+function ScanningPhoto({
+  uri,
+  species,
+  sniffing,
+}: {
+  uri: string;
+  species: Species;
+  sniffing: boolean;
+}) {
+  const { theme } = useTheme();
+  const t_ = tokens[theme];
+  const [frame, setFrame] = useState({ width: 0, height: 0 });
+  const onLayout = (e: LayoutChangeEvent) => {
+    const { width, height } = e.nativeEvent.layout;
+    setFrame((f) => (f.width === width && f.height === height ? f : { width, height }));
+  };
+
+  return (
+    <View
+      accessibilityElementsHidden
+      importantForAccessibility="no-hide-descendants"
+      style={{ zIndex: 1 }}
+    >
+      {/* Outer view carries the shadow and the tilt; the inner one clips — iOS clips a shadow
+          drawn by a view that has `overflow: hidden`. */}
+      <View
+        style={{
+          transform: [{ rotate: '-1.6deg' }],
+          borderRadius: radius.lg,
+          ...hardShadow[2][theme],
+        }}
+      >
+        <View
+          onLayout={onLayout}
+          className="aspect-[3/2] w-full overflow-hidden bg-surface-sunken"
+          style={{ borderRadius: radius.lg, borderWidth: 3, borderColor: t_.border.strong }}
+        >
+          <Image source={{ uri }} resizeMode="cover" className="h-full w-full" />
+          {frame.height > 0 ? <ScanBand height={frame.height} /> : null}
+          {frame.width > 0 ? <Magnifier width={frame.width} height={frame.height} /> : null}
+        </View>
+      </View>
+      <View
+        pointerEvents="none"
+        style={{ position: 'absolute', insetInlineEnd: -10, bottom: -sizes.scanMascotOverhang }}
+      >
+        <Mascot
+          species={species}
+          mood={sniffing ? 'sniff' : 'idle'}
+          pose="peek"
+          size={sizes.mascotIdentifying}
+          animated
+        />
+      </View>
+    </View>
+  );
+}
+
+function ScanBand({ height }: { height: number }) {
+  const { theme } = useTheme();
+  const t_ = tokens[theme];
+  const enabled = useMotionEnabled();
+  const spec = useMemo<Keyframes>(
+    () => ({
+      duration: SCAN.duration,
+      easing: 'inOut',
+      at: [0, 1],
+      translateY: [-SCAN.bandHeight, height],
+    }),
+    [height],
+  );
+  const progress = useLoop(spec, { enabled, alternate: true });
+  if (!enabled) return null;
+  return (
+    <Animated.View
+      pointerEvents="none"
+      style={[
+        {
+          position: 'absolute',
+          top: 0,
+          insetInlineStart: -8,
+          insetInlineEnd: -8,
+          height: SCAN.bandHeight,
+          borderTopWidth: 3,
+          borderBottomWidth: 3,
+          borderColor: t_.border.strong,
+        },
+        keyframeStyle(progress, spec),
+      ]}
+    >
+      {/* The canvas's `color-mix(brand 32%, transparent)`, as an opacity on a brand fill. */}
+      <View style={{ flex: 1, backgroundColor: t_.brand.primary, opacity: 0.32 }} />
+    </Animated.View>
+  );
+}
+
+function Magnifier({ width, height }: { width: number; height: number }) {
+  const { theme } = useTheme();
+  const enabled = useMotionEnabled();
+  // The canvas's path is drawn for a 350×244 photo; stretch it onto this one.
+  const sx = width / MAGNIFIER.frameWidth;
+  const sy = height / MAGNIFIER.frameHeight;
+  const spec = useMemo<Keyframes>(
+    () => ({
+      ...MAGNIFIER,
+      translateX: MAGNIFIER.translateX.map((x) => x * sx),
+      translateY: MAGNIFIER.translateY.map((y) => y * sy),
+    }),
+    [sx, sy],
+  );
+  const progress = useLoop(spec, { enabled });
+  if (!enabled) return null;
+  const size = MAGNIFIER.size * Math.min(1, sx);
+  return (
+    <Animated.View
+      pointerEvents="none"
+      style={[
+        { position: 'absolute', top: 0, insetInlineStart: 0, width: size, height: size },
+        keyframeStyle(progress, spec),
+      ]}
+    >
+      <MagnifierIcon
+        size={size}
+        ink={tokens[theme].border.strong}
+        handle={MAGNIFIER_COLORS.handle}
+        lens={MAGNIFIER_COLORS.lens}
+        glint={MAGNIFIER_COLORS.glint}
+      />
+    </Animated.View>
+  );
+}
+
+/**
+ * A stage's round indicator (the canvas's `.a-ind`): empty while pending, three bouncing dots
+ * while active (`a-dots`), a brand-filled tick that pops in once done. Decorative — the stage
+ * text beside it and the live region carry the progress.
+ */
+function StageIndicator({ state }: { state: 'pending' | 'active' | 'done' }) {
+  const { theme } = useTheme();
+  const t_ = tokens[theme];
+  const ring = {
+    width: sizes.stageIndicator,
+    height: sizes.stageIndicator,
+    borderRadius: radius.full,
+    borderWidth: 3,
+    borderColor: t_.border.strong,
+    alignItems: 'center',
+    justifyContent: 'center',
+  } as const;
+
+  if (state === 'done') {
+    return (
+      <Enter kind="check" style={{ ...ring, backgroundColor: t_.brand.primary }}>
+        <CheckIcon size={18} color={t_.brand.onPrimary} />
+      </Enter>
+    );
+  }
+  return (
+    <View style={{ ...ring, backgroundColor: t_.surface.raised, flexDirection: 'row', gap: 3 }}>
+      {state === 'active'
+        ? [0, 150, 300].map((delay) => (
+            <Loop key={delay} kind="dots" delay={delay} pointerEvents="none">
+              <View
+                style={{
+                  width: 5,
+                  height: 5,
+                  borderRadius: radius.full,
+                  backgroundColor: t_.text.primary,
+                }}
+              />
+            </Loop>
+          ))
+        : null}
+    </View>
   );
 }

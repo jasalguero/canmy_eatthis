@@ -2,9 +2,7 @@ import type { Species } from '@canmyeatthis/shared';
 import { useTranslation } from 'react-i18next';
 import { Text as RNText, View } from 'react-native';
 
-import { useTheme } from '@/theme/ThemeProvider';
-import { hardShadow, radius, tokens } from '@/theme/tokens';
-import { Mascot } from './Mascot';
+import { MascotCoin } from './MascotCoin';
 
 /**
  * The app wordmark (docs/02-tech-decisions.md D25) — a small mascot "coin" beside the app name,
@@ -13,7 +11,8 @@ import { Mascot } from './Mascot';
  * order differs between languages, so a decorative icon can never sit inside a translated phrase.
  * This renders the icon and `common:appName` as two siblings instead — same idea, i18n-safe.
  *
- * `species` picks which animal the coin shows; it's decorative only (a brand mark, not a status
+ * `species` picks which animal the coin shows — changing it flips the coin (`MascotCoin`, docs/02
+ * D26); it's decorative only (a brand mark, not a status
  * indicator), so a caller with no species context yet can omit it.
  *
  * **The name text shrinks-to-fit at large scale, unlike every other string in this app.** docs/06
@@ -43,29 +42,9 @@ export function Wordmark({
   size?: number;
 }) {
   const { t } = useTranslation();
-  const { theme } = useTheme();
-  const t_ = tokens[theme];
 
   return (
     <View className="shrink flex-row items-center gap-2" style={{ minWidth: 0 }}>
-      <View
-        accessibilityElementsHidden
-        importantForAccessibility="no-hide-descendants"
-        style={{
-          width: size,
-          height: size,
-          borderRadius: radius.full,
-          borderWidth: 2.5,
-          borderColor: t_.border.strong,
-          backgroundColor: species === 'cat' ? t_.brand.tintCat : t_.brand.tintDog,
-          alignItems: 'center',
-          justifyContent: 'flex-end',
-          overflow: 'hidden',
-          ...hardShadow[1][theme],
-        }}
-      >
-        <Mascot species={species} pose="head" size={size * 1.05} />
-      </View>
       <RNText
         className="font-display text-ink-primary"
         style={{ fontSize: 20, lineHeight: 22, flexShrink: 1 }}
@@ -74,7 +53,18 @@ export function Wordmark({
         minimumFontScale={0.4}
         accessibilityRole="header"
       >
-        {t('common:appName')}
+        {t('common:appNameSplit1')}
+      </RNText>
+      <MascotCoin species={species} size={size} />
+      <RNText
+        className="font-display text-ink-primary"
+        style={{ fontSize: 20, lineHeight: 22, flexShrink: 1 }}
+        numberOfLines={1}
+        adjustsFontSizeToFit
+        minimumFontScale={0.4}
+        accessibilityRole="header"
+      >
+        {t('common:appNameSplit2')}
       </RNText>
     </View>
   );

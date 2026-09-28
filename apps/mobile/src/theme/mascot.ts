@@ -66,3 +66,11 @@ export const VERDICT_MASCOT_MOOD = {
   toxic: 'worried',
   unknown: 'confused',
 } as const satisfies Record<string, MascotMood>;
+
+/** The scanning screen's magnifier (the canvas's A3) — illustration ink, like the mascot, so
+ *  theme-invariant: a yellow handle, a clear lens with a white glint. */
+export const MAGNIFIER_COLORS = {
+  handle: '#FFC23D',
+  lens: '#FFFFFF',
+  glint: '#FFFFFF',
+} as const;
