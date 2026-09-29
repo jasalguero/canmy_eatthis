@@ -12,7 +12,7 @@
  * **"Bold Ink" visual identity (docs/02-tech-decisions.md D25).** These are the values from that
  * decision: a cream/ink base, saturated cartoon verdict colours (dark ink text ON the bright
  * fill, not white-on-dark), and a toon-blue brand accent. The shape of the token file — six keys
- * per verdict, four chrome groups — is unchanged from the funded-plan design; only the values
+ * per verdict, four chrome groups — is unchanged from the original design; only the values
  * moved. `onBg`/`onAccent` happen to be the same ink colour for all four verdicts in both themes
  * (the identity's mascot-illustration outline colour), which is why they read as one flat value
  * per theme below rather than four different ones — they are still four independent CI-checked
@@ -44,7 +44,7 @@ export interface VerdictTokens {
 export interface ThemeTokens {
   verdict: Record<VerdictId, VerdictTokens>;
   /** Brand / chrome (docs/02 D25: a toon blue — deliberately a "this is an app" colour, not a
-   *  medical one, same brief as the funded plan's warm green, answered differently). */
+   *  medical one, same brief as the original warm green, answered differently). */
   brand: {
     primary: string;
     primaryPress: string;
@@ -220,8 +220,8 @@ export const elevation = {
  * `elevation` shadows above — what a shape cut from paper and glued down slightly off-register
  * looks like. iOS renders this exactly (`shadowRadius: 0`); Android's `elevation` prop has no
  * offset control and always blurs, so on Android this degrades to a plain soft shadow at a
- * similar depth — a known platform gap, not a bug, and not worth a custom shadow view for a
- * hobby build. Applied via the `hard-shadow-1` / `hard-shadow-2` Tailwind utilities.
+ * similar depth — a known platform gap, not a bug, and not worth a custom shadow view.
+ * Applied via the `hard-shadow-1` / `hard-shadow-2` Tailwind utilities.
  * Colour is `border.strong`'s ink, not black, so it reads as "outline ink", not a device shadow —
  * callers pass it as a literal here (like `elevation` above) rather than through a class, because
  * `shadowColor` is a style prop, not resolvable from a CSS variable on native.
@@ -310,8 +310,8 @@ export const motion = {
  * **Font (docs/02 D25):** two Google Fonts, not the platform system font — Lilita One for
  * `display` (the verdict word, the wordmark) and Nunito for everything else. This is a deviation
  * from docs/06 §2, which allows the platform system font "if bundle size matters"; two static
- * font files cost roughly 250 KB combined, which this hobby build accepts for the "cartoon"
- * identity docs/10 asked for. See `apps/mobile/src/theme/fonts.ts` for loading and the fallback
+ * font files cost roughly 250 KB combined, which the app accepts for the "cartoon"
+ * visual identity (D25). See `apps/mobile/src/theme/fonts.ts` for loading and the fallback
  * while fonts are not yet ready, and `tailwind.config.js` for how `display`/`sans` map to them.
  */
 export const typography = {

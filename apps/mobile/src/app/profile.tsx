@@ -9,10 +9,10 @@ import { ScrollScreen, Section } from '@/components/layout';
 import { Button, Text } from '@/components/primitives';
 
 /**
- * Pet profile (docs/06 §4, docs/10 §4).
+ * Pet profile (docs/06 §4, docs/04-knowledge-base.md §2).
  *
  * Name and species only. **There is no weight field, and there will not be one**: weight existed
- * in the funded plan to drive dose bands and risk banding, both cut (AGENTS.md #16) because they
+ * only to drive dose bands and risk banding, both out of scope (AGENTS.md #16) because they
  * are the highest-expertise feature in the plan and cannot be done unreviewed. Collecting a
  * number the app must then refuse to use would be worse than not asking — so the screen says so
  * out loud rather than leaving a suspicious gap.

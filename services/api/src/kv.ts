@@ -1,5 +1,5 @@
 /**
- * The four abuse-control layers from docs/10-hobby-scope.md §3, in the order that matters:
+ * The four abuse-control layers from docs/01-architecture.md §6.3, in the order that matters:
  * the global daily cap and the kill switch are what actually prevent an unbounded bill
  * (AGENTS.md #17 — this module exists in the same commit as the first real provider call, not
  * as a follow-up). Every function takes a `KVNamespace` as a parameter rather than reading it off
@@ -9,7 +9,7 @@
  * All four degrade the same way on a KV problem: **soft**. A KV read/write failure here must
  * never surface as a 500 — it must fail toward "treat this call as not allowed" for the cap/kill
  * switch (the conservative direction: refuse a paid call rather than risk missing the cap) and
- * toward "not cached" for the cache (docs/10 §2's own stated failure mode).
+ * toward "not cached" for the cache (docs/01-architecture.md §6.1's own stated failure mode).
  */
 
 const KILL_SWITCH_KEY = 'config:kill_switch';
@@ -28,7 +28,7 @@ function utcHourKey(now: Date): string {
 }
 
 /**
- * docs/10 §3 layer 2: a boolean in KV, flippable from the dashboard in ~10 seconds, no deploy.
+ * docs/01-architecture.md §6.3 layer 2: a boolean in KV, flippable from the dashboard in ~10 seconds, no deploy.
  * Fails **closed** (killed) if KV can't be read — an outage should not silently reopen the
  * vision path.
  */
@@ -53,7 +53,7 @@ export function secondsUntilUtcMidnight(now: Date = new Date()): number {
 }
 
 /**
- * docs/10 §3 layer 1 — "roughly twenty lines of code and it is the layer that actually
+ * docs/01-architecture.md §6.3 layer 1 — "roughly twenty lines of code and it is the layer that actually
  * prevents the disaster." Checks and reserves a slot in one call: this is called *before* the
  * paid provider call, not after, so a request that fails partway through still counts against
  * the day's budget rather than risking an under-count. Fails **closed** on a KV error (refuses
@@ -85,7 +85,7 @@ export interface RateLimitCheck {
 }
 
 /**
- * docs/10 §3 layer 4 — casual-abuse protection on an anonymous client-generated device id (no
+ * docs/01-architecture.md §6.3 layer 4 — casual-abuse protection on an anonymous client-generated device id (no
  * attestation behind it; see docs/02-tech-decisions.md D24). Fails **open** (allowed) on a KV
  * error: unlike the daily cap, letting one device through when KV is briefly unavailable does
  * not risk an unbounded bill — the daily cap is what actually bounds spend.
@@ -147,7 +147,7 @@ export async function getCachedResponse<T>(kv: KVNamespace, cacheKey: string): P
 }
 
 /**
- * docs/10 §2: "a failed KV write must degrade to 'not cached', never to an error." Swallows the
+ * docs/01-architecture.md §6.1: "a failed KV write must degrade to 'not cached', never to an error." Swallows the
  * error deliberately — the caller already has the real response to return regardless.
  */
 export async function setCachedResponse(

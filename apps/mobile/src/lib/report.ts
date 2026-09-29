@@ -4,7 +4,7 @@ import type { TFunction } from 'i18next';
 import { Linking } from 'react-native';
 
 /**
- * "Report a wrong answer" (docs/05 §5, docs/10 §5): an email to a real inbox. A Google Play
+ * "Report a wrong answer" (docs/05 §5, docs/05-safety-legal.md §6): an email to a real inbox. A Google Play
  * requirement for AI content, the knowledge base's correction channel, and a record of diligence.
  *
  * A `mailto:` needs no server, account or connection to compose. The pre-filled body carries only

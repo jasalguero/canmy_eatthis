@@ -19,7 +19,7 @@ import kbIndexArtifact from './kb-data/kb.index.json';
 
 /**
  * The server-side mirror of `apps/mobile/src/lib/offlineKb.ts` — same committed snapshot
- * (docs/02-tech-decisions.md D21, extended to this package for H4), same shared functions
+ * (docs/02-tech-decisions.md D21, extended to this package for Phase 4), same shared functions
  * (AGENTS.md #5), so `/v1/verdict` and the app's on-device resolution can never disagree. This is
  * not a coincidence to maintain by hand: both load `packages/kb/dist` via the same
  * `sync-assets.mjs` script, so a stale copy in either place fails the same CI check.

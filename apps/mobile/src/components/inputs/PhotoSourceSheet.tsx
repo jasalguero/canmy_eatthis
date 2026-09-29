@@ -7,7 +7,7 @@ import { sizes } from '@/theme/tokens';
 /**
  * The `[+]` action sheet (docs/00-product-spec.md: "Tap [+] → action sheet: Camera / Library /
  * Scan barcode"). Replaces `PhotoTray`'s Phase 2 mock `onAdd`, which just appended a placeholder
- * URI — this is the real H3 entry point into the camera screen, the picker and barcode capture.
+ * URI — this is the real Phase 3 entry point into the camera screen, the picker and barcode capture.
  */
 export interface PhotoSourceSheetProps {
   visible: boolean;

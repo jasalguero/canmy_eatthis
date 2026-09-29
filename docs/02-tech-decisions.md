@@ -83,7 +83,7 @@ interface VisionProvider {
 }
 ```
 
-Ship `gemini.ts` and `openai.ts` in Phase 5. Selection is config, not code —
+Ship `gemini.ts` and `openai.ts` in Phase 4 (D24 later settled on Gemini alone). Selection is config, not code —
 a KV-stored config document chooses the primary and escalation providers so a provider outage or a
 price change is a config edit, not a deploy. Use JSON-schema-constrained structured output on every
 provider. `temperature: 0`.
@@ -110,30 +110,21 @@ prefer falling through to the model over a marginal match.
 
 ## D10 — History in `expo-sqlite`; drafts and preferences in MMKV; tokens in `expo-secure-store`
 
-No cloud sync in v1 (see product spec §6). SQLite is right for history because history is queried
-and searched; MMKV is right for small hot key-values; SecureStore is the only correct place for the
-attestation token.
+No cloud sync (see product spec §6). SQLite is right for history because history is queried and
+searched; MMKV is right for small hot key-values; SecureStore is the right place for any token the
+app ever holds. (D20 records that drafts and preferences use AsyncStorage instead of MMKV.)
 
-## D11 — Abuse control: spend caps first, attestation later
+## D11 — Abuse control: spend caps, not attestation
 
-**Superseded for the hobby build by `docs/10-hobby-scope.md` §3.** For a free app run by one
-person, the failure mode is not cost per call but an unbounded bill. A global daily counter in KV
-plus a dashboard kill switch plus provider-side quota caps is ~a morning's work and covers the
-scenario that actually costs money. Per-device rate limiting on an anonymous UUID handles casual
-abuse. Attestation is deferred until determined abuse actually appears.
+For a free app run by one person, the failure mode is not cost per call but an unbounded bill. A
+global daily counter in KV, a dashboard kill switch and provider-side quota caps are about a
+morning's work and cover the scenario that actually costs money; per-device rate limiting on an
+anonymous UUID handles casual abuse (`docs/01-architecture.md` §6.3).
 
-The original reasoning, which still applies if this ever becomes a funded product:
-
-### Original: device attestation, not accounts
-
-App Attest (iOS) and Play Integrity (Android) produce a token the Worker verifies to establish that
-the caller is a genuine install of this app on a genuine device. That token is exchanged for a
-short-lived session JWT, which is what subsequent calls carry. Rate limit on the device identity
-inside that token.
-
-This gives abuse resistance without asking a panicking user to create an account.
-**MVP shortcut:** anonymous device UUID + IP rate limiting in Phase 5; real attestation before store
-submission in Phase 9. Do not ship to production on the shortcut.
+**Alternatives:** device attestation — App Attest (iOS) and Play Integrity (Android) tokens verified
+by the Worker and exchanged for a short-lived session. It is the right answer to *determined* abuse,
+and it is out of scope until that appears (`docs/00-product-spec.md` §6): it costs a week rather
+than a morning, and the spend cap already bounds the damage.
 
 ## D12 — i18n from Phase 0: `i18next` + `i18next-icu` + `expo-localization`
 
@@ -141,7 +132,7 @@ submission in Phase 9. Do not ship to production on the shortcut.
 
 English and Spanish at launch, architected for N languages. Deferring is the option explicitly
 rejected: retrofitting i18n into a shipped React Native app is several times the cost of building
-it in, and the knowledge-base schema in particular cannot be reshaped cheaply once it holds 500
+it in, and the knowledge-base schema in particular cannot be reshaped cheaply once it holds its
 entries.
 
 **ICU MessageFormat from day one**, not later. English and Spanish both have two plural forms, so
@@ -151,7 +142,7 @@ full re-key of every catalogue. Catalogues are split by namespace (`common`, `ho
 
 **Language and region are separate settings**, both defaulted from `expo-localization` and both
 independently overridable. Language drives UI strings and KB prose; region drives poison-control
-hotlines, weight units and regional food coverage. A Spanish speaker in the US needs Spanish text
+hotlines and regional food coverage. A Spanish speaker in the US needs Spanish text
 and US hotline numbers — conflating the two is a safety bug, not a cosmetic one.
 
 **Logical layout properties everywhere** (`marginStart`, not `marginLeft`). Neither launch language
@@ -161,27 +152,25 @@ added.
 Full treatment in `docs/09-localisation.md` — including why KB aliases are functional search data
 rather than translation, and why KB prose can never be machine-translated to `approved`.
 
-## D13 — Observability: Sentry (crashes and Worker errors) + PostHog (product analytics)
+## D13 — Observability: Sentry for errors only; no product analytics
 
-Two events matter more than the rest and should be instrumented in Phase 6:
-`identification_rejected_at_confirm` (the user said "not right" — every one of these is a near-miss
-worth studying) and `verdict_unknown` (a KB gap worth backfilling).
+Crash and Worker error reporting via Sentry, added when needed; the privacy policy must name it
+before it ships (D31). Product analytics (funnels, PostHog or similar) are out of scope
+(`docs/00-product-spec.md` §6): less to disclose, less to comply with.
 
-**Never log image contents or free text as analytics properties.** Log hashes and KB ids.
+The signals that matter come from elsewhere: typed queries that end in `unknown` show KB gaps, and
+"report a wrong answer" emails show wrong answers. **Never log image contents or free text.** The
+Worker logs normalised queries and KB ids only.
 
 ## D14 — Monetisation: none
 
-**Decided 2026-09-18.** This is a free hobby app. No RevenueCat, no purchase code, no quotas, no
-paywall, no subscription state anywhere in the app or the Worker. Delete this concern rather than
-deferring it — an unused purchase SDK is still a dependency, a privacy disclosure and a store
-review question.
+**Decided 2026-09-18.** The app is free. No purchase SDK, no purchase code, no quotas, no paywall,
+no subscription state anywhere in the app or the Worker. An unused purchase SDK is still a
+dependency, a privacy disclosure and a store review question, so none is added.
 
-Not charging also narrows the liability surface (`docs/10-hobby-scope.md` §5) and means no
+Not charging also narrows the liability surface (`docs/05-safety-legal.md` §7) and means no
 requirement to register as autónomo in Spain for a free giveaway. Both change the moment money is
 involved, which is a reason to leave it alone.
-
-The superseded plan — RevenueCat, a free daily tier and a subscription, with the emergency path
-never paywalled — is recoverable from this file's history if this ever becomes a product.
 
 ## D15 — Monorepo with pnpm workspaces
 
@@ -196,24 +185,24 @@ packages/kb          KB source data, build script, validation, fixtures
 normalise-and-match code runs on-device and at the edge, so local and server resolution cannot
 disagree.
 
-## D16 — Phase 0 schema deviations from `docs/03-api-contract.md` (hobby scope)
+## D16 — Phase 0 schema deviations from `docs/03-api-contract.md`
 
-Implementing Phase 0 (`packages/shared/src/schemas/`), two of docs/03's schemas as written
-assume the funded plan and conflict with `docs/10-hobby-scope.md`. Per AGENTS.md "Before you
-deviate", recording the change here rather than silently diverging:
+Implementing Phase 0 (`packages/shared/src/schemas/`), docs/03's schemas as first written included
+fields for features that are out of scope (`docs/00-product-spec.md` §6). Per AGENTS.md "Before you
+deviate", recording the change here rather than silently diverging (docs/03 has since been updated
+to match):
 
-1. **`VerdictPayload` drops `mechanism`, `riskBand`, `riskBandExplanation`.** Doc 10 §1/§4 cuts
-   per-entry mechanism prose and weight×amount risk banding outright (AGENTS.md #16) — they are
-   exactly the highest-expertise, least-reviewable parts of the funded schema, and Doc 10 is
-   explicit that they don't exist without a vet. `onsetHours` is kept: it's a sourced fact
-   ("signs typically appear within N–M hours"), not a judgement call, so it clears the bar Doc 10
-   §4 sets.
+1. **`VerdictPayload` drops `mechanism`, `riskBand`, `riskBandExplanation`.** Per-entry mechanism
+   prose and weight×amount risk banding are out of scope (AGENTS.md #16) — they are exactly the
+   highest-expertise, least-reviewable parts of the schema, and they cannot exist without veterinary
+   review. `onsetHours` is kept: it's a sourced fact ("signs typically appear within N–M hours"),
+   not a judgement call, so it clears the editorial standard (`docs/04-knowledge-base.md` §2).
 2. **`POST /v1/verdict` request drops `context` (`petWeightKg`, `amount`).** Both inputs existed
    only to compute `riskBand`, which no longer exists. The request is now `{ kbId, species }`.
 3. **`ApiError` drops `QUOTA_EXCEEDED` (402, "Paywall sheet"), adds `SPEND_CAP_EXCEEDED`.** Doc
-   03's `QUOTA_EXCEEDED` belonged to the funded plan's per-user subscription quota; AGENTS.md #18
-   cuts all monetisation code, so there is nothing to paywall. `SPEND_CAP_EXCEEDED` names the
-   real hobby-scope failure mode instead (Doc 10 §3): the *global* daily vision-call counter is
+   03's `QUOTA_EXCEEDED` was a per-user subscription quota; there is no monetisation code
+   (AGENTS.md #18), so there is nothing to paywall. `SPEND_CAP_EXCEEDED` names the real failure
+   mode instead (`docs/01-architecture.md` §6.3): the *global* daily vision-call counter is
    exceeded, and the app must degrade to offline-KB-only with an honest message, never an error
    screen.
 
@@ -224,13 +213,13 @@ Everything else in doc 03 (`Species`, `Verdict`, `IdentifyRequest`, `IdentifyRes
 ## D17 — Phase 1: `review.status` has no vet behind it, and `es` ships gated by a config flag
 
 Implementing Phase 1 (`packages/kb`), two points from docs/04 §1 and docs/09 §5 need recording
-because there is no licensed vet available in the hobby build (`docs/10-hobby-scope.md` §4):
+because there is no veterinary review (`docs/04-knowledge-base.md` §2):
 
-1. **`review.status: approved` means "meets the editorial standard in docs/10 §4"** — ≥2
+1. **`review.status: approved` means "meets the editorial standard in docs/04 §2"** — ≥2
    independent authoritative sources, no thin or contested claims, own-words prose — recorded
-   against the author's own name in `reviewed_by`, not a veterinary sign-off. Doc 04 rule 4 ("no
+   against the reviewer's own name in `reviewed_by`, not a veterinary sign-off. Doc 04 rule 4 ("no
    entry ships to production with `review.status !== approved`") is a *release* gate, enforced
-   later (Phase 10); Phase 1 entries are authored as `draft` or `needs_review` and that is
+   later (Phase 6); Phase 1 entries are authored as `draft` or `needs_review` and that is
    correct, per doc 07 Phase 1's own instruction to author with `review.status: draft`.
 2. **`build.ts` takes a `SHIPPED_LANGUAGES` list and enforces the Tier A/B approval rules
    (docs/04 §1 rules 8–9, docs/09 §5 rules 1–2) only for languages in that list.** Flipping a
@@ -301,7 +290,7 @@ behaviour is unchanged under 7 (typecheck + tests green). If a future release of
 `^5` and we want the warning gone, the lever is upgrading those libraries, not downgrading the
 compiler.
 
-**A second caveat, found during H3 (2026-09-23):** on Node 20.9.0, every package's `tsc` script
+**A second caveat, found during Phase 3 (2026-09-23):** on Node 20.9.0, every package's `tsc` script
 (`tsc --noEmit` / `tsc -p tsconfig.build.json`) fails with
 `ERR_UNKNOWN_FILE_EXTENSION` on `typescript/bin/tsc` — that file is a `#!/usr/bin/env node`
 shebang script with no extension, and pnpm's generated `node_modules/.bin/tsc` shim invokes it via
@@ -315,12 +304,12 @@ this TypeScript build is updated to close the gap, work around it locally by inv
 `node node_modules/.pnpm/typescript@7.0.2/node_modules/typescript/lib/tsc.js` directly in place of
 `tsc`.
 
-## D20 — H3 draft persistence: zustand + AsyncStorage, not MMKV
+## D20 — Phase 3 draft persistence: zustand + AsyncStorage, not MMKV
 
-D10 specified MMKV for drafts and preferences. `lib/settings.ts` (H0/H2) already used zustand's
+D10 specified MMKV for drafts and preferences. `lib/settings.ts` (Phases 0 and 2) already used zustand's
 `persist` middleware over `@react-native-async-storage/async-storage` instead, without an ADR
 recording the change — this entry closes that gap for both call sites at once rather than adding
-a second, inconsistent storage engine for the H3 draft store (`lib/draft.ts`: species,
+a second, inconsistent storage engine for the Phase 3 draft store (`lib/draft.ts`: species,
 description, in-progress photo URIs).
 
 **Why AsyncStorage over MMKV here:** MMKV is a native module — adopting it means a config-plugin
@@ -338,9 +327,9 @@ reading `localStorage['canmyeatthis.draft.v1']` directly.
 
 ## D21 — Bundled KB ships as a committed static asset, not fetched OTA
 
-docs/01-architecture.md's diagram calls the on-device KB "OTA updatable"; docs/07 Phase 8 is where
+docs/01-architecture.md's diagram calls the on-device KB "OTA updatable"; the post-release OTA work in docs/07 is where
 that update *mechanism* (a versioned manifest, a background fetch, a diff against the running
-app's copy) actually gets built — well past H3. H3 only needs the KB usable fully offline from
+app's copy) actually gets built — well past Phase 3. Phase 3 only needs the KB usable fully offline from
 first launch, so `apps/mobile/assets/kb/{kb.en,kb.es,kb.index}.json` is a plain committed asset,
 synced from `packages/kb/dist` by `pnpm --filter kb run sync:mobile`
 (`packages/kb/scripts/sync-mobile-assets.mjs`) and imported with a static `import` in
@@ -353,8 +342,8 @@ edit — is closed by a CI step (`.github/workflows/ci.yml`) that re-runs the bu
 safe-claims/contrast/UI-hygiene. Whoever edits `packages/kb/data` and forgets to re-sync gets a
 failing PR, not a silently stale app.
 
-**Alternatives considered:** fetching the KB from the Worker on first launch (rejected — H3 has no
-Worker yet, and doc10 §7's H3 checkpoint is explicitly "no server, no API key, no spend"); bundling
+**Alternatives considered:** fetching the KB from the Worker on first launch (rejected — Phase 3 has
+no Worker yet, and its checkpoint is explicitly "no server, no API key, no spend"); bundling
 the JSON straight into the JS bundle via a package import from `@canmyeatthis/kb`'s own `dist`
 (rejected — that directory is build output, gitignored and ephemeral, and Metro resolving across
 a workspace package's gitignored `dist` is exactly the kind of implicit cross-package coupling
@@ -364,9 +353,9 @@ a workspace package's gitignored `dist` is exactly the kind of implicit cross-pa
 
 The tier-1 fuzzy matcher docs/01 §"resolution tiers" and docs/02 D9 call for
 (`resolveText`/`buildAliasSearchIndex`, `packages/shared/src/resolveText.ts`, using `fuse.js`)
-lives in `packages/shared`, not in `apps/mobile`, even though only the app calls it in H3. AGENTS.md
+lives in `packages/shared`, not in `apps/mobile`, even though only the app calls it in Phase 3. AGENTS.md
 #5 is about verdict resolution disagreeing between the app and the Worker, but the same argument
-applies one step earlier: H4's Worker will need to map a model's free-text candidate label onto a
+applies one step earlier: Phase 4's Worker will need to map a model's free-text candidate label onto a
 KB id, and that is the same alias-matching problem a typed query solves offline. Fuse.js has no
 native or Node-only dependencies, so the identical function will run unmodified in the Worker's V8
 isolate later — duplicating this logic there instead would be exactly the "app and Worker
@@ -395,8 +384,8 @@ guessed:
 Also recorded: an ambiguous fuzzy match — the best two scoring hits map to two *different* KB ids
 within a small margin of each other (e.g. bare `"chocolate"` between `chocolate_dark` and
 `chocolate_milk`) — resolves to no match, not a guess. This is D9's "prefer falling through over a
-marginal match" applied literally, and it means doc07 Phase 4's acceptance list (written against
-the funded 500-entry KB) does not transfer literally: `"chocolate"` alone is not expected to
+marginal match" applied literally, and it means the Phase 3 acceptance list (written against a
+much larger KB) does not transfer literally: `"chocolate"` alone is not expected to
 resolve in this KB, because two real, differently-verdicted entries both plausibly own it.
 
 **Verified:** `packages/shared/src/resolveText.test.ts` (synthetic index, including the ambiguity
@@ -439,11 +428,11 @@ and ingredient lists off the fuzzy tier.
 
 ## D23 — `SpeciesToggle`'s pill dropped `react-native-reanimated`, undiagnosed
 
-**Decided 2026-09-23**, from a bug report during H3 device testing, not from a design review.
+**Decided 2026-09-23**, from a bug report during Phase 3 device testing, not from a design review.
 
 `SpeciesToggle`'s sliding pill (docs/06 §2 signature interaction #1) was built on
-`react-native-reanimated` (`useSharedValue`/`useAnimatedStyle`/`withSpring`) from H2 onward. On a
-real device (iPhone, Expo Go, SDK 57 — the app's first ever real-device test; H0–H2 were built
+`react-native-reanimated` (`useSharedValue`/`useAnimatedStyle`/`withSpring`) from Phase 2 onward. On a
+real device (iPhone, Expo Go, SDK 57 — the app's first ever real-device test; Phases 0–2 were built
 and reviewed without one) the pill rendered with **no colour and no position at all**, in both
 themes, with no error or warning surfaced anywhere. Two rounds of fixes narrowed this down without
 resolving it:
@@ -509,20 +498,20 @@ animation here, do not reach for `cssInterop`/inline-`style` tweaks as a first r
 tried against this exact failure and did not work) — first establish, on a real device, that
 `useAnimatedStyle`'s output visibly reaches a plain test view at all.
 
-## D24 — H4 Worker: no sessions, one provider, exact-only matching for machine-read text
+## D24 — Phase 4 Worker: no sessions, one provider, exact-only matching for machine-read text
 
-**Decided 2026-09-24**, implementing H4 (`services/api`). This records where the Worker differs
-from `docs/03-api-contract.md` and docs/07 Phase 5, and why.
+**Decided 2026-09-24**, implementing Phase 4 (`services/api`). This records where the Worker differs
+from `docs/03-api-contract.md` and docs/07 Phase 4, and why.
 
-1. **No `/v1/session`, no JWT. Callers send an `X-Device-Id` UUID instead.** In the funded plan,
-   sessions wrap attestation. Attestation is deferred (docs/10 §3, D11), and without it a session
+1. **No `/v1/session`, no JWT. Callers send an `X-Device-Id` UUID instead.** Sessions existed to
+   wrap attestation, which is out of scope (D11), and without it a session
    token is just a signed copy of an id the client picked, so it adds no security. The device id
    only keys the per-device rate limit, and the global daily cap is what bounds spend. A missing
    or malformed id is `UNAUTHENTICATED` (401). `ATTESTATION_FAILED` stays in the error enum but
-   nothing returns it until attestation is built. `DEV_SESSION_TOKENS_ENABLED` is removed.
-2. **One provider: Gemini, paid tier.** docs/10 §7's H4 row overrides D7's "at least two
-   implementations". The `VisionProvider` seam in `src/providers/` stays, so adding a second
-   provider means one new file and a config value. Escalation (docs/07 Phase 5) uses a stronger
+   nothing returns it. `DEV_SESSION_TOKENS_ENABLED` is removed.
+2. **One provider: Gemini, paid tier.** This overrides D7's "at least two implementations": one
+   provider is enough at this volume. The `VisionProvider` seam in `src/providers/` stays, so adding a second
+   provider means one new file and a config value. Escalation (docs/07 Phase 4) uses a stronger
    model from the same provider. Each escalation call reserves its own slot against the daily cap.
 3. **Model labels and barcode ingredient lines resolve by exact alias only, never fuzzy.** D22's
    fuzzy tier is tuned for a person typing, who then sees what it matched. Text the Worker reads
@@ -545,13 +534,13 @@ from `docs/03-api-contract.md` and docs/07 Phase 5, and why.
    copy, and a test diffs it against `apps/mobile/src/i18n/locales/*/legal.json`. `POST
    /v1/verdict` takes an optional `locale` (language only, per AGENTS.md #12).
 9. **`/v1/hotlines` is not served by the Worker.** Hotlines must work offline (AGENTS.md #4), so
-   they ship bundled in the app. The registry needs human-verified numbers and is H5 work.
+   they ship bundled in the app. The registry needs human-verified numbers and is Phase 5 work.
 10. **KB manifest is per language** (`?lang=`). `sha256` and `sizeBytes` describe the exact bytes
-    `GET /v1/kb/:lang` serves. Signing and the on-device swap remain Phase 8 (D21). The KB sync
+    `GET /v1/kb/:lang` serves. Signing and the on-device swap come after the first release (D21). The KB sync
     script is now `sync:assets` (was `sync:mobile`) and writes to both the app and the Worker.
 
 **Known limit:** KV counters are read-modify-write and eventually consistent, so a concurrent
-burst can overshoot the daily cap slightly. The provider-side quota cap (docs/10 §3 layer 3,
+burst can overshoot the daily cap slightly. The provider-side quota cap (docs/01 §6.3 layer 3,
 `services/api/README.md`) is the hard backstop. Free-plan KV's 1,000 writes a day caps real use at
 about 300 paid calls a day. When writes fail, the daily cap fails closed.
 
@@ -587,9 +576,9 @@ actually changed in the shipped app, distinct from the exploration itself.
    `brand.primary` there.
 3. **Two bundled Google Fonts — Lilita One (`display`) and Nunito (everything else) — replace the
    platform system font**, a deliberate deviation from docs/06 §2's "the platform system font if
-   bundle size matters" allowance: this is a hobby build, and it takes the ~250 KB cost for the
-   identity docs/10 asked for. Loaded via `@expo-google-fonts/*` (bundled TTFs, not fetched — this
-   holds docs/10 §5's "collect nothing" posture and the screenshot script's zero-network-call
+   bundle size matters" allowance: the ~250 KB cost is worth it for the visual identity. Loaded
+   via `@expo-google-fonts/*` (bundled TTFs, not fetched — this holds the "collect nothing"
+   posture of `docs/05-safety-legal.md` §6 and the screenshot script's zero-network-call
    check) and gated behind the splash screen (`_layout.tsx`) so no screen ever flashes the system
    font. Each typography role maps to a *specific* font file (`tailwind.config.js`'s `fontFamily`),
    not a generic family plus a `fontWeight` style — Google Fonts ship one file per weight with its
@@ -786,7 +775,8 @@ UI-hygiene and Expo dependency checks, tests, build and the KB snapshot diff all
 
 ## D28 — Build-time feature flags; the first release is text-only
 
-Following `docs/10-hobby-scope.md` §7, the first store release is the offline typed-lookup app,
+Following the release plan (`docs/07-implementation-plan.md`, "Releases"), the first store release
+is the offline typed-lookup app,
 without photo identification. Barcode scanning comes later, once its lookup exists. The photo
 and barcode code stays on `main` behind two flags rather than on a branch, because a long-lived
 branch would drift from the screens and stores it shares with the rest of the app.
@@ -828,8 +818,7 @@ objects to the unused purpose strings).
 
 ## D29 — Barcode lookup from the app, not the Worker, for the first release
 
-D8 put the Open Food Facts lookup in the Worker. The first release has no Worker (D28, docs/10
-§7), and barcode scanning is in it, so the app now looks products up itself. Neither database
+D8 put the Open Food Facts lookup in the Worker. The first release has no Worker (D28), and barcode scanning is in it, so the app now looks products up itself. Neither database
 needs a key or an account, so this adds no secret and no spend.
 
 - **One implementation, in `packages/shared/src/barcode.ts`:** the lookup (Open Pet Food Facts,
@@ -881,7 +870,7 @@ Until now every emergency button dialled a placeholder (`+00000000000`). The reg
 - **No line for MX or AR, deliberately.** Mexico has no single national line. Argentina's Centro
   Nacional de Intoxicaciones (0800-333-0160) is confirmed as 24 h and free, but its official page
   does not say it takes calls about animals. Those regions get their own vet and the maps search.
-- **The US lines are not offered outside the US.** docs/05 §3 lists them as international
+- **The US lines are not offered outside the US.** docs/05 §3 originally listed them as international
   fallbacks, but they are US toll-free numbers, which generally cannot be dialled from abroad.
 - **The emergency button opens an emergency screen instead of dialling one number:** the user's
   own vet first (docs/05 §3), then the region's lines with cost, hours and languages, then an
@@ -900,14 +889,14 @@ Spanish, plain HTML), and `.github/workflows/pages.yml` publishes that folder al
 internal design documentation. One-time setup: repository Settings → Pages → Source: "GitHub
 Actions".
 
-- **Written from what the app actually does, not a template** (docs/10 §5): no accounts,
+- **Written from what the app actually does, not a template** (`docs/05-safety-legal.md` §6): no accounts,
   analytics, crash reporting or ads; typed lookups stay on the phone; a barcode scan sends the
   barcode and the phone's IP address to Open Food Facts (D29); the emergency-vet search opens
   Google Maps; hotlines open the dialler; a report is an email the user chooses to send.
 - **Controller:** Jose Salguero, publishing as an individual. Contact:
   canmy_eatthis@jasalguero.com. Governing law: Spain, with the AEPD as the supervisory authority.
-- **No lawyer review.** docs/05 asks for one; docs/10's hobby scope replaces it with an honest,
-  self-written policy. Revisit if the app ever monetises or photo identification ships.
+- **No lawyer review.** An honest, self-written policy instead (`docs/05-safety-legal.md` §6).
+  Revisit if the app ever monetises or photo identification ships.
 - **The app links to them** from the first-run screen and Settings, in the user's language
   (`apps/mobile/src/lib/legal.ts`). CI checks every linked page exists and that none uses the word
   "safe" (AGENTS.md #3).

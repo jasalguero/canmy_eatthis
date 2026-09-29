@@ -1,5 +1,5 @@
 /**
- * Nightly live-provider drift check (docs/07 Phase 5). The committed suite never calls a model;
+ * Nightly live-provider drift check (docs/07 Phase 4). The committed suite never calls a model;
  * this is the one place that does, so a provider-side change (model retired, output drift, schema
  * handling change) shows up within a day instead of in a user's result.
  *

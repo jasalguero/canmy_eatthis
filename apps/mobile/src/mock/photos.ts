@@ -4,7 +4,7 @@ import { Asset } from 'expo-asset';
  * A stand-in photo for the Phase 2 tray.
  *
  * `PhotoThumb` takes a URI string because that is what `expo-image-picker` and `expo-camera`
- * hand back in H3 (a `file://` path). So the mock resolves a bundled asset to its URI rather
+ * hand back in Phase 3 (a `file://` path). So the mock resolves a bundled asset to its URI rather
  * than passing a `require()` handle, and the component never learns that Phase 2 had no camera.
  *
  * Resolved through `expo-asset` rather than `Image.resolveAssetSource`: the latter does not

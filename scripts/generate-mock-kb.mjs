@@ -7,7 +7,7 @@
  * vocabulary ids — so it is generated from `packages/kb/dist/kb.<lang>.json` rather than
  * invented. Run `pnpm --filter @canmyeatthis/kb build` first if `dist/` is stale.
  *
- * This file and its output are deleted in H3, when the real KB is bundled as an app asset.
+ * This file and its output are deleted in Phase 3, when the real KB is bundled as an app asset.
  */
 import { readFileSync, writeFileSync } from 'node:fs';
 
@@ -67,14 +67,14 @@ const file = `import type { ResolvedKbEntry } from '@canmyeatthis/shared';
  * Mock knowledge-base entries for Phase 2. **Generated — do not edit by hand.**
  *
  * Phase 2 builds every screen against hardcoded mock data with no network and no bundled KB
- * (docs/07 Phase 2) — bundling \`kb.json\` as an app asset is H3's job (docs/10 §7). But the
+ * (docs/07 Phase 2) — bundling \`kb.json\` as an app asset is Phase 3's job (docs/07-implementation-plan.md). But the
  * screens still have to be reviewed against content that behaves like the real thing: Spanish
  * that actually runs 20–30% longer than the English, real source labels long enough to wrap, and
  * the real controlled-vocabulary ids so the Result screen's signs list is exercised.
  *
  * So this file is generated from the Phase 1 build artefacts (\`packages/kb/dist/kb.<lang>.json\`)
  * rather than invented: same entries, same prose, same ids, projected onto \`ResolvedKbEntry\`.
- * Regenerate with \`pnpm mock:kb\`. When H3 bundles the real KB, this file and its generator are
+ * Regenerate with \`pnpm mock:kb\`. When Phase 3 bundles the real KB, this file and its generator are
  * deleted and nothing else changes — the screens already consume \`ResolvedKbEntry\` and
  * \`resolveVerdict()\`.
  *

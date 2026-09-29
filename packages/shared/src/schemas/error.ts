@@ -1,11 +1,11 @@
 import { z } from 'zod';
 
 /**
- * Hobby-scope deviation from docs/03-api-contract.md — see docs/02-tech-decisions.md D16.
+ * Deviation from the original docs/03-api-contract.md — see docs/02-tech-decisions.md D16.
  *
- * docs/03's `QUOTA_EXCEEDED` (402, "Paywall sheet") belonged to the funded plan's per-user
+ * docs/03's `QUOTA_EXCEEDED` (402, "Paywall sheet") was a per-user
  * subscription quota. AGENTS.md #18 cuts all monetisation code, so there is no paywall to
- * show. What replaces it is the *global* spend cap from docs/10-hobby-scope.md §3: when the
+ * show. What replaces it is the *global* spend cap from docs/01-architecture.md §6.3: when the
  * daily vision-call counter is exceeded, the vision path refuses and the app degrades to
  * offline-KB-only with an honest message — never an error screen. `SPEND_CAP_EXCEEDED` names
  * that case explicitly so the app can render "photos are unavailable right now" rather than a

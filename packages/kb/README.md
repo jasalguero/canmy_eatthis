@@ -1,8 +1,7 @@
 # packages/kb
 
 The knowledge base: source data, schema, build pipeline and fixtures
-(`docs/04-knowledge-base.md`, `docs/07-implementation-plan.md` Phase 1 / `docs/10-hobby-scope.md`
-§7 "H1").
+(`docs/04-knowledge-base.md`, `docs/07-implementation-plan.md` Phase 1).
 
 - `schema/entry.ts` — Zod validator for one YAML entry (per-entry rules only; cross-entry rules
   live in `src/build.ts`, which needs the whole KB).
@@ -15,7 +14,7 @@ The knowledge base: source data, schema, build pipeline and fixtures
   `dist/kb.index.json`, one `dist/kb.<lang>.json` per language, and `dist/coverage-report.json`
   (gzipped alongside the raw JSON, SHA-256 logged to stdout).
 - `fixtures/` — the resolution and verdict fixture suites `docs/04-knowledge-base.md` §6
-  describes (plus `fixtures/fuzzy-resolutions.ts` for the H3 fuzzy tier), consumed by this
+  describes (plus `fixtures/fuzzy-resolutions.ts` for the Phase 3 fuzzy tier), consumed by this
   package's and `packages/shared`'s tests.
 - `scripts/sync-assets.mjs` — copies `dist/{kb.en,kb.es,kb.index}.json` into every consumer that
   ships a committed offline KB snapshot: `apps/mobile/assets/kb/` and `services/api/src/kb-data/`
@@ -23,5 +22,5 @@ The knowledge base: source data, schema, build pipeline and fixtures
   content change and commit the result — CI diffs both targets and fails if either is stale.
 
 Run `pnpm --filter @canmyeatthis/kb build` to build. `review.status` and `translations.es` on
-individual entries reflect the hobby-build editorial standard (no vet; `es` reviewed by a named
-native speaker) — see `docs/02-tech-decisions.md` D17 before changing what the build enforces.
+individual entries reflect the editorial standard in `docs/04-knowledge-base.md` §2 (no vet;
+`es` reviewed by a named native speaker) — see `docs/02-tech-decisions.md` D17 before changing what the build enforces.

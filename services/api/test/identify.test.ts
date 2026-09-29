@@ -109,7 +109,7 @@ describe('POST /v1/identify — model path against recorded-shape provider fixtu
     expect(JSON.stringify(sent).toLowerCase()).not.toContain('is this toxic');
   });
 
-  it('never trusts a photo-identified plant above low confidence (docs/10 §4)', async () => {
+  it('never trusts a photo-identified plant above low confidence (docs/04-knowledge-base.md §2)', async () => {
     stubGemini([{ body: fx.LILY_PHOTO }, { body: fx.LILY_PHOTO }]);
     const body = IdentifyResponseSchema.parse(
       await (await identifyRequest(makeEnv(), photoRequest({ species: 'cat' }))).json(),
@@ -269,7 +269,7 @@ describe('invariant: no response path can emit verdict "safe" with resolvedBy "m
   });
 });
 
-describe('spend controls (docs/10 §3)', () => {
+describe('spend controls (docs/01-architecture.md §6.3)', () => {
   it('forcing the daily counter past its threshold refuses the vision path…', async () => {
     const env = makeEnv({ VISION_DAILY_CALL_CAP: '5' }, { ...NO_ESCALATION, [todayCapKey()]: '5' });
     const { fetchMock } = stubGemini([]);
@@ -572,7 +572,7 @@ describe('every docs/03 error code is reachable and correctly shaped', () => {
   });
 
   it('RATE_LIMITED and SPEND_CAP_EXCEEDED are covered under "spend controls" above', () => {
-    // ATTESTATION_FAILED is intentionally unreachable: attestation is deferred (docs/10 §3, D24).
+    // ATTESTATION_FAILED is intentionally unreachable: attestation is deferred (docs/01-architecture.md §6.3, D24).
     expect(true).toBe(true);
   });
 });

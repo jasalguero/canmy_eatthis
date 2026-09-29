@@ -1,8 +1,8 @@
 name: Live provider eval
 
-# docs/07 Phase 5: a nightly job that calls the real vision provider against the eval set and
+# docs/07 Phase 4: a nightly job that calls the real vision provider against the eval set and
 # reports drift. The main CI never makes a live model call; this is the only workflow that does.
-# Needs the repository secret GEMINI_API_KEY_EVAL (a paid-tier key — docs/10 §2.1). Without it
+# Needs the repository secret GEMINI_API_KEY_EVAL (a paid-tier key — docs/01-architecture.md §6.2). Without it
 # the script skips and exits 0.
 on:
   schedule:

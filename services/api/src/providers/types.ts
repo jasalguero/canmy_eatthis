@@ -1,8 +1,8 @@
 import type { ModelOutput } from '../prompts/identify.v1.js';
 
 /**
- * docs/02 D7's provider seam. Hobby scope ships one implementation (Gemini, paid tier —
- * docs/10 §2.1 and D24); a second provider is a new file here plus a `provider` value in the KV
+ * docs/02 D7's provider seam. It ships one implementation (Gemini, paid tier —
+ * docs/01-architecture.md §6.2 and D24); a second provider is a new file here plus a `provider` value in the KV
  * config, not a change to the identify pipeline.
  *
  * The input deliberately has no `species`: identification does not depend on it, and not

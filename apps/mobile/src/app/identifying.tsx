@@ -46,8 +46,8 @@ import { hardShadow, radius, sizes, tokens } from '@/theme/tokens';
  * motion, where the mascot's face goes back to `idle` rather than a frozen sniff.
  *
  * The stages still advance on a fixed timer — for a typed query the real, synchronous on-device
- * resolution (H3) finishes well under `STAGE_MS`, so the timer is what keeps the moment readable
- * rather than a flash. The photo path still has no network call to time against (H4); H5
+ * resolution (Phase 3) finishes well under `STAGE_MS`, so the timer is what keeps the moment readable
+ * rather than a flash. The photo path still has no network call to time against (Phase 4); Phase 5
  * replaces its timer with the real request lifecycle, and the presentation does not change.
  */
 
@@ -55,9 +55,9 @@ import { hardShadow, radius, sizes, tokens } from '@/theme/tokens';
  * The stages differ by input, and not only for polish.
  *
  * A typed check never sends anything: it resolves against the bundled knowledge base, on device
- * and offline (H3). Showing "Preparing your photo" and "Sending it for identification" for a
+ * and offline (Phase 3). Showing "Preparing your photo" and "Sending it for identification" for a
  * text lookup would be telling the user their data left the device when it did not — which, in
- * an app whose privacy position is "we collect nothing" (docs/10 §5), is the one thing the
+ * an app whose privacy position is "we collect nothing" (docs/05-safety-legal.md §6), is the one thing the
  * loading copy must not get wrong.
  */
 const PHOTO_STAGE_KEYS = [
@@ -97,11 +97,11 @@ export default function Identifying() {
     // Last stage: hand off, rather than sitting on a finished progress list forever.
     //
     // A photo-derived identification always goes through Confirm — real photo *identification*
-    // needs a vision model that doesn't exist until H4, so this still hands off to Confirm's
+    // needs a vision model that doesn't exist until Phase 4, so this still hands off to Confirm's
     // mock candidates (AGENTS.md #1: the model produces candidates, never verdicts, so this was
     // always going through a confirmation step regardless).
     //
-    // Typed input is real as of H3: `resolveOffline` runs the on-device exact/alias/fuzzy
+    // Typed input is real as of Phase 3: `resolveOffline` runs the on-device exact/alias/fuzzy
     // resolver from `packages/shared` (AGENTS.md #5) against the bundled KB. An exact match
     // skips Confirm — nothing to confirm when the user typed the exact name — a fuzzy match
     // goes to Confirm with that one real candidate, and no match is a real `unknown`, not a mock.

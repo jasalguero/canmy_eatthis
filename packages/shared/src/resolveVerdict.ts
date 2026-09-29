@@ -9,7 +9,7 @@ import { type VerdictPayload, VerdictPayloadSchema } from './schemas/verdict.js'
  * Pure and synchronous: no I/O, no network, no randomness. AGENTS.md #5 — this is the only
  * place resolution logic lives, so the app (on-device, offline) and the Worker (server-side)
  * compute byte-identical verdicts for the same `(kbId, species)` by both calling this function
- * against the same KB artefact. Hobby scope (docs/02-tech-decisions.md D16) drops the funded
+ * against the same KB artefact. D16 drops the original
  * plan's `context` parameter (`petWeightKg`, `amount`) — there is no risk band left to compute
  * from it.
  *

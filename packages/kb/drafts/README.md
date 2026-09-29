@@ -10,7 +10,7 @@ A draft claims no review it has not had: `review.status: draft`, `reviewed_by: n
 
 ## Reviewing a draft
 
-The editorial standard is `docs/10-hobby-scope.md` §4. For each draft:
+The editorial standard is `docs/04-knowledge-base.md` §2. For each draft:
 
 1. Open **both** sources. Check that each one supports the verdict for **each** species, and that
    the summary, signs and onset say nothing the sources do not.

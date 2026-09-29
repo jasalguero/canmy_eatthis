@@ -6,7 +6,7 @@ import { POSITIVE_RESOLUTIONS } from '../fixtures/resolution.fixtures.js';
 import { buildAliasIndex, loadEntries } from './build.js';
 
 /**
- * `resolveText` (the fuzzy tier, docs/07 Phase 4) lives in `packages/shared` (AGENTS.md #5), but
+ * `resolveText` (the fuzzy tier, docs/07 Phase 3) lives in `packages/shared` (AGENTS.md #5), but
  * it can only be proven against the real KB here — `packages/shared` cannot depend on
  * `packages/kb` without a cycle (see `resolved-kb-entry.ts`'s doc comment), so its own unit
  * tests use a small synthetic index instead. This is the test that exercises it against what

@@ -1,6 +1,6 @@
 /**
  * Gemini `generateContent` response bodies for the contract tests — CI makes zero live model
- * calls (docs/07 Phase 5). These follow the documented REST response shape (`candidates[].content
+ * calls (docs/07 Phase 4). These follow the documented REST response shape (`candidates[].content
  * .parts[].text`, `finishReason`, `promptFeedback.blockReason`); they were authored to that shape,
  * not captured from a live call, because no API key was available when they were written.
  * `pnpm --filter @canmyeatthis/api run eval:live` (nightly, `.github/workflows/live-eval.yml`)

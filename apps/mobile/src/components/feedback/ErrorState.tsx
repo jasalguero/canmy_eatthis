@@ -11,7 +11,7 @@ import { Button, Text } from '@/components/primitives';
  * Every error offers a route to offline text lookup, and every error offers the hotline list.
  * That is not a nicety: AGENTS.md #4 requires the emergency path to survive every failure mode,
  * and an error screen is exactly where an app usually drops it. `SPEND_CAP_EXCEEDED` is the case
- * this matters most for (docs/10 §3) — the vision path is refused, and what the user sees is an
+ * this matters most for (docs/01-architecture.md §6.3) — the vision path is refused, and what the user sees is an
  * honest message with the whole offline app still behind it, never a dead end.
  */
 export type ErrorStateCode = ApiErrorCode | 'offline';

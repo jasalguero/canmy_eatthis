@@ -2,13 +2,13 @@ import { z } from 'zod';
 import { EmergencyActionIdSchema, SignIdSchema } from './vocab.js';
 
 /**
- * Per-entry Zod validator matching `docs/04-knowledge-base.md` §1, with the hobby-build cuts
- * from `docs/10-hobby-scope.md` §4 / AGENTS.md #16 already applied:
+ * Per-entry Zod validator matching `docs/04-knowledge-base.md` §1, with the out-of-scope fields
+ * (docs/04-knowledge-base.md §2, AGENTS.md #16) left out:
  *   - no `mechanism` prose
  *   - no `dose_bands` / `concentration` (no risk banding at all)
  *   - no `emergency_actions_extra` (universal set only, no entry-specific instructions)
  *   - no vet `reviewed_by` requirement — there is no vet. `review.status` instead reflects the
- *     editorial standard in docs/10 §4 (≥2 independent sources, careful sourcing), self-applied
+ *     editorial standard in docs/04-knowledge-base.md §2 (≥2 independent sources, careful sourcing), self-applied
  *     and recorded, not a licensed sign-off. See docs/02-tech-decisions.md D17.
  *
  * This validates a single entry in isolation. Cross-entry rules (global alias uniqueness,
@@ -127,7 +127,7 @@ export const KbEntrySchema = z
     translations: z.object({ es: TranslationEsSchema }),
   })
   .superRefine((entry, ctx) => {
-    // docs/04 §1 rule 3 (hobby editorial standard, docs/10 §4): toxic or caution in EITHER
+    // docs/04 §1 rule 3 (the editorial standard, docs/04-knowledge-base.md §2): toxic or caution in EITHER
     // species requires at least two independent sources with URLs.
     const needsSources =
       entry.species.dog.verdict === 'toxic' ||

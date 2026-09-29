@@ -6,25 +6,11 @@ Do not hand-write these types in either half of the codebase.
 
 ## Auth
 
-All endpoints except `/v1/health` require `Authorization: Bearer <session_jwt>`.
-
-### `POST /v1/session`
-
-Exchanges a platform attestation assertion for a short-lived session token.
-
-```jsonc
-// request
-{
-  "platform": "ios" | "android",
-  "attestation": "<base64 App Attest assertion | Play Integrity token>",
-  "appVersion": "1.2.0"
-}
-// 200
-{ "token": "<jwt>", "expiresIn": 3600, "quota": { "remaining": 5, "resetsAt": "..." } }
-```
-
-Phase 5 development mode accepts `{ "platform": "dev", "deviceId": "<uuid>" }` behind an env flag.
-**This flag must be off in production.**
+There are no accounts and no sessions (D24). `POST /v1/identify` requires an
+`X-Device-Id: <uuid>` header: an anonymous id the app generates once, used only for per-device rate
+limiting. A missing or malformed id is `UNAUTHENTICATED`. The id is not an identity and proves
+nothing about the caller, which is why the global daily cap (`docs/01-architecture.md` §6.3) is
+what actually bounds spend.
 
 ---
 
@@ -89,15 +75,14 @@ high-confidence candidate. Anything model-derived is `true`. See product spec §
 
 ## `POST /v1/verdict`
 
-Pure function of `(kbId, species, optional weight/amount)`. No model call, no cost.
+Pure function of `(kbId, species)`. No model call, no cost.
 The app calls this after the user confirms an identification. It can also be computed entirely
 on-device from the bundled KB — **it must produce an identical result either way**, and a shared
 test fixture set enforces that.
 
 ```jsonc
 // request
-{ "kbId": "chocolate_dark", "species": "dog",
-  "context": { "petWeightKg": 8.5, "amount": "a_few_bites" | "a_mouthful" | "a_lot" | "unknown" } }
+{ "kbId": "chocolate_dark", "species": "dog", "locale": "es-ES" }   // locale picks the KB language only
 ```
 
 ### `VerdictPayload`
@@ -111,16 +96,9 @@ test fixture set enforces that.
   "severity": "mild" | "moderate" | "severe" | null,     // non-null iff verdict === "toxic"
   "headline": "Toxic to dogs. Call your vet.",
   "summary": "Dark chocolate contains theobromine, which dogs clear very slowly.",
-  "mechanism": "Theobromine and caffeine are methylxanthines..." | null,
-  "signs": ["vomiting", "restlessness", "rapid heartbeat", "tremors"],
-  "onsetHours": { "min": 2, "max": 12 } | null,
-  "riskBand": "low" | "moderate" | "high" | "unknown",   // from weight+amount; "unknown" if either missing
-  "riskBandExplanation": "For a dog of this size, this amount is in the range where vets usually want to see the animal.",
-  "emergencyActions": [                                   // required, non-empty, when verdict === "toxic"
-    "Call your vet or a poison hotline now — do not wait for symptoms.",
-    "Do not make your pet vomit unless a vet tells you to.",
-    "If you can, have the packaging and an estimate of how much was eaten ready."
-  ],
+  "signs": ["vomiting", "restlessness", "tachycardia", "tremors"],     // controlled-vocabulary ids
+  "onsetHours": { "min": 2, "max": 12 } | null,                        // only when a source states it
+  "emergencyActions": ["call_vet_now", "do_not_induce_vomiting", "bring_packaging"],  // vocabulary ids; non-empty when toxic
   "sources": [ { "label": "Merck Veterinary Manual — Chocolate toxicosis", "url": "https://..." } ],
   "kbVersion": "2026.09.17",
   "disclaimer": "This is general information, not veterinary advice..."
@@ -131,8 +109,11 @@ test fixture set enforces that.
 1. `verdict === "toxic"` ⇒ `severity !== null` **and** `emergencyActions.length > 0`
 2. `verdict === "unknown"` ⇒ `headline` never contains the substring "safe"
 3. `resolvedBy === "model_fallback"` ⇒ `verdict ∈ {caution, unknown}`. Never `safe`.
-4. `riskBand` is `"unknown"` whenever `petWeightKg` or `amount` is missing. Never inferred.
-5. Every `toxic` and `caution` payload has `sources.length > 0`.
+4. Every `toxic` and `caution` payload has `sources.length > 0`.
+5. `severity` is `null` unless `verdict === "toxic"`.
+
+There is no `mechanism`, `riskBand` or weight/amount context: those features are out of scope
+(`docs/00-product-spec.md` §6). `signs` and `emergencyActions` are ids, translated by the app.
 
 ---
 
@@ -173,9 +154,9 @@ wrong" screen.
 | Code | HTTP | App behaviour |
 |---|---|---|
 | `INVALID_REQUEST` | 400 | Developer error — log to Sentry, generic message |
-| `UNAUTHENTICATED` | 401 | Silently re-run `/v1/session`, retry once |
-| `ATTESTATION_FAILED` | 403 | "We couldn't verify this app install." Offer offline text lookup |
-| `QUOTA_EXCEEDED` | 402 | Paywall sheet. **Offline KB lookup stays available** |
+| `UNAUTHENTICATED` | 401 | Missing or malformed `X-Device-Id`. Developer error — regenerate the id and retry once |
+| `ATTESTATION_FAILED` | 403 | Reserved: nothing returns it, because attestation is out of scope (D24). Offer offline text lookup |
+| `SPEND_CAP_EXCEEDED` | 503 | The global daily cap or the kill switch refused the vision path. "Photo checks are paused for today." **Offline KB lookup, verdicts and hotlines stay available** |
 | `RATE_LIMITED` | 429 | Backoff + retry, show remaining seconds |
 | `IMAGE_UNUSABLE` | 422 | "That photo's hard to read — try again in better light?" with retake CTA |
 | `NO_SUBJECT_FOUND` | 422 | "I couldn't find anything edible in that photo." |

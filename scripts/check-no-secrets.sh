@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# AGENTS.md #6 / docs/07 Phase 5 acceptance: no API key in any committed file. The Worker's one
+# AGENTS.md #6 / docs/07 Phase 4 acceptance: no API key in any committed file. The Worker's one
 # secret lives only in `wrangler secret`; the nightly eval's only in GitHub Actions secrets.
 # Matches the key formats of the providers this project uses or has considered.
 set -u

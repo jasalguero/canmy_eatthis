@@ -121,7 +121,7 @@ describe('cache', () => {
     }
   });
 
-  it('a write failure degrades to "not cached", never an error (docs/10 §2)', async () => {
+  it('a write failure degrades to "not cached", never an error (docs/01-architecture.md §6.1)', async () => {
     const kv = createFakeKv();
     vi.spyOn(kv, 'put').mockRejectedValueOnce(new Error('kv write failed'));
     await expect(setCachedResponse(kv, 'some-key', { a: 1 })).resolves.toBeUndefined();

@@ -20,13 +20,13 @@ import { sizes } from '@/theme/tokens';
  *
  * This screen is a safety gate, not a convenience: a verdict is only as good as the
  * identification behind it, and the model produces candidates, never verdicts (AGENTS.md #1).
- * docs/07 Phase 6 requires it to be impossible to skip for a photo-derived identification — that
- * assertion belongs with the real flow in H5; Phase 2 builds the screen it lands on.
+ * docs/07 Phase 5 requires it to be impossible to skip for a photo-derived identification — that
+ * assertion belongs with the real flow in Phase 5; Phase 2 builds the screen it lands on.
  *
  * `?plant=1` renders the plant case: photo-identified plants are always low confidence and
- * always carry the "confirm with a vet" notice regardless of what the model said (docs/10 §4).
+ * always carry the "confirm with a vet" notice regardless of what the model said (docs/04-knowledge-base.md §2).
  *
- * `?kbId=...` (H3) is the real path: `identifying.tsx`'s fuzzy-match branch landed here with one
+ * `?kbId=...` (Phase 3) is the real path: `identifying.tsx`'s fuzzy-match branch landed here with one
  * real on-device candidate, no alternates (the fuzzy resolver returns one match or none — there
  * is nothing else to offer), and no photo, since this only happens for a typed query.
  *

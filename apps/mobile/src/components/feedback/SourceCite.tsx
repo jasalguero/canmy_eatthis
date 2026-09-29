@@ -7,7 +7,7 @@ import { useTheme } from '@/theme/ThemeProvider';
 import { hardShadow, sizes } from '@/theme/tokens';
 
 /**
- * The app's actual claim, and a primary UI element rather than a footnote (docs/10 §4).
+ * The app's actual claim, and a primary UI element rather than a footnote (docs/04-knowledge-base.md §2).
  *
  * "The Merck Veterinary Manual lists dark chocolate as toxic to dogs →" is a statement this
  * project can support; "dark chocolate is toxic to dogs" is a veterinary claim it cannot make

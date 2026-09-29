@@ -9,14 +9,14 @@ import { openLegal } from '@/lib/legal';
 import { useSettingsStore } from '@/lib/settings';
 
 /**
- * First run (docs/07 Phase 7, docs/10 §5). Home redirects here until it has been completed.
+ * First run (docs/07 Phase 5, docs/05-safety-legal.md §6). Home redirects here until it has been completed.
  *
  * Three things, in this order: what this is, what it is not, and consent to the AI step. The
  * middle one is not padding — an app that looks up poisons has to be explicit that it is not a
  * vet before the user's first emergency, not during it.
  *
  * **Declining leaves a fully working app.** That is a requirement, not a courtesy (docs/07
- * Phase 7 acceptance), so "Use typed lookups only" is a real choice with its consequence stated,
+ * Phase 5 acceptance), so "Use typed lookups only" is a real choice with its consequence stated,
  * rendered at the same weight as accepting — not a greyed-out escape hatch.
  *
  * A build without photo identification (`lib/features.ts`, D28) sends no photos to any AI

@@ -3,15 +3,15 @@
  * `wrangler secret put` and never appear in the repo in any form (AGENTS.md #6).
  */
 export type Env = {
-  /** Response cache, spend counter, device rate limits, kill switch, vision config (docs/10 §3). */
+  /** Response cache, spend counter, device rate limits, kill switch, vision config (docs/01-architecture.md §6.3). */
   KV: KVNamespace;
-  /** docs/10 §3 layer 1 — the hard ceiling on paid model calls per UTC day. */
+  /** docs/01-architecture.md §6.3 layer 1 — the hard ceiling on paid model calls per UTC day. */
   VISION_DAILY_CALL_CAP: string;
-  /** docs/10 §3 layer 4 — paid model calls per anonymous device per UTC hour. */
+  /** docs/01-architecture.md §6.3 layer 4 — paid model calls per anonymous device per UTC hour. */
   DEVICE_HOURLY_CALL_LIMIT: string;
   /** Oldest app build that can read the KB artefact this Worker serves. */
   MIN_APP_VERSION: string;
-  /** Secret. Must be a key on a billing-enabled (paid tier) Google Cloud project — docs/10 §2.1. */
+  /** Secret. Must be a key on a billing-enabled (paid tier) Google Cloud project — docs/01-architecture.md §6.2. */
   GEMINI_API_KEY?: string;
 };
 

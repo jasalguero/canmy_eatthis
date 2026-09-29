@@ -156,7 +156,7 @@ describe('i18n catalogues', () => {
     const esVocab = Object.keys(es.vocab).sort();
     expect(esVocab).toEqual(enVocab);
     expect(enVocab.length).toBeGreaterThan(0);
-    // The universal emergency set (docs/10 §4) must be present — the Result screen renders it
+    // The universal emergency set (docs/04-knowledge-base.md §2) must be present — the Result screen renders it
     // for every toxic verdict, and a missing id there is an empty "What to do now".
     for (const id of ['call_vet_now', 'do_not_induce_vomiting', 'bring_packaging']) {
       expect(enVocab).toContain(`emergency_actions.${id}`);

@@ -1,7 +1,7 @@
 /**
  * Positive resolution fixtures (docs/04-knowledge-base.md §6): input string -> expected kbId,
  * via the normalised alias index `build.ts` emits (exact/alias match only — fuzzy matching is
- * Phase 4). Covers case-insensitivity, plurals and accented/un-accented Spanish, which is what
+ * Phase 3). Covers case-insensitivity, plurals and accented/un-accented Spanish, which is what
  * `normalise()` is responsible for folding to the same key.
  */
 export const POSITIVE_RESOLUTIONS: { input: string; expected: string }[] = [

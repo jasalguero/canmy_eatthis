@@ -27,7 +27,7 @@ import { VERDICT_CLASSES } from '@/theme/verdict';
 /**
  * Result (docs/06 §4) — the screen the whole app exists to show.
  *
- * Structure, in the order docs/06 §4 and docs/10 §4 require:
+ * Structure, in the order docs/06 §4 and docs/04-knowledge-base.md §2 require:
  *   banner (full-bleed, ignores the top safe area)
  *   → headline
  *   → SourceCite, above every collapsible section
@@ -37,7 +37,7 @@ import { VERDICT_CLASSES } from '@/theme/verdict';
  *   → report a wrong answer
  *
  * The source is placed above the fold and above every section deliberately: without a vet, the
- * claim this app can actually support is "this authority says X", not "X is true" (docs/10 §4).
+ * claim this app can actually support is "this authority says X", not "X is true" (docs/04-knowledge-base.md §2).
  * Demoting it to a footnote would change what the app is claiming.
  *
  * On `severity: severe` a persistent banner appears and the call button is duplicated above the
@@ -148,7 +148,7 @@ function Result({ payload, still }: { payload: VerdictPayload; still: boolean })
               </Text>
             </Staggered>
 
-            {/* The app's actual claim, above every section (docs/10 §4). */}
+            {/* The app's actual claim, above every section (docs/04-knowledge-base.md §2). */}
             {payload.sources[0] ? (
               <Staggered enter={rise(0)}>
                 <SourceCite

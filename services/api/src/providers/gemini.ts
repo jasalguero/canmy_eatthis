@@ -28,7 +28,7 @@ interface GeminiResponse {
  * Gemini over plain `fetch` (no SDK — nothing to bundle, and the request is one POST). The key
  * travels in a header, not the URL, so it cannot end up in a log line. It must belong to a
  * billing-enabled project: the free tier's terms allow Google to train on and human-review
- * submitted photos, which is not acceptable for pictures taken inside users' homes (docs/10 §2.1).
+ * submitted photos, which is not acceptable for pictures taken inside users' homes (docs/01-architecture.md §6.2).
  */
 export function createGeminiProvider(apiKey: string): VisionProvider {
   return {
@@ -67,7 +67,7 @@ export function createGeminiProvider(apiKey: string): VisionProvider {
       }
 
       if (!res.ok) {
-        // 429 here is the provider-side quota cap (docs/10 §3 layer 3) doing its job.
+        // 429 here is the provider-side quota cap (docs/01-architecture.md §6.3 layer 3) doing its job.
         throw new ProviderUnavailableError(`gemini responded ${res.status}`);
       }
 

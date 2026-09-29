@@ -72,7 +72,7 @@ export interface DevHistoryRow {
   payload: VerdictPayload;
 }
 
-/** History has no store yet (docs/07 Phase 8), so only development builds show these rows. */
+/** History has no store yet (docs/07, after the first release), so only development builds show these rows. */
 export function devHistoryRows(
   language: SupportedLanguage,
   disclaimer: string,

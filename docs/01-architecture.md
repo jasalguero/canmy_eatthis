@@ -9,10 +9,10 @@ non-deterministic and unauditable — at answering *"is this toxic to a cat?"*. 
 jobs and this app separates them completely.
 
 ```
-photo/text ──► IDENTIFY (LLM / barcode / plant API) ──► canonical item id
+photo/text ──► IDENTIFY (LLM / barcode) ──► canonical item id
                                                               │
                                                               ▼
-                                            ADJUDICATE (curated vet-reviewed KB)
+                                            ADJUDICATE (curated, sourced KB)
                                                               │
                                                               ▼
                                                       verdict + copy + sources
@@ -25,7 +25,7 @@ Consequences of this split, all of them good:
 - Every verdict carries a citation, because KB entries carry citations.
 - A wrong verdict is a *data bug*, fixable in minutes by editing one JSON row and pushing an OTA
   update — not a prompt-engineering session with uncertain blast radius.
-- The KB can be reviewed and signed off by a veterinarian. A prompt cannot.
+- The KB can be audited entry by entry against its cited sources. A prompt cannot.
 - Most queries never reach a model at all.
 
 The LLM is allowed to produce a free-form verdict in exactly one case: the item was identified
@@ -42,21 +42,19 @@ notice, and is logged for KB backfill.
 │   ├── bundled KB snapshot (JSON, ~600 KB)  ◄── OTA updatable     │
 │   ├── local resolver (normalise → alias index → fuzzy)           │
 │   ├── image pipeline (resize 1024px, JPEG q0.8, strip EXIF)      │
-│   ├── barcode scanner (expo-camera)                              │
+│   ├── barcode scanner + Open Food Facts lookup (D29)             │
 │   └── SQLite history                                             │
 │                                                                  │
 └───────────────────┬──────────────────────────────────────────────┘
-                    │  HTTPS + attestation token
+                    │  HTTPS + anonymous device id
                     │  (only when local resolution fails or a photo is present)
                     ▼
 ┌────────────────── EDGE (Cloudflare Worker) ─────────────────────┐
 │                                                                  │
 │  POST /v1/identify                                               │
-│   ├── verify App Attest / Play Integrity token                   │
-│   ├── rate limit (per device, per IP)                            │
+│   ├── kill switch → global daily cap → rate limit (per device)   │
 │   ├── cache lookup: KV[hash(species, normalised text, imghash)]  │
 │   ├── route:  barcode → OFF lookup                               │
-│   │           plant-ish → plant-ID API (optional, phase 9)       │
 │   │           else → vision LLM (structured output)              │
 │   ├── resolve candidates against server KB (authoritative copy)  │
 │   ├── apply override list (always wins over model)               │
@@ -77,7 +75,7 @@ Ordered, cheapest-first. Each tier can terminate the request.
 |---|---|---|---|---|
 | 0 | **On-device exact/alias match** | <20 ms | 0 | "chocolate", "uvas", "xylitol" — the majority of typed queries |
 | 1 | **On-device fuzzy match** (fuse.js, threshold tuned conservatively) | <50 ms | 0 | "chocolat", "xilitol", "onyon" |
-| 2 | **Barcode → Open Food Facts / Open Pet Food Facts** | ~400 ms | 0 | Any packaged product. Exact. Returns an ingredient list, which is then scanned for KB-known toxic ingredients |
+| 2 | **Barcode → Open Food Facts / Open Pet Food Facts** | ~400 ms | 0 | Any packaged product. Exact. Looked up from the app (D29). Returns an ingredient list, which is then scanned for KB-known ingredients |
 | 3 | **Server cache hit** | ~60 ms | 0 | Repeat photos/queries across all users |
 | 4 | **Vision LLM identify** | 1–3 s | ~$0.0004 | Everything else |
 | 5 | **Model fallback verdict** | — | — | Identified but not in KB. Capped at `caution`/`unknown` |
@@ -142,10 +140,10 @@ Its weaknesses, and what covers each:
 
 | Weakness | Cover |
 |---|---|
-| Confidently wrong on fine-grained species (lily vs. daylily) | Mandatory confirm screen + `confusable_with` alternates + optional specialist plant-ID API |
+| Confidently wrong on fine-grained species (lily vs. daylily) | Mandatory confirm screen + `confusable_with` alternates + photo-identified plants always treated as low confidence |
 | Hallucinated confidence | Never trust the model's self-reported confidence alone; calibrate against a held-out test set and use conservative thresholds |
 | Non-determinism | Verdicts do not come from the model; `temperature: 0`; server cache makes repeats identical |
-| Cannot judge quantity or the pet's weight | Ask the user; present risk *bands*, never a computed dose |
+| Cannot judge quantity or the pet's weight | Not asked for: a toxic item routes to a vet whatever the amount. No dose or risk bands (`docs/00-product-spec.md` §6) |
 | Latency and per-call cost | Tiers 0–3 mean most requests never reach it |
 
 **Specific model choice (Sept 2026 pricing, verify before building):**
@@ -164,15 +162,17 @@ flagged `high_risk` in the KB, re-run on the escalation model and take the more 
 
 A rough cost per uncached check: ~1,100 image tokens + ~700 prompt tokens + ~250 output tokens.
 At Flash-Lite rates that is well under **$0.001**. With a 70% cache hit rate, ~**$0.0003** per check
-amortised — roughly **$3 per 10,000 checks**. The model bill is not the constraint on this business;
-the veterinary review of the KB is.
+amortised — roughly **$3 per 10,000 checks**. The model bill is not the constraint; careful
+sourcing of the knowledge base is. The real cost risk is an *unbounded* bill, which §6 covers.
 
 **Alternatives worth adding (not replacing):**
 
 - **Barcode scanning.** Free, instant, exact, and it returns an ingredient list. For packaged goods
-  it is strictly better than vision. Ship it in v1.
-- **Specialist plant ID** (Plant.id, PlantNet). Plants are where misidentification is most lethal
-  and where general VLMs are weakest. Route plant-looking photos here in a later phase.
+  it is strictly better than vision. It ships in the first release, looked up from the app (D29).
+- **Specialist plant ID** (Plant.id, PlantNet) is out of scope (`docs/00-product-spec.md` §6).
+  Plants are where misidentification is most lethal, so plants resolve by typed name, and a
+  photo-identified plant is always low confidence, always confirmed, and always carries a
+  "confirm with a vet" notice.
 - **On-device pre-filter** (ML Kit image labelling). Not a replacement — a *router and gate*. Reject
   useless photos (blurry, a photo of the pet, a selfie) before spending an API call, and tag
   plant-vs-packaged-vs-prepared to pick the downstream route. Cheap accuracy and latency win.
@@ -196,5 +196,63 @@ rather than assembled. See `docs/06-ui-design-system.md`.
    privacy policy and consented to at first run (Apple 5.1.2 requires explicit consent before
    sharing personal data with a third-party AI service).
 4. History is stored locally in SQLite, including the thumbnail. Nothing syncs.
+5. A barcode scan sends the barcode — and, like any request, the device's IP address — to Open
+   Pet Food Facts and Open Food Facts, from the app (D29). Nothing else about the user is sent.
 
 Opting out of photo upload is possible and should be offered: text-only mode is fully functional.
+
+## 6. Running costs and the spend cap
+
+### 6.1 What it costs to run
+
+| Item | Cost | Notes |
+|---|---|---|
+| Apple Developer Program | **$99 / year** | Required for the App Store and TestFlight. The main fixed cost |
+| Google Play registration | **$25 once** | One-time, lifetime |
+| Cloudflare Workers | **€0** | Free plan: 100,000 requests/day |
+| Cloudflare KV | **€0** | 100k reads/day, **1,000 writes/day**, 1 GB. See below |
+| Cloudflare D1 | **€0** | 5M rows read/day, 100k written, 5 GB |
+| Gemini API (paid tier) | **~€1 / month** | At ~100 checks/day. Must be the *paid* tier — §6.2 |
+| EAS Build | **€0** | Free plan: 15 iOS + 15 Android builds/month |
+| EAS Update | **€0** | Free to 1,000 monthly active users; KB updates go via the Worker anyway |
+| Sentry | **€0** | If added; the free plan covers this error volume |
+| Domain | **€0–12 / year** | Optional. A `*.workers.dev` subdomain is free and fine |
+| **Total** | **~$99/year + $25 once + a couple of euros a month** | |
+
+**The KV write limit is the one real ceiling.** Free-plan KV allows 1,000 writes per day, and every
+cache miss writes. At 100 checks/day that is nowhere near the limit; at 2,000 checks/day it breaks.
+Workers Paid ($5/month) is the answer at that point. The cache write path fails soft: a failed KV
+write degrades to "not cached", never to an error.
+
+### 6.2 Use the paid Gemini tier
+
+Google's API terms differ sharply between tiers. On the **free tier**, "Google uses the content you
+submit to the Services and any generated responses to provide, improve, and develop Google products
+and services", and "human reviewers may read, annotate, and process your API input and output". On
+the **paid tier**, "Google doesn't use your prompts … or responses to improve our products."
+
+For an app that uploads photographs taken inside users' homes, the free tier is not an option. Use
+the paid tier in production and the free tier only in development, with your own photos.
+
+### 6.3 The spend cap
+
+The cost risk is not cost per call. It is **waking up to a €2,000 bill** because of a retry loop, a
+scraper, or someone who found the endpoint. Four layers, cheapest and most effective first:
+
+1. **A global daily counter in KV.** One integer, incremented per model call, checked before every
+   call. Above the threshold (start at 500/day), the vision path is refused and the app degrades to
+   offline-KB-only with an honest message. Built in the same commit as the first model call
+   (AGENTS.md #17).
+2. **A kill switch.** A KV value that disables the vision path entirely, flippable from the
+   Cloudflare dashboard in about ten seconds from a phone.
+3. **Provider-side quota limits.** Explicit per-project quota caps in the Google Cloud console, plus
+   a budget alert. Budget *alerts* do not stop spending on their own — the quota cap does.
+4. **Per-device rate limiting.** An anonymous device UUID, N checks per hour. Catches accidental
+   loops and casual abuse; it cannot stop someone who rotates device ids, which layers 1–3 bound.
+
+Device attestation (App Attest / Play Integrity) is the answer to determined abuse, and is out of
+scope until that appears (`docs/00-product-spec.md` §6).
+
+**Degradation is graceful.** When the cap is hit, the app still does typed lookups offline, still
+shows verdicts, still shows the hotlines. It says photos are unavailable right now. That is a mildly
+worse app, not a broken one.

@@ -56,7 +56,7 @@ describe('mock cases', () => {
   });
 
   it('cites at least one source on every toxic and caution payload', () => {
-    // Invariant 5, and the whole editorial standard (docs/10 §4): the source is the claim.
+    // Invariant 5, and the whole editorial standard (docs/04-knowledge-base.md §2): the source is the claim.
     for (const mockCase of MOCK_CASES) {
       const payload = mockVerdict(mockCase, 'en', DISCLAIMER);
       if (payload.verdict === 'toxic' || payload.verdict === 'caution') {

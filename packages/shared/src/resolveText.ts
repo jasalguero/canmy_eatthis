@@ -16,7 +16,7 @@ export interface TextResolution {
 
 /**
  * Wraps a prebuilt Fuse instance so callers (the app, later the Worker) build it once at
- * startup — docs/07 Phase 4 budgets resolution at <50 ms, which a per-query Fuse construction
+ * startup — docs/07 Phase 3 budgets resolution at <50 ms, which a per-query Fuse construction
  * would blow on anything but a tiny KB.
  */
 export interface AliasSearchIndex {

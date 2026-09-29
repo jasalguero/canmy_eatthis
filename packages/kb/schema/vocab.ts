@@ -46,7 +46,7 @@ export type SignId = (typeof SIGN_IDS)[number];
 export const SignIdSchema = z.enum(SIGN_IDS);
 
 /**
- * The controlled vocabulary for `emergency_actions`. Hobby build (docs/10-hobby-scope.md §4):
+ * The controlled vocabulary for `emergency_actions` (docs/04-knowledge-base.md §2):
  * the **universal set only** — the three lines every authority agrees on. No entry-specific
  * emergency instructions (AGENTS.md #16). This list is deliberately not meant to grow.
  */

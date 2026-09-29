@@ -19,7 +19,7 @@ import { DISCLAIMER } from './strings.js';
 // without digging through the Cloudflare dashboard.
 const VERSION = '0.1.0';
 
-/** docs/10 §3 — the conservative starting values if a var is missing or garbled. */
+/** docs/01-architecture.md §6.3 — the conservative starting values if a var is missing or garbled. */
 const DEFAULT_DAILY_CAP = 500;
 const DEFAULT_DEVICE_HOURLY_LIMIT = 20;
 
@@ -99,7 +99,7 @@ export function createApp() {
       errorCode = err instanceof ApiFailure ? err.code : 'INTERNAL';
       throw err;
     } finally {
-      // docs/07 Phase 5 structured log: normalised query only — never raw text, never images.
+      // docs/07 Phase 4 structured log: normalised query only — never raw text, never images.
       console.log(
         JSON.stringify({
           at: 'identify',

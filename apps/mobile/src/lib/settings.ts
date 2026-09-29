@@ -31,9 +31,9 @@ interface SettingsState {
   region: RegionCode;
   appearance: Appearance;
   /**
-   * AI-processing consent (Apple 5.1.2, docs/10 §5). Defaults to `false`: consent is something
+   * AI-processing consent (Apple 5.1.2, docs/05-safety-legal.md §6). Defaults to `false`: consent is something
    * the user gives at first run, never something the app assumes. While it is false the app
-   * never sends a photo anywhere, and — the point of docs/07 Phase 7 — everything else still
+   * never sends a photo anywhere, and — the point of docs/07 Phase 5 — everything else still
    * works: typed lookups, every verdict, every emergency number.
    */
   photoIdConsent: boolean;

@@ -2,7 +2,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { lookupBarcode, matchIngredientsAgainstKb } from '../src/barcode.js';
 
 /**
- * `fetch` is mocked here so the committed suite stays hermetic (doc07 Phase 5's "CI makes zero
+ * `fetch` is mocked here so the committed suite stays hermetic (doc07 Phase 4's "CI makes zero
  * live model calls" spirit extends to every external call, not just the vision providers) — this
  * module was additionally verified once against the real Open Food Facts API by hand (a real
  * Nutella barcode), which is not repeated here to keep tests fast and network-independent.

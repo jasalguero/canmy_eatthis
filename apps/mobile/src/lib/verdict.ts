@@ -27,7 +27,7 @@ export function buildRealVerdict(params: {
 }
 
 /**
- * The true "not in our knowledge base" case (docs/07 Phase 4's negative-fixture set, and every
+ * The true "not in our knowledge base" case (docs/07 Phase 3's negative-fixture set, and every
  * query `resolveOffline` returns `none` for). AGENTS.md #10: uncertain stays `unknown`, never a
  * guess. `headline`/`summary` are passed in already translated (`result:unknownHeadline` /
  * `result:unknownBody`) — this module stays free of `t()`, matching `resolveVerdict`'s pattern

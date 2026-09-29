@@ -1,23 +1,27 @@
 # 07 — Implementation Plan
 
-> ⚠️ **Hobby build:** `docs/10-hobby-scope.md` §7 collapses these eleven phases into seven and cuts
-> roughly a third of the features below (monetisation, dose bands, attestation-first, PostHog,
-> plant-ID API, the 500-entry KB). Read it before starting. The acceptance criteria here still apply
-> to the work that survives, and the phase mapping is in doc 10's table.
-
-Eleven phases. Each is sized to be handed to a single agent working alone, states its dependencies,
+Seven phases. Each is sized to be handed to a single agent working alone, states its dependencies,
 and ends in acceptance criteria that can be checked without judgement calls. **A phase is not done
 until every box is ticked.**
 
-Phases 2, 4 and 5 are independent of each other after Phase 1 and can run in parallel across agents.
-Everything else is sequential.
+```
+P0 ──► P1 ──┬──► P2 (UI) ──► P3 (capture + offline) ──┬──► P5 (integration + safety) ──► P6 (stores)
+            └──► P4 (Worker) ─────────────────────────┘
+```
 
-```
-P0 ──► P1 ──┬──► P2 (UI)        ──┐
-            ├──► P4 (offline res) ├──► P6 ──► P7 ──► P8 ──► P9 ──► P10
-            └──► P5 (proxy)     ──┘
-                 P3 (capture) ──────┘
-```
+Phase 4 is independent of Phases 2 and 3 after Phase 1 and can run in parallel.
+
+## Releases
+
+The phases do not all ship at once (`docs/02-tech-decisions.md` D28):
+
+- **First release — typed lookups and barcode scanning.** Phases 0–3, the safety and legal parts of
+  Phase 5, and Phase 6. A complete, free app that answers typed questions and scanned products
+  with sourced verdicts: no server of ours, no API key, no model spend, and no AI consent screen.
+  It de-risks store review and gets the app to real users before any model spend starts.
+- **Second release — photo identification.** Phase 4 (already built) and the photo parts of Phase 5,
+  switched on with `EXPO_PUBLIC_FEATURE_PHOTO_ID`, then a store update. The privacy policy must be
+  updated first (D31).
 
 ---
 
@@ -34,9 +38,8 @@ P0 ──► P1 ──┬──► P2 (UI)        ──┐
 - `packages/shared`: `normalise(text)` — lowercase, strip accents/diacritics, collapse whitespace,
   singularise, strip punctuation. **Used by both app and Worker.** Unit tested against a fixture list
   including Spanish accents.
-- Biome (or ESLint+Prettier), Husky pre-commit, GitHub Actions running `typecheck lint test build`
+- Biome, Husky pre-commit, GitHub Actions running `typecheck lint test build`
 - i18next + `i18next-icu` + expo-localization wired; `en` and `es` catalogues split by namespace
-  (`common`, `home`, `result`, `errors`, `onboarding`, `legal`), may be near-empty
 - **Language and region as two separate persisted settings**, each defaulted from the device and
   each independently overridable
 - Pseudo-locale (accented, +40% padding) available in dev builds
@@ -57,30 +60,31 @@ P0 ──► P1 ──┬──► P2 (UI)        ──┐
 
 ## Phase 1 — Knowledge base
 
-**Depends on:** P0. **Blocks:** everything.
+**Depends on:** P0. **Blocks:** everything. The long pole — weeks, not days.
 
 - YAML schema and Zod validator per `docs/04-knowledge-base.md` §1
 - `packages/kb/build.ts` → emits `kb.json` (entries) and `kb.index.json` (normalised alias → id),
   gzipped, with a SHA-256 and a version stamp
-- Build fails on any violation of the seven schema rules in §1
-- **Author Tier 1 (≈60) and Tier 2 (≈120) entries** with `en` and `es`, sources cited, dog and cat
-  authored separately, `review.status: draft`
-- **Extract the `signs` / `emergency_actions` controlled vocabulary (~120 terms) and translate it
-  once** — this is what makes the mandatory translation tier affordable
+- Build fails on any violation of the schema rules in `docs/04-knowledge-base.md` §1
+- **60–80 entries**, each meeting the editorial standard in `docs/04-knowledge-base.md` §2: at least
+  two independent authoritative sources, `en` and `es`, dog and cat authored separately. No
+  `mechanism` prose, no dose bands
+- **Extract the `signs` / `emergency_actions` controlled vocabulary and translate it once** — this is
+  what makes the mandatory translation tier affordable
 - `display_name` and `aliases` for **both** languages on every entry; Spanish aliases authored by a
   native speaker as a search index, not translated (`docs/09-localisation.md` §4)
 - `translations.<lang>` tier block per entry; build emits a per-language, per-tier coverage report
 - Build emits one artefact per language plus a shared structural core, so a device downloads only
   the prose it needs
-- `resolveVerdict(kbId, species, context)` in `packages/shared` — pure, no I/O, enforcing all five
-  invariants from `docs/03-api-contract.md` with runtime assertions
+- `resolveVerdict(kbId, species)` in `packages/shared` — pure, no I/O, enforcing every invariant from
+  `docs/03-api-contract.md` with runtime assertions
 - Fixture suites: verdict fixtures, resolution fixtures (including the negative near-miss set)
 
 **Acceptance**
-- [ ] ≥180 entries, every one validating, every one with both species
-- [ ] Every `toxic` entry has `severity`, non-empty `emergency_actions`, ≥1 sourced citation
+- [ ] 60–80 entries, every one validating, every one with both species and at least two sources
+- [ ] Every `toxic` entry has `severity`, non-empty `emergency_actions` and its sources
 - [ ] `pnpm --filter kb build` emits a gzipped KB under 400 KB
-- [ ] All five `VerdictPayload` invariants covered by passing tests
+- [ ] All `VerdictPayload` invariants covered by passing tests
 - [ ] Negative resolution fixtures all fail to match — "chocolate lab" does not resolve to chocolate
 - [ ] Deliberately corrupting an entry fails the build with a readable error
 - [ ] Every entry resolves from both English and Spanish input
@@ -93,12 +97,13 @@ P0 ──► P1 ──┬──► P2 (UI)        ──┐
 
 ## Phase 2 — Design system and static UI
 
-**Depends on:** P0 (P1 for realistic mock data). **Parallel with:** P3, P4, P5.
+**Depends on:** P0 (P1 for realistic mock data). **Parallel with:** P4.
 
 - Tokens, `tailwind.config.js` with the Tailwind palette **removed**, light and dark
 - Full component inventory from `docs/06-ui-design-system.md` §3
 - All screens built against **hardcoded mock data, no network**: Home, Identifying, Confirm,
   Result ×4 verdicts ×2 severities, History, Profile, Settings, First-run, every error state
+- **Source-forward result screen:** the citation above the fold, above every collapsible section
 - The three signature interactions (§2) implemented
 - `__dev__` gallery screen rendering every component in both themes
 - Accessibility checklist (§5) satisfied
@@ -118,9 +123,9 @@ P0 ──► P1 ──┬──► P2 (UI)        ──┐
 
 ---
 
-## Phase 3 — Input capture and the image pipeline
+## Phase 3 — Capture and offline resolution
 
-**Depends on:** P2.
+**Depends on:** P1, P2. At the end of this phase the app answers typed questions fully offline.
 
 - `expo-camera` multi-shot (max 4), `expo-image-picker` multi-select, barcode scanning mode
 - Permission flows including **denied** and **denied-permanently** (deep-link to Settings)
@@ -128,6 +133,10 @@ P0 ──► P1 ──┬──► P2 (UI)        ──┐
   **strip all EXIF**
 - Thumbnail generation, removal, reordering, full-screen preview
 - Draft persistence — the in-progress input survives a backgrounding
+- Bundle `kb.json` + `kb.index.json` as app assets; load and index at startup (target <150 ms)
+- Exact match → alias match → Fuse.js fuzzy, **conservative threshold**, tuned against fixtures
+- Wire Home → local resolution → Result, entirely offline
+- Language-aware: Spanish input resolves through Spanish aliases
 
 **Acceptance**
 - [ ] Processed images average <200 KB; none exceed 400 KB
@@ -135,25 +144,9 @@ P0 ──► P1 ──┬──► P2 (UI)        ──┐
 - [ ] Permission denial does not dead-end — text input stays usable, with a route to Settings
 - [ ] Check button enablement exactly matches the ≥1-photo-OR-≥2-chars rule (unit tested)
 - [ ] A 12 MP photo processes in under 800 ms on a mid-range Android device
-
----
-
-## Phase 4 — Offline resolution
-
-**Depends on:** P1, P2. **Parallel with:** P3, P5.
-
-- Bundle `kb.json` + `kb.index.json` as app assets; load and index at startup (target <150 ms)
-- Exact match → alias match → Fuse.js fuzzy, **conservative threshold**, tuned against fixtures
-- Wire Home → local resolution → Result, entirely offline
-- Language-aware: Spanish input resolves through Spanish aliases
-
-**Acceptance**
 - [ ] "chocolate", "Chocolate", "chocolat", "uvas", "xilitol", "cebolla" all resolve correctly
 - [ ] Un-accented Spanish resolves: "limon", "platano", "pina" all match
 - [ ] The entire negative fixture set fails to match, including its Spanish near-misses
-- [ ] An entry with `tier_c: missing` still renders a fully usable Spanish result — correct colour,
-      glyph, verdict word, signs and emergency actions — with only the "Why" section marked as
-      shown in English
 - [ ] Cross-language alias fallback works: an English-only alias still resolves for a Spanish user
 - [ ] Airplane mode: typed lookups work end to end with no error state
 - [ ] Resolution completes in <50 ms on a mid-range Android device
@@ -161,28 +154,26 @@ P0 ──► P1 ──┬──► P2 (UI)        ──┐
 
 ---
 
-## Phase 5 — The proxy service
+## Phase 4 — The Worker
 
-**Depends on:** P0, P1. **Parallel with:** P2, P3, P4.
+**Depends on:** P0, P1. **Parallel with:** P2, P3. Ships with the second release.
 
-- Hono routes: `/v1/session`, `/v1/identify`, `/v1/verdict`, `/v1/kb/manifest`, `/v1/hotlines`
+- Hono routes: `/v1/identify`, `/v1/verdict`, `/v1/kb/manifest`, `/v1/hotlines`. No sessions:
+  callers send an anonymous device UUID (D24)
 - Zod validation on every boundary, in and out
-- `VisionProvider` adapter with **two** implementations (Gemini, OpenAI), structured output,
-  `temperature: 0`, provider chosen from a KV config document
+- `VisionProvider` adapter; one provider, Gemini on the **paid tier** (D24,
+  `docs/01-architecture.md` §6.2), structured output, `temperature: 0`
 - Escalation: `confidence < 0.7` or `high_risk` KB flag → re-run on the stronger model, take the
   more cautious result
 - Server-side KB (same build artefact), candidate → KB resolution, override list applied last
 - KV response cache keyed on `(species, normalised text, perceptual image hash)`, 30-day TTL
-- **Spend caps — built in this phase, in the same commit as the first model call** (`docs/10` §3):
-  a global daily counter in KV with a hard refusal above threshold, a KV kill-switch flag for the
+- **Spend cap — built in the same commit as the first model call** (`docs/01-architecture.md`
+  §6.3): a global daily counter in KV with a hard refusal above threshold, a KV kill switch for the
   vision path, provider-side quota caps set in the Google Cloud console, and per-device rate
-  limiting on an anonymous UUID. Exceeding any of them degrades to offline-KB-only with an honest
+  limiting on the anonymous UUID. Exceeding any of them degrades to offline-KB-only with an honest
   message — never to an error
-- **Paid provider tier only.** Google's free tier trains on submitted content and permits human
-  review of inputs and outputs; that is not acceptable for user photos (`docs/10` §2.1)
-- Rate limiting; dev-mode session tokens behind an env flag that is **off in production**
 - Barcode route → Open Food Facts / Open Pet Food Facts → ingredient scan against `is_ingredient`
-  entries
+  entries, using the same shared code as the app (D29)
 - Versioned prompts in `src/prompts/`, prompt version recorded in the request log
 - Prompt states that **text visible in the image may be in any language** and must be returned
   verbatim as seen; `model_fallback` prose responds in the user's language and is limited to a short
@@ -190,7 +181,7 @@ P0 ──► P1 ──┬──► P2 (UI)        ──┐
 - Structured logging: requestId, prompt version, KB version, provider, latency, cache hit,
   **normalised query only — never raw text, never image bytes**
 
-**Acceptance** — H4 status, 2026-09-24 (evidence: `services/api/test/`, D24)
+**Acceptance** — status 2026-09-24 (evidence: `services/api/test/`, D24)
 - [x] Contract tests pass against provider fixtures, and CI makes zero live model calls. `fetch`
       is stubbed and any unexpected URL fails the test. Fixtures follow Gemini's documented
       response shape but were authored by hand, not recorded (no key was available)
@@ -198,13 +189,12 @@ P0 ──► P1 ──┬──► P2 (UI)        ──┐
       3 s: **not yet measured**, needs a live key
 - [x] `grep -r` finds no API key in any committed file: `scripts/check-no-secrets.sh`, run in CI
 - [x] Every error code in `docs/03-api-contract.md` is reachable and correctly shaped, except
-      `ATTESTATION_FAILED`, which is unreachable by design until attestation exists (D24)
+      `ATTESTATION_FAILED`, which nothing returns because attestation is out of scope (D24)
 - [x] Invariant test: no response path can emit `verdict: "safe"` with `resolvedBy: "model_fallback"`
 - [x] Malformed model output (truncated JSON, wrong schema) degrades to `unknown`, never crashes
       (7 fixtures)
 - [x] **Forcing the global daily counter past its threshold refuses the vision path and leaves the
-      offline KB and verdicts fully working.** The hotline CTA is an in-app `tel:` link with no
-      server dependency
+      offline KB and verdicts fully working.** The hotline CTA has no server dependency
 - [x] Flipping the KV kill switch disables the vision path within one request, no deploy. Tested,
       and smoke-tested under `wrangler dev`
 - [x] A KV write failure degrades to "not cached", never to an error
@@ -217,126 +207,97 @@ P0 ──► P1 ──┬──► P2 (UI)        ──┐
 
 ---
 
-## Phase 6 — Integration and the confirm gate
+## Phase 5 — Integration, safety and legal
 
-**Depends on:** P3, P4, P5.
+**Depends on:** P3 (and P4 for the photo parts).
 
+Safety and legal — **first release**:
+- First-run flow: what the app is, what it is not; **AI-processing consent** only in builds with
+  photo identification (Apple 5.1.2)
+- Disclaimer footer on every verdict screen; long form in Settings
+- **Region**-aware hotline registry (not language-aware), bundled offline, `tel:` links, fees
+  stated, the language each service operates in recorded, "find an emergency vet" maps link
+  (`docs/05-safety-legal.md` §3, D30)
+- "Report a wrong answer" → a real inbox
+- Privacy policy and terms of use, written from what the app actually does, in every shipped
+  language, linked from first run and Settings (`docs/05-safety-legal.md` §6, D31)
+
+Photo identification — **second release**:
 - TanStack Query client, typed from `packages/shared`, retry with backoff, cancel on screen exit
 - Full flow: Home → Identifying → Confirm → Result
 - Confirm screen wired to real candidates and to `confusable_with` alternates
 - Local resolution tried first even when a photo is attached
 - Every error code mapped to its designed screen
-- `identification_rejected_at_confirm` and `verdict_unknown` telemetry
-
-**Acceptance**
-- [ ] End-to-end against a 20-photo test set on both platforms; results recorded in
-      `docs/eval/phase6.md` with per-item pass/fail
-- [ ] Confirm screen never skipped for a photo-derived identification (asserted in code and tested)
-- [ ] Killing the network mid-request produces the designed offline state, not a crash
-- [ ] Identical `(kbId, species, context)` yields byte-identical verdicts on-device and server-side
-      — shared fixture suite runs in both environments
-- [ ] No unhandled promise rejections under Sentry in a 30-minute manual session
-
----
-
-## Phase 7 — Safety, legal and emergency
-
-**Depends on:** P6.
-
-- First-run flow: what it is, what it is not, **AI-processing consent** (Apple 5.1.2)
 - Text-only mode for users who decline photo upload — fully functional
-- Disclaimer footer on every verdict screen; long form in Settings
-- **Region**-aware hotline registry (not language-aware), bundled offline, `tel:` links, fees
-  stated, the language each service operates in recorded, "find an emergency vet" maps deep link
-- Disclaimer, ToS and privacy policy translated by a **legal** translator and reviewed for validity
-  in each language and jurisdiction — a launch blocker per language
-- "Report a wrong answer" → a real inbox
-- Terms of service and privacy policy, drafted and lawyer-reviewed
 
 **Acceptance**
-- [ ] Every one of the eight non-negotiable rules in `docs/05-safety-legal.md` §1 has a passing test
-      or a signed-off manual check
-- [ ] Hotline CTA works in airplane mode, logged out, with quota exhausted, on an expired subscription
-- [ ] Declining AI consent leaves a working app
-- [ ] Every hotline number dialled and verified by a human; `verifiedAt` and operating language(s)
+- [ ] Every one of the non-negotiable rules in `docs/05-safety-legal.md` §1 has a passing test or a
+      recorded manual check
+- [ ] Hotline CTA works in airplane mode and with the daily cap exhausted
+- [ ] Every hotline number dialled and verified by a person; `verifiedAt` and operating language(s)
       recorded
-- [ ] Legal review complete and recorded **for each shipped language**
 - [ ] A Spanish speaker in a US region gets Spanish text and US hotline numbers
+- [ ] The privacy policy and terms of use are published and match the app's actual behaviour
+- [ ] *(second release)* End-to-end against a 20-photo test set on both platforms; results recorded
+      in `docs/eval/` with per-item pass/fail
+- [ ] *(second release)* Confirm screen never skipped for a photo-derived identification (asserted
+      in code and tested)
+- [ ] *(second release)* Killing the network mid-request produces the designed offline state, not a
+      crash
+- [ ] *(second release)* Identical `(kbId, species)` yields byte-identical verdicts on-device and
+      server-side — shared fixture suite runs in both environments
+- [ ] *(second release)* Declining AI consent leaves a working app
 
 ---
 
-## Phase 8 — History, profile, polish
+## Phase 6 — Store submission
 
-**Depends on:** P7.
+**Depends on:** P5.
 
-- SQLite history with thumbnails, search, re-open, delete, KB version stamped per entry
-- Pet profile: species, name, optional weight; weight requested non-blockingly after a first toxic
-  result; risk bands activated
-- Animation and haptic pass; empty, loading and error states finished
-- KB Tier 3 entries expanded toward ~500
-- OTA KB update flow implemented and exercised
-
-**Acceptance**
-- [ ] History survives app restart and reinstall-from-backup; readable offline
-- [ ] Risk band renders `unknown` whenever weight or amount is missing — never guessed
-- [ ] No numeric dose figure appears anywhere in the UI (grep + manual review)
-- [ ] A KB edit reaches a running app via OTA in under 4 hours, end to end, timed
-- [ ] ≥500 KB entries, all `review.status: approved`
-- [ ] Spanish Tier A at 100% `approved`; Tier B ≥95% `approved`, and **100% for every `toxic` entry**
-
----
-
-## Phase 9 — Hardening, attestation, monetisation
-
-**Depends on:** P8.
-
-- **Hobby build: App Attest / Play Integrity are deferred** until determined abuse appears — the
-  spend caps from Phase 5 cover the scenario that actually costs money. **RevenueCat and PostHog are
-  cut entirely** (`docs/10` §8)
-- **Dev session mode disabled in production** — this part stays, and is a release blocker
-- Sentry with source maps on both halves
-- Optional: on-device ML Kit pre-filter to reject unusable photos before an API call
-- Optional: specialist plant-ID route
-- Performance pass: cold start, memory, bundle size, Hermes profiling
-
-**Acceptance**
-- [ ] Dev session mode is off in production
-- [ ] Global daily cap reached → offline KB and hotline both still fully reachable
-- [ ] Cold start under 2 s on a mid-range Android device
-- [ ] Crash-free sessions above 99.5% across a week of internal testing
-
----
-
-## Phase 10 — Store submission
-
-**Depends on:** P9.
-
-- **Hobby build:** there is no veterinary sign-off. The gate is instead the editorial standard in
-  `docs/10-hobby-scope.md` §4 — every entry carries ≥2 independent authoritative sources, the
+- **The editorial gate:** every entry carries at least two independent authoritative sources, the
   source is displayed above the fold on every result, and thin or contested entries were omitted
-  rather than guessed. If a vet can be found to review 60–80 entries as a favour, do it
-- iOS: Privacy Manifest, App Privacy labels, purpose strings, review notes explaining the AI use
-- Android: Health apps declaration, Data safety form, AI content disclosure
-- Store listings, screenshots and ASO keywords per locale (es-ES distinct from es-MX if both ship),
-  a demo video for reviewers
-- TestFlight and Play internal testing with ≥20 real users
-- EAS Submit pipelines; a documented and rehearsed rollback plan
+  rather than guessed (`docs/04-knowledge-base.md` §2). If a vet can be found to review the entries
+  as a favour, do it
+- iOS: Privacy Manifest, App Privacy labels, purpose strings, review notes explaining what the
+  release does (and, for the photo release, the AI use)
+- Android: Health apps declaration, Data safety form, and for the photo release the AI content
+  disclosure
+- Store listings, screenshots and keywords in English and Spanish, and a demo video for reviewers
+- TestFlight and Play testing with real users
+- EAS Submit pipelines; a documented rollback plan
+- Performance pass: cold start, memory, bundle size
 
 **Acceptance**
-- [ ] Every entry has ≥2 independent authoritative sources, verified by a manual pass
+- [ ] Every entry has at least two independent authoritative sources, verified by a manual pass
 - [ ] The source is visible above the fold on every result screen
 - [ ] Both declaration forms submitted and accepted
-- [ ] ≥20 external testers, ≥100 real checks, feedback triaged
+- [ ] Testers outside the project have run real checks, and their feedback is triaged
 - [ ] A native Spanish speaker has walked the full flow end to end, including an emergency result
 - [ ] The KB correction path exercised once under realistic conditions and timed
+- [ ] Cold start under 2 s on a mid-range Android device
 - [ ] Builds accepted by both stores
+
+---
+
+## After the first release
+
+Worth building once the app is in users' hands, in rough order:
+
+- **Photo identification** — the second release above.
+- **History** — SQLite, with thumbnails, search, re-open and delete, KB version stamped per entry.
+  The History screen exists on mock data and is development-only until then.
+- **Pet profile** — species and name only (`docs/00-product-spec.md` §2.5).
+- **OTA knowledge base updates** — a KB edit reaching a running app within hours, via the Worker's
+  manifest.
+- **Knowledge base growth** — only under the editorial standard.
+- **Optional:** an on-device pre-filter (ML Kit) that rejects unusable photos before an API call.
 
 ---
 
 ## Cross-cutting rules for every phase
 
 1. **Never widen a verdict's optimism.** Any change that could turn an amber or red result green
-   requires a KB change with vet sign-off, not a code change.
+   requires a KB change that meets the editorial standard, not a code change.
 2. **`packages/shared` is the only place resolution logic lives.** Duplicating it in the app or the
    Worker is a review failure.
 3. **No secrets in the repo.** Ever.

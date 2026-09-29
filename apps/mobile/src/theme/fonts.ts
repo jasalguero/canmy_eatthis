@@ -1,7 +1,7 @@
 /**
  * Bold Ink's two font families (docs/02-tech-decisions.md D25): Lilita One for the `display`
  * type role, Nunito for everything else. Both are bundled TTF assets via `@expo-google-fonts/*`
- * — loaded from the app bundle, not fetched — so this holds docs/10 §5's "collect nothing"
+ * — loaded from the app bundle, not fetched — so this holds docs/05-safety-legal.md §6's "collect nothing"
  * posture and the Phase 2 screenshot script's "zero network calls in the build" assertion.
  *
  * Each family/weight pair below is its own font FILE with its own PostScript name (e.g.

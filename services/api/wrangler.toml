@@ -5,7 +5,7 @@ compatibility_flags = ["nodejs_compat"]
 
 # One namespace for: the response cache, the global daily spend counter, per-device rate limits,
 # the kill switch (`config:kill_switch`) and the vision config document (`config:vision`) —
-# docs/10-hobby-scope.md §3. Create it with `wrangler kv namespace create KV` and paste the id.
+# docs/01-architecture.md §6.3. Create it with `wrangler kv namespace create KV` and paste the id.
 # See services/api/README.md for the full setup runbook.
 [[kv_namespaces]]
 binding = "KV"
@@ -14,7 +14,7 @@ id = "REPLACE_WITH_KV_NAMESPACE_ID"
 [vars]
 # Non-secret config only. The one secret is set with:
 #   wrangler secret put GEMINI_API_KEY
-# and must belong to a billing-enabled (paid tier) Google Cloud project — docs/10 §2.1.
+# and must belong to a billing-enabled (paid tier) Google Cloud project — docs/01-architecture.md §6.2.
 # Never put a secret in this file — AGENTS.md #6.
 VISION_DAILY_CALL_CAP = "500"
 DEVICE_HOURLY_CALL_LIMIT = "20"

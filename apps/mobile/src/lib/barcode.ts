@@ -22,7 +22,8 @@ export type ProductLookup =
   | { kind: 'unavailable' };
 
 /** Open Food Facts asks every API client to identify itself. */
-export const USER_AGENT = 'CanMyEatThis/0.1 (hobby app; barcode ingredient lookup)';
+export const USER_AGENT =
+  'CanMyEatThis/0.1 (https://github.com/jasalguero/canmy_eatthis; canmy_eatthis@jasalguero.com)';
 
 export async function lookupProduct(
   barcode: string,

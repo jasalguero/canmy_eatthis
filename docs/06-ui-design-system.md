@@ -110,7 +110,6 @@ primitives/   Text  Button  IconButton  Card  Sheet  Divider  Skeleton  Pill
 inputs/       SpeciesToggle  PhotoTray  PhotoThumb  DescriptionInput  CheckButton
 feedback/     VerdictBanner  VerdictCard  SourceCite  ConfidencePill
               EmergencyCallButton  DisclaimerFooter  ErrorState  EmptyState
-              # RiskBandMeter — cut, see docs/10 §4
 layout/       Screen  ScrollScreen  StickyFooter  Section  Collapsible
 ```
 
@@ -144,8 +143,8 @@ match. Glyph 64 pt, verdict word in `display`, item name in `title`, "for Max �
 Below, on `surface.base`: the one-sentence headline in `headline`, then collapsible sections. On
 `toxic`, "What to do now" is **expanded and not collapsible**, and the `EmergencyCallButton` is a
 sticky footer with the `toxic.accent` fill. On `severity: severe`, add a persistent top banner and
-move the call button above the fold. **`RiskBandMeter` is cut in the hobby build** (`docs/10-hobby-scope.md` §4) — no dose bands, no
-weight input, no risk banding.
+move the call button above the fold. There is no risk-band meter: dose bands and risk banding are
+out of scope (`docs/00-product-spec.md` §6).
 
 **The source is a primary element, not a footnote.** Directly beneath the headline, above every
 collapsible section, a `SourceCite` component reads *"The Merck Veterinary Manual lists dark

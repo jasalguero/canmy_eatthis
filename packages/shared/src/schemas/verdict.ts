@@ -18,20 +18,20 @@ export const SourceSchema = z.object({
 export type Source = z.infer<typeof SourceSchema>;
 
 /**
- * Hobby-scope deviation from docs/03-api-contract.md — see docs/02-tech-decisions.md D16.
+ * Deviation from the original docs/03-api-contract.md — see docs/02-tech-decisions.md D16.
  *
- * Cut relative to the funded-plan schema (docs/10-hobby-scope.md §1, §4, AGENTS.md #16):
+ * Left out because the features are out of scope (docs/00-product-spec.md §6, AGENTS.md #16):
  *   - `mechanism`            — no per-entry mechanism prose, link to the source instead
  *   - `riskBand` / `riskBandExplanation` — no weight×amount risk banding
  *   - request `context` (petWeightKg, amount) — nothing left to compute a risk band from
  *
  * Kept:
  *   - `onsetHours` — a sourced fact ("signs typically appear within N–M hours"), not a
- *     judgement call, so it survives the no-expertise-required bar in docs/10 §4.
+ *     judgement call, so it meets the editorial standard in docs/04-knowledge-base.md §2.
  *   - `signs` / `emergencyActions` are arrays of controlled-vocabulary ids (AGENTS.md #13),
  *     never per-entry prose. The vocabulary itself is authored in Phase 1 (packages/kb).
  *     `emergencyActions` for a shipped `toxic` entry is always the same universal-set ids
- *     (docs/10 §4) — the schema does not special-case that, the KB content does.
+ *     (docs/04-knowledge-base.md §2) — the schema does not special-case that, the KB content does.
  */
 export const VerdictPayloadSchema = z
   .object({
@@ -102,7 +102,7 @@ export const VerdictPayloadSchema = z
 export type VerdictPayload = z.infer<typeof VerdictPayloadSchema>;
 
 /**
- * `POST /v1/verdict` request. Hobby scope: no `context` (no weight/amount — see module doc).
+ * `POST /v1/verdict` request. No `context` (no weight/amount — see module doc).
  * Pure function of (kbId, species); identical result whether computed on-device or server-side.
  */
 export const VerdictRequestSchema = z.object({

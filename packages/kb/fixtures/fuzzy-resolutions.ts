@@ -1,5 +1,5 @@
 /**
- * Typo fixtures for the fuzzy-match tier (docs/07-implementation-plan.md Phase 4, docs/02
+ * Typo fixtures for the fuzzy-match tier (docs/07-implementation-plan.md Phase 3, docs/02
  * D9: "tune the threshold against a fixture set of real typos"). Unlike
  * `resolution.fixtures.ts` (exact/alias match only), these deliberately do NOT appear as
  * aliases anywhere in `packages/kb/data` — each is a plausible misspelling or keyboard slip of

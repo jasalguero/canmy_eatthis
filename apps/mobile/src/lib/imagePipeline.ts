@@ -3,7 +3,7 @@ import { Image } from 'react-native';
 
 /**
  * docs/07 Phase 3: resize longest edge to 1024 px, JPEG quality 0.8, strip all EXIF. The resize
- * happens before the photo ever gets near the network (H4) — this is what keeps a 12 MP photo
+ * happens before the photo ever gets near the network (Phase 4) — this is what keeps a 12 MP photo
  * from a phone camera down to the couple-hundred-KB budget.
  */
 export const MAX_EDGE = 1024;

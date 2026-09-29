@@ -10,7 +10,7 @@ import { devHistoryRows } from '@/lib/devPreview';
 import { useSettingsStore } from '@/lib/settings';
 
 /**
- * History (docs/07 Phase 8 owns the real SQLite store; Phase 2 builds the screen).
+ * History (the real SQLite store comes after the first release, docs/07; Phase 2 built the screen).
  *
  * Each row stamps the KB version that produced it, which is why the row renders from a resolved
  * payload rather than from a stored verdict string: an answer given under an older KB should be

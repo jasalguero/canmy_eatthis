@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Copies the built KB artefacts into every consumer that ships a committed snapshot instead of
-// fetching one OTA (docs/02-tech-decisions.md D21, extended in H4 to cover services/api — real
-// OTA delivery is doc07 Phase 8, well past either). Run after `pnpm --filter kb build`.
+// fetching one OTA (docs/02-tech-decisions.md D21, extended in Phase 4 to cover services/api — real
+// OTA delivery comes after the first release, docs/07). Run after `pnpm --filter kb build`.
 import { copyFileSync, existsSync, mkdirSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';

@@ -13,7 +13,8 @@ import type { Language } from './kb.js';
  */
 export type { BarcodeProduct };
 
-const USER_AGENT = 'CanMyEatThis/0.1 (hobby app; barcode ingredient lookup)';
+const USER_AGENT =
+  'CanMyEatThis/0.1 (https://github.com/jasalguero/canmy_eatthis; canmy_eatthis@jasalguero.com)';
 
 /**
  * `null` on a genuine "not found" in either database. Throws when a database could not be reached

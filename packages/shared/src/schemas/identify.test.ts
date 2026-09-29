@@ -6,7 +6,7 @@ import { type IdentifyResponse, IdentifyResponseSchema } from './identify.js';
  * `verdict ∈ {caution, unknown}`, never `safe` or `toxic`. AGENTS.md #1 exists to protect this —
  * the model never produces a verdict, so its one user-facing path (fallback prose) must never
  * carry a "safe" claim it isn't entitled to make. (Invariant 4, risk bands, does not exist in
- * this hobby build — docs/02-tech-decisions.md D16 — so only invariants 1, 2, 3 and 5 apply
+ * this schema — docs/02-tech-decisions.md D16 — so only invariants 1, 2, 3 and 5 apply
  * here; 1, 2 and 5 are covered in `resolveVerdict.test.ts`.)
  */
 function baseResponse(overrides: Partial<IdentifyResponse> = {}) {

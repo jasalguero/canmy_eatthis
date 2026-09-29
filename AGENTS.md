@@ -1,9 +1,8 @@
 # Conventions for implementing agents
 
-Read `README.md`, then **`docs/10-hobby-scope.md`**, then `docs/07-implementation-plan.md`, then the
-doc for your phase. Doc 10 overrides everything else where they conflict — it cuts roughly a third
-of the features described in docs 00–09. Do not build anything on its cut list (§8). Do not start a
-phase whose dependencies are not complete.
+Read `README.md`, then `docs/07-implementation-plan.md`, then the doc for your phase. Do not build
+anything on the out-of-scope list in `docs/00-product-spec.md` §6 without first recording a decision
+in `docs/02-tech-decisions.md`. Do not start a phase whose dependencies are not complete.
 
 ## Hard rules
 
@@ -26,17 +25,18 @@ phase whose dependencies are not complete.
     comment, in `en` and `es`. Never concatenate sentence fragments — use full ICU messages with
     placeholders, because word order differs between languages.
 12. **Language and region are separate settings.** Language picks the text; region picks the poison
-    hotlines, the weight units and the regional food coverage. Never derive one from the other.
+    hotlines and the regional food coverage. Never derive one from the other.
 13. **`signs` and `emergency_actions` are controlled-vocabulary ids, never per-entry prose.**
     Translated once in the UI catalogues. Adding a bespoke phrasing where a vocabulary term exists
     is a review failure.
 14. **Tier A (aliases, display names, safety strings) is mandatory in every shipped language.**
     Tier B prose is never machine-translated to `approved`, and no `toxic` entry ships below
-    `approved` in Tiers A or B. Tier C may stay English behind a visible marker.
+    `approved` in Tiers A or B.
 15. **Every KB entry carries at least two independent authoritative sources.** If two good sources
     disagree, or coverage is thin, the entry does not ship. Omission is a correct outcome.
 16. **No `mechanism` prose, no dose bands, no pet weight, no entry-specific emergency actions.**
-    These are cut (`docs/10-hobby-scope.md` §4). Link to the source instead.
+    They are out of scope (`docs/00-product-spec.md` §6, `docs/04-knowledge-base.md` §2). Link to
+    the source instead.
 17. **The global daily spend cap and kill switch ship in the same commit as the first model call.**
     Not a follow-up task. An unbounded bill is the one failure this project cannot absorb.
 18. **No monetisation code anywhere.** No RevenueCat, no quotas, no subscription state.

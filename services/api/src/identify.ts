@@ -57,14 +57,14 @@ export interface IdentifyLog {
   model: string | null;
   cached: boolean;
   resolvedBy: IdentifyResponse['resolvedBy'] | null;
-  /** docs/07 Phase 5: the *normalised* query only — never raw text, never image bytes. */
+  /** docs/07 Phase 4: the *normalised* query only — never raw text, never image bytes. */
   query: string;
   imageCount: number;
   escalated: boolean;
   modelDetail: string | null;
 }
 
-/** Plants are low confidence from a photo whatever the model says (docs/10 §4). */
+/** Plants are low confidence from a photo whatever the model says (docs/04-knowledge-base.md §2). */
 function confidenceBand(confidence: number, category: string): ConfidenceBand {
   if (category === 'plant') return 'low';
   if (confidence >= 0.85) return 'high';
@@ -232,7 +232,7 @@ export async function identify(
     throw err;
   }
 
-  // Escalation (docs/07 Phase 5): a low-confidence or high-risk answer is re-asked of the
+  // Escalation (docs/07 Phase 4): a low-confidence or high-risk answer is re-asked of the
   // stronger model, and the more cautious combination kept. The second call reserves its own
   // slot against the cap — escalation can never be how the cap is exceeded.
   if (
@@ -259,7 +259,7 @@ export async function identify(
   const meta = { provider: deps.provider.id, model, cached: false, latencyMs: 0 };
 
   if (result.kind === 'malformed') {
-    // docs/07 Phase 5: malformed model output degrades to `unknown`, never a crash. No
+    // docs/07 Phase 4: malformed model output degrades to `unknown`, never a crash. No
     // candidates, no verdict: the app renders its own `unknown` result. Not cached — the next
     // attempt deserves a fresh call.
     log.modelDetail = result.detail;

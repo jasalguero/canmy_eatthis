@@ -1,6 +1,6 @@
 # services/api — the Worker
 
-The thin proxy from `docs/01-architecture.md`, built in H4 (`docs/10-hobby-scope.md` §7). The
+The thin proxy from `docs/01-architecture.md`, built in Phase 4 (`docs/07-implementation-plan.md`). The
 Worker identifies things and never decides whether they are dangerous. Verdicts come from the same
 `resolveVerdict()` and the same KB snapshot the app bundles (AGENTS.md #1, #5).
 
@@ -14,12 +14,12 @@ Worker identifies things and never decides whether they are dangerous. Verdicts 
 
 `/v1/identify` needs an `X-Device-Id: <uuid>` header: an anonymous id the app generates once. It
 only keys the per-device rate limit (D24). There are no sessions and no attestation (D24).
-`/v1/hotlines` is not served here. Hotlines ship bundled in the app in H5 because the emergency
+`/v1/hotlines` is not served here. Hotlines ship bundled in the app (D30) because the emergency
 path must work offline (AGENTS.md #4).
 
 ## Spend controls
 
-These are `docs/10` §3, in the order the code checks them on the paid path:
+These are `docs/01-architecture.md` §6.3, in the order the code checks them on the paid path:
 
 1. **Kill switch.** KV key `config:kill_switch`. Set it to `true` and every vision request fails
    with `PROVIDER_UNAVAILABLE` on the next request, cached answers included. Delete the key or set
@@ -38,7 +38,7 @@ the vision path is refused.
 **KV ceiling.** Each paid call writes to KV up to three times (counter, device bucket, cache).
 The free plan allows 1,000 KV writes a day, so in practice the cap tops out at around 300 calls
 a day. When writes fail, the daily cap fails closed and the vision path refuses. That is the safe
-direction. If traffic ever gets near this, move to Workers Paid ($5/month), as `docs/10` §2 says.
+direction. If traffic ever gets near this, move to Workers Paid ($5/month), as `docs/01-architecture.md` §6.1 says.
 
 ## Vision config (`config:vision` in KV)
 
@@ -54,7 +54,7 @@ lower of the two confidences.
 
 ## One-time setup
 
-1. **Google Cloud: paid tier only** (`docs/10` §2.1). Create a project and enable billing on
+1. **Google Cloud: paid tier only** (`docs/01-architecture.md` §6.2). Create a project and enable billing on
    it. Enable the Generative Language API and create an API key restricted to that API. The free
    tier lets Google train on and human-review submitted photos. Never point production at it.
 2. **Provider quota cap.** In *APIs & Services → Generative Language API → Quotas*, cap requests

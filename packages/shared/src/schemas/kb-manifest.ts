@@ -3,7 +3,7 @@ import { z } from 'zod';
 /**
  * `GET /v1/kb/manifest?lang=` (docs/03). One manifest per KB language, because the app only
  * ever loads the artefact for its current language and `sha256`/`sizeBytes` describe those exact
- * bytes. Signature verification and the on-device swap are Phase 8 (docs/02 D21) — this is only
+ * bytes. Signature verification and the on-device swap come after the first release (docs/02 D21) — this is only
  * the description of what the Worker is currently serving.
  */
 export const KbManifestSchema = z.object({

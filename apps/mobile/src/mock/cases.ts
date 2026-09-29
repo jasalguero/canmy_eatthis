@@ -18,7 +18,7 @@ import { MOCK_ENTRIES, MOCK_KB_VERSION, type MockLanguage } from './kbEntries';
  * `unknown` never says the reassuring word, toxic/caution ⇒ at least one source), so a mock that
  * would be impossible in production throws here rather than quietly producing a screenshot of a
  * screen that can never exist. It also means the screens are wired to the same function the app
- * will call for real in H3 — AGENTS.md #5.
+ * will call for real in Phase 3 — AGENTS.md #5.
  */
 
 /** A mock scenario: which entry, which species, and why it is in the set. */
@@ -90,7 +90,7 @@ export function findMockCase(id: string): MockCase | undefined {
 
 /**
  * Candidates for the Confirm screen. Confidence is a band, never a number, on screen — the raw
- * `confidence` is carried because `IdentifyResponse` has it and the escalation rule in H4 reads
+ * `confidence` is carried because `IdentifyResponse` has it and the escalation rule in Phase 4 reads
  * it, but no component may render it (docs/06 §4).
  */
 export const MOCK_CANDIDATES: readonly Candidate[] = [
@@ -115,7 +115,7 @@ export const MOCK_ALTERNATES: readonly Alternate[] = [
   { kbId: 'cheese', label: 'Cheese' },
 ];
 
-/** A low-confidence plant candidate — docs/10 §4: photo plant ID is always treated as unreliable. */
+/** A low-confidence plant candidate — docs/04-knowledge-base.md §2: photo plant ID is always treated as unreliable. */
 export const MOCK_PLANT_CANDIDATE: Candidate = {
   id: 'cand_plant',
   label: 'Lily',

@@ -3,88 +3,77 @@
 The KB is the product. The app is a way of querying it. Budget accordingly: this is where the real
 work sits, not in the React Native code.
 
-> **Hobby build:** `docs/10-hobby-scope.md` §4 cuts this to **60–80 entries with ≥2 independent
-> authoritative sources each**, and removes `mechanism` prose, `dose_bands`, and entry-specific
-> emergency actions — the three most expertise-dependent fields. Read that section before authoring
-> anything. The schema below keeps those fields documented for a future funded build; they are not
-> populated now.
+**Scope:** 60–80 entries, each meeting the editorial standard in §2. No `mechanism` prose, no dose
+bands, no entry-specific emergency instructions (`docs/00-product-spec.md` §6).
 
 ## 1. Entry schema
 
-`packages/kb/data/*.yaml`, compiled to JSON by `packages/kb/build.ts`.
+`packages/kb/data/*.yaml`, one file per entry, compiled to JSON by `packages/kb/src/build.ts`.
+The Zod validator is `packages/kb/schema/entry.ts`.
 
 ```yaml
-id: chocolate_dark                    # stable, snake_case, never reused or renamed
+id: chocolate_dark                    # stable, snake_case, never reused or renamed; = filename
 display_name:
   en: Dark chocolate
   es: Chocolate negro
 category: food                        # food | plant | medication | chemical | household | other
 aliases:
-  en: [dark chocolate, bittersweet chocolate, 70% cocoa, cocoa solids, baking chocolate]
-  es: [chocolate negro, chocolate amargo, cacao puro]
-confusable_with: [chocolate_milk, chocolate_white, carob]   # drives confirm-screen alternates
+  en: [dark chocolate, bittersweet chocolate, cocoa solids, baking chocolate]
+  es: [chocolate negro, chocolate amargo, chocolate puro]
+confusable_with: [chocolate_milk]     # drives confirm-screen alternates
 is_ingredient: true                   # can appear in a barcode-derived ingredient list
 high_risk: true                       # forces escalation to the stronger vision model
 species:
   dog:
-    verdict: toxic
-    severity: moderate
+    verdict: toxic                    # safe | caution | toxic | unknown
+    severity: severe                  # mild | moderate | severe; only for toxic
     headline:
-      en: Toxic to dogs. Call your vet.
+      en: Toxic to dogs. Call your vet now.
+      es: Tóxico para perros. Llama ahora a tu veterinario.
     summary:
-      en: Dark chocolate contains theobromine, which dogs clear very slowly.
-    mechanism:
-      en: Theobromine and caffeine are methylxanthines...
-    signs: [vomiting, diarrhoea, restlessness, tachycardia, tremors, seizures]   # controlled-vocabulary ids
-    onset_hours: { min: 2, max: 12 }
-    # ---- CUT in the hobby build (docs/10 §4): dose_bands, concentration, mechanism ----
-    dose_bands:                       # mg theobromine per kg body weight
-      - { max_mg_per_kg: 20,  band: low,      note_en: "Usually mild GI upset at most." }
-      - { max_mg_per_kg: 40,  band: moderate, note_en: "Vets usually want to see the animal." }
-      - { max_mg_per_kg: null, band: high,    note_en: "Treat as an emergency." }
-    concentration: { theobromine_mg_per_g: 5.5 }
-    emergency_actions: [call_vet_now, do_not_induce_vomiting, bring_packaging]   # controlled-vocabulary ids
-    emergency_actions_extra:            # rare, entry-specific; free text, translated per entry
-      en: []
+      en: Dark chocolate contains theobromine, which dogs clear very slowly...
+      es: El chocolate negro contiene teobromina, que los perros eliminan muy despacio...
+    signs: [vomiting, diarrhoea, restlessness, tachycardia, tremors, seizures]  # vocabulary ids
+    onset_hours: { min: 2, max: 12 }  # only when a source states it; otherwise null
+    emergency_actions: [call_vet_now, do_not_induce_vomiting, bring_packaging]  # the universal set
   cat:
     verdict: toxic
-    severity: moderate
+    severity: severe
     # ... same shape; cats and dogs differ and must be authored separately, never copied
-sources:                              # MINIMUM TWO, independent, authoritative (docs/10 §4)
-  - label: Merck Veterinary Manual — Chocolate toxicosis
-    url: https://www.merckvetmanual.com/...
-    accessed: 2026-09-17
+sources:                              # at least two, independent, authoritative (§2)
+  - label: Merck Veterinary Manual — Chocolate Toxicosis in Animals
+    url: https://www.merckvetmanual.com/toxicology/food-hazards/chocolate-toxicosis-in-animals
+    accessed: 2026-09-19
   - label: "<second independent source>"
     url: https://...
-    accessed: 2026-09-17
+    accessed: 2026-09-19
 review:
-  reviewed_by: "<vet name / licence>"
-  reviewed_at: 2026-10-02
+  reviewed_by: "Jose Salguero"        # the person who checked it against the editorial standard
+  reviewed_at: 2026-09-28
   status: approved                    # draft | needs_review | approved
 translations:
   es:
-    tier_a: approved     # aliases, display_name, bespoke Tier A overrides — MANDATORY
-    tier_b: approved     # headline + summary                 (missing|machine|draft|approved)
-    tier_c: missing      # mechanism, dose-band notes         — English fallback is acceptable
+    tier_a: approved     # aliases, display_name — MANDATORY       (missing|machine|draft|approved)
+    tier_b: approved     # headline + summary
     translated_by: "<name>"
-    reviewed_by: "<bilingual vet / medical translator>"
-    reviewed_at: 2026-11-04
+    reviewed_by: "<native speaker>"
+    reviewed_at: 2026-09-28
 ```
 
-`signs` and `emergency_actions` are **controlled-vocabulary ids, not prose**. Across the whole KB
-they collapse to roughly 120 terms, translated once in the UI catalogues rather than per entry.
-This is what makes the mandatory translation tier affordable, and it also forces consistent phrasing
-across 500 entries. See `docs/09-localisation.md` §1.
+`signs` and `emergency_actions` are **controlled-vocabulary ids, not prose**
+(`packages/kb/schema/vocab.ts`), translated once in `packages/kb/vocab/<lang>.json` rather than per
+entry. This is what makes the mandatory translation tier affordable, and it forces consistent
+phrasing across the KB. `emergency_actions` is deliberately the universal set only: call your vet or
+a poison line now; do not induce vomiting unless told to; bring the packaging. See
+`docs/09-localisation.md` §1.
 
 ### Schema rules the build script enforces (build fails, not warns)
 
 1. Every entry has **both** `species.dog` and `species.cat`. Authored separately — grapes, onions,
    lilies and paracetamol all differ sharply between the two, and a copy-paste here is a real hazard.
 2. `verdict: toxic` ⇒ non-empty `emergency_actions` and `severity` set.
-3. `verdict: toxic` or `caution` ⇒ **at least two independent `source` entries with URLs**
-   (hobby-build editorial standard, `docs/10-hobby-scope.md` §4). If two good sources disagree, or
-   coverage is thin, the entry does not ship — omission renders as `unknown`, which routes the user
-   to a vet, and that is the correct outcome.
+3. `verdict: toxic` or `caution` ⇒ **at least two independent `source` entries with URLs** (§2).
+   AGENTS.md #15 extends this to every entry, whatever its verdict.
 4. No entry ships to production with `review.status !== approved`.
 5. `aliases` are unique across the whole KB — a collision is ambiguous and fails the build.
 6. `confusable_with` ids all resolve.
@@ -99,18 +88,57 @@ across 500 entries. See `docs/09-localisation.md` §1.
 11. The build emits a per-language, per-tier coverage report, plus the count of toxic entries below
     `approved` in Tiers A and B. Those two numbers are release gates.
 
-`tier_c: missing` is permitted and safe: the entry still renders its verdict structurally — colour,
-glyph, verdict word, signs and emergency actions all come from UI strings and the controlled
-vocabulary — and only the collapsed explanatory section falls back to English behind a visible
-marker. See `docs/09-localisation.md` §2.
+## 2. The editorial standard
 
-## 2. Licensing — read this before copying anything
+There is no veterinary sign-off, so the app does not present itself as an authority. It is **a
+fast, well-organised index into authorities** — which is what a worried owner needs at 2 a.m.
+anyway, since the useful action is almost always "call someone". That shapes the product:
+
+- **The source is a primary UI element, not a footnote.** Every result shows, above the fold, which
+  authority says this and a link to it: "The Merck Veterinary Manual lists dark chocolate as toxic
+  to dogs →". The app's claim is about what the sources say, which is a claim it can support.
+- **At least two independent authoritative sources per entry.** Acceptable: the Merck Veterinary
+  Manual, peer-reviewed veterinary toxicology literature, university veterinary extension
+  publications, and government materials (FDA, USDA, CDC, AEMPS). Pet blogs are not sources.
+- **If two good sources disagree, or coverage is thin, the entry does not ship.** Uncertainty is
+  handled by omission, and omission renders as `unknown` — which routes the user to a vet. That is
+  the correct outcome.
+- **Every claim in an entry is in its sources.** The verdict for each species, the signs, the onset
+  window. A species the sources do not cover is `unknown` for that species.
+- **No `mechanism` prose.** Explaining metabolism in your own words is where a non-expert most
+  easily goes wrong, and it adds nothing a link cannot.
+- **No dose bands, no weight input, no risk banding.** "Toxic — call your vet" is honest; "moderate
+  risk for an 8 kg dog" is a clinical judgement.
+- **Emergency actions are the universal set only**, identical across entries. Entry-specific medical
+  instructions are exactly what cannot be written without review.
+- **Plants get special handling.** They are the most dangerous category to misidentify. Typed plant
+  lookups are fine. A photo-identified plant is always low confidence, always confirmed, and always
+  shows a "plant identification from photos is unreliable — confirm with a vet" notice.
+
+Hold the line when adding entries later. The temptation to add "just one more" unsourced item is
+how a careful project stops being careful. If a vet is ever willing to review the entries as a
+favour, take it — a plausible ask for a short list.
+
+### Drafting and approval
+
+New entries start in `packages/kb/drafts/`, which the build ignores; `packages/kb/src/drafts.test.ts`
+validates each draft against the live KB so promotion cannot break the build. A reviewer opens both
+sources, checks the verdict for each species and every claim against them, reads the Spanish as a
+native speaker, then moves the file into `data/` and records `review` and `translations.es` as
+approved. The steps are in `packages/kb/drafts/README.md`.
+
+### The residual risk
+
+Publishing a free pet-safety app without veterinary review carries real risk that no disclaimer
+fully removes. The mitigations are genuine — narrow scope, strong sourcing, source-forward
+presentation, omission under uncertainty, and routing every serious case to a professional. They
+reduce the risk substantially. They do not eliminate it.
+
+## 3. Licensing — read this before copying anything
 
 The **facts** ("lilies are nephrotoxic to cats") are not copyrightable. The **compilations and the
 prose** on ASPCA, Pet Poison Helpline and similar sites are. Scraping ASPCA's plant list into a
-shipped commercial app is a real legal risk, and their terms prohibit it.
-
-**The approach:**
+shipped app is a real legal risk, and their terms prohibit it.
 
 - Build the entry list from multiple sources and from primary literature: the **Merck Veterinary
   Manual**, peer-reviewed veterinary toxicology papers, **USDA/FDA** materials (US government works
@@ -118,86 +146,60 @@ shipped commercial app is a real legal risk, and their terms prohibit it.
 - **Write every description in your own words.** No paraphrase-close-to-source.
 - Cite sources per entry — good practice, good UX, and evidence of provenance.
 - Use public sources for *coverage discovery* (what belongs on the list) but not as the text.
-- **Spanish Tier B prose is authored or translated by a bilingual veterinarian or a medical
-  translator, then vet-reviewed.** Never machine-translated to `approved`. Spanish **aliases** are
-  authored by a native speaker as a search index and need no veterinary review, because a search
-  index makes no medical claim — see `docs/09-localisation.md` §4.
-- **Open Food Facts / Open Pet Food Facts** are ODbL-licensed and *can* be used for barcode and
-  ingredient data, with attribution and share-alike obligations. Read the licence; display the
-  attribution.
-- Have a veterinarian review and sign off. Record the sign-off in `review`.
+- **Spanish prose is never machine-translated to `approved`.** Spanish **aliases** are authored by a
+  native speaker as a search index — see `docs/09-localisation.md` §4.
+- **Open Food Facts / Open Pet Food Facts** are ODbL-licensed and are used for barcode and
+  ingredient data, with attribution in the app (D29).
+- The KB entries themselves are licensed CC BY-NC 4.0 (`LICENSE-CONTENT`).
 
-## 3. Seeding priority
+## 4. Seeding priority
 
-Build outward in this order; the first 60 entries cover the large majority of real queries.
+Build outward in this order; the first entries cover the large majority of real queries.
 
-**Tier 1 — the classics (≈60 entries, Phase 1).**
-chocolate (dark/milk/white/cocoa powder) · xylitol/birch sugar · grapes, raisins, sultanas, currants ·
-onion, garlic, leek, chive (raw, cooked, powdered) · macadamia · alcohol · caffeine · avocado ·
-raw yeast dough · cooked bones · salt / play dough · paracetamol (acetaminophen) · ibuprofen ·
-aspirin · nicotine and vapes · cannabis · lilies (cats — `severe`) · sago palm · azalea · oleander ·
-tulip and daffodil bulbs · antifreeze/ethylene glycol · rodenticide · slug pellets ·
-grape-seed-containing foods · nutmeg · unripe tomato/green potato · rhubarb leaves.
+**Priority 1 — the classics.**
+chocolate (dark/milk/cocoa powder) · xylitol/birch sugar · grapes, raisins, sultanas, currants ·
+onion, garlic, leek, chive · macadamia · alcohol · caffeine · avocado · raw yeast dough · salt /
+play dough · paracetamol (acetaminophen) · ibuprofen · aspirin · nicotine and vapes · cannabis ·
+lilies (cats — `severe`) · sago palm · azalea · oleander · spring bulbs · antifreeze/ethylene
+glycol · rodenticide · slug pellets.
 
-**Tier 2 — the reassurance set (≈120 entries, Phase 1).**
+**Priority 2 — the reassurance set.**
 The things people check hoping for a yes: plain cooked chicken, rice, carrot, pumpkin, apple without
 seeds, banana, blueberry, plain yoghurt, cucumber, green beans, peanut butter (**with a mandatory
-xylitol warning**), cheese (`caution`, lactose/fat), egg, salmon, plain pasta, watermelon,
-strawberry, catnip, wet/dry food of the other species (`caution`).
+xylitol warning**), cheese (`caution`), egg, salmon, plain pasta, watermelon, strawberry, catnip.
+Two sources that say a food is harmless are harder to find than two that say it is toxic; an entry
+without them does not ship.
 
-**Tier 3 — the long tail (Phase 8 onward).** Houseplants by genus · common medications · cleaning
-products · garden chemicals · **regional foods, which are driven by region rather than language** —
-jamón, turrón, aceitunas, mantecados for Spain; mole (contains chocolate), tamales, chile for
-Mexico. Adding a region means adding entries, not only translating existing ones.
+**Priority 3 — regional foods**, which are driven by region rather than language: jamón, turrón,
+aceitunas for Spain; mole (contains chocolate), tamales, chile for Mexico. Adding a region means
+adding entries, not only translating existing ones.
 
-**Tier 4 — backfill from telemetry.** Every `verdict: unknown` and every `model_fallback` is logged
-by normalised query string. That log is the KB roadmap; review it weekly.
-
-## 4. Risk bands — CUT in the hobby build
-
-> **Not built.** `docs/10-hobby-scope.md` §4 removes dose bands, pet weight input and risk banding
-> entirely. They are the highest-expertise feature in the plan and should not exist without
-> veterinary review. "Toxic — call your vet" is honest; "moderate risk for an 8 kg dog" is a
-> clinical judgement. The section below is retained for a future funded build.
-
-### Original: risk bands, and the line not to cross
-
-`dose_bands` let a chocolate result say *"for an 8 kg dog, this amount is in the range where vets
-usually want to see the animal"* instead of a useless bare "toxic". That is a large UX win.
-
-**But do not build a dosage calculator.** Apple's guideline 1.4.1 requires drug-dosage calculators
-to originate from a manufacturer, hospital, university, insurer, pharmacy or regulator. A
-"chocolate toxicity calculator" presented with numeric precision invites that reading and invites
-liability. The rules:
-
-- Output a **band** (`low` / `moderate` / `high`), never a computed milligram figure shown to the user.
-- Never state a threshold as a number in the UI.
-- `riskBand` is `unknown` whenever weight or amount is missing — never estimate either.
-- Every band, including `low`, ends with a call-your-vet line.
-- Never tell a user their pet does **not** need to see a vet.
+**Backfill.** Every typed query that ends in `unknown` is a candidate entry. The "report a wrong
+answer" inbox is the other input.
 
 ## 5. Distribution and updates
 
-- **Bundled** with the binary: the full KB at build time, so the app works on first launch offline.
-- **OTA**: `GET /v1/kb/manifest` on cold start, at most once per 24 h. Download, verify signature and
-  SHA-256, swap atomically, keep the bundled copy as fallback. A corrupted or unverified download is
-  discarded silently.
+- **Bundled** with the binary: the full KB at build time, so the app works on first launch offline
+  (D21).
+- **OTA** (after the first release, `docs/07-implementation-plan.md`): `GET /v1/kb/manifest` on cold
+  start, at most once per 24 h. Download, verify signature and SHA-256, swap atomically, keep the
+  bundled copy as fallback. A corrupted or unverified download is discarded silently.
 - KB version is shown in Settings and recorded on every history entry, so a past result can be
   explained.
-- **Correction path:** edit YAML → PR → CI validates schema and runs the fixture suite → vet
-  sign-off for any verdict change → publish manifest. Target: under 4 hours from report to users.
-  Exercise this path once in Phase 10 before launch so it is known to work.
+- **Correction path:** edit YAML → PR → CI validates schema and runs the fixture suite → the change
+  meets the editorial standard → release. Exercise this path once in Phase 6 before launch so it is
+  known to work.
 
 ## 6. Test fixtures
 
 `packages/kb/fixtures/` holds a golden set that CI runs on every commit:
 
-- **Verdict fixtures** — `(kbId, species, weight, amount) → expected VerdictPayload`. Covers all
-  four verdicts, both species, missing-context cases, and all invariants from `docs/03-api-contract.md`.
+- **Verdict fixtures** — `(kbId, species) → expected VerdictPayload`. Covers all four verdicts, both
+  species, and all invariants from `docs/03-api-contract.md`.
 - **Resolution fixtures** — `input string → expected kbId | null`. Includes correct spellings,
   realistic typos, Spanish, plurals, brand names, and a **negative set of near-misses that must
   NOT match** ("onion powder" must not resolve to "onion ring"; "chocolate lab" must not resolve to
   "chocolate").
-- **Image fixtures** — ~40 real photos with expected candidates. Run against recorded provider
-  responses in CI (fast, deterministic, free) and against live providers in a nightly job, so
-  provider drift is detected without making every CI run cost money.
+- **Image fixtures** — real photos with expected candidates, for photo identification. Run against
+  recorded provider responses in CI (fast, deterministic, free) and against the live provider in a
+  nightly job, so provider drift is detected without making every CI run cost money.

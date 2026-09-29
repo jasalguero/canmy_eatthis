@@ -111,9 +111,10 @@ Four variants, one per verdict. Shared anatomy:
 ### 2.5 Secondary screens
 
 - **History** — past checks, offline-readable, searchable. Tapping one re-opens its Result.
-- **Pet profile** — species and name only. **Weight is cut** along with risk banding
-  (`docs/10-hobby-scope.md` §4).
-- **Settings** — language, units, disclaimers, privacy policy, hotline region, subscription.
+- **Pet profile** — species and name only. There is no weight field: nothing in the app could
+  use one without dose bands, which are out of scope (§6).
+- **Settings** — language, region (which picks the hotlines), appearance, disclaimers, privacy
+  policy and terms of use.
 - **First-run** — three cards: what the app does, what it is not (not a vet, not a diagnosis),
   and AI-processing consent (required — see `docs/05-safety-legal.md`).
 
@@ -145,8 +146,8 @@ liability exposure.
 
 - Second person, present tense, no exclamation marks on toxic screens.
 - Never hedge on an emergency: *"Call your vet now"*, not *"you may wish to consider contacting"*.
-- Never speculate beyond the KB entry. The hobby build has no `mechanism` prose at all — the
-  source link carries that job, and nothing is filled in by the model at render time.
+- Never speculate beyond the KB entry. There is no `mechanism` prose at all — the source link
+  carries that job, and nothing is filled in by the model at render time.
 - Numbers only where the KB supplies them with a source.
 - Every result screen ends with the standing disclaimer in muted text.
 
@@ -157,20 +158,39 @@ are country-specific, the KB needs Spanish aliases for text lookup to work at al
 "cebolla", "xilitol"), and Spanish text runs 20–30% longer, which reshapes the verdict banner.
 
 Two settings, not one. **Language** picks the UI strings and the KB prose; **region** picks the
-hotlines, the weight units and the regional food coverage. A Spanish speaker in the US gets Spanish
-text and US hotline numbers.
+hotlines and the regional food coverage. A Spanish speaker in the US gets Spanish text and US
+hotline numbers.
 
 Verdict labels are designed per language rather than translated — "Not great" becomes "Mejor
 evitarlo", chosen by a native speaker to stay short and scannable in a banner.
 
-The knowledge base is translated in tiers, not wholesale: aliases and the short safety strings are
-mandatory, the one-sentence answer follows, and long-form explanation may stay English behind a
-marker.
+The knowledge base is translated in two tiers, both required in every shipped language: aliases
+and the short safety strings, then the one-sentence answer. There is no long-form prose to
+translate.
 
 Full treatment in `docs/09-localisation.md`. Architect for it in Phase 0; do not retrofit.
 
-## 6. Explicitly out of scope for v1
+## 6. Out of scope
 
-Accounts and cloud sync · social/sharing features · symptom checkers · vet appointment booking ·
-multiple pet profiles · dosage calculators and risk bands (see `docs/10-hobby-scope.md` §4) ·
-ingredient-level analysis of full pet-food labels · Apple Watch · **monetisation of any kind**.
+Deliberately not built. Each item is either clinical judgement that needs veterinary review, or
+work that would not improve the answers users judge the app on. Do not build them without first
+recording a decision in `docs/02-tech-decisions.md`.
+
+- **Monetisation of any kind.** No purchases, subscriptions, quotas or paywall. The app is free.
+- **Pet weight, dose bands and risk banding.** "Moderate risk for an 8 kg dog" is a clinical
+  judgement; "Toxic — call your vet" is honest.
+- **`mechanism` prose and entry-specific emergency instructions.** The source link explains the
+  mechanism; emergency actions are the universal set every authority agrees on
+  (`docs/04-knowledge-base.md`).
+- **Device attestation (App Attest / Play Integrity).** The global spend cap covers the risk that
+  costs money (`docs/01-architecture.md`); attestation is the answer only if determined abuse
+  appears.
+- **Product analytics** (funnels, PostHog or similar).
+- **A specialist plant-identification API.** Plants resolve by typed name; photo-identified plants
+  are always low confidence.
+- **Accounts, cloud sync and multiple pet profiles.**
+- **A knowledge base larger than can be sourced carefully.** The target is 60–80 entries; it grows
+  only under the editorial standard in `docs/04-knowledge-base.md`.
+- **Load testing at scale.**
+- Social/sharing features · symptom checkers · vet appointment booking · analysis of full pet-food
+  labels beyond matching ingredients against the knowledge base · Apple Watch.

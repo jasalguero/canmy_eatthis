@@ -60,7 +60,7 @@ export function buildUserText(params: {
 }
 
 /**
- * What the model must return. Validated with Zod on the way in (docs/07 Phase 5: "Zod validation
+ * What the model must return. Validated with Zod on the way in (docs/07 Phase 4: "Zod validation
  * on every boundary") — anything that does not parse degrades to `unknown`, never to a crash.
  */
 export const ModelCandidateSchema = z.object({

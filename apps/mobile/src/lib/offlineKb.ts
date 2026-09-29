@@ -15,7 +15,7 @@ import kbEs from '../../assets/kb/kb.es.json';
 import kbIndexArtifact from '../../assets/kb/kb.index.json';
 
 /**
- * The bundled KB (docs/07 Phase 4, docs/02-tech-decisions.md D21): a static asset snapshot
+ * The bundled KB (docs/07 Phase 3, docs/02-tech-decisions.md D21): a static asset snapshot
  * synced from `packages/kb/dist` by `pnpm --filter kb run sync:assets` and committed to the
  * repo, not fetched OTA. Metro (and Jest, via jest-expo) bundle JSON imports directly, so this
  * is in memory the moment the module loads — no filesystem read, no async gap before the
@@ -66,7 +66,7 @@ function getEntryMap(language: SupportedLanguage): EntryMap {
 
 let searchIndex: AliasSearchIndex | null = null;
 
-/** Built once, lazily — this is the expensive part `docs/07 Phase 4`'s <150 ms budget is about. */
+/** Built once, lazily — this is the expensive part `docs/07 Phase 3`'s <150 ms budget is about. */
 function getSearchIndex(): AliasSearchIndex {
   if (!searchIndex) searchIndex = buildAliasSearchIndex(ALIAS_INDEX);
   return searchIndex;
@@ -87,7 +87,7 @@ export function getKbVersion(language: SupportedLanguage): string {
  * Tier 0 (exact/alias) then tier 1 (conservative fuzzy) resolution, entirely on-device
  * (docs/01-architecture.md §"resolution tiers"). Calls the shared, pure `resolveText` —
  * AGENTS.md #5 — against the bundled index built above. The alias index is language-agnostic
- * (docs/07 Phase 4: "cross-language alias fallback works" — one merged index, built by
+ * (docs/07 Phase 3: "cross-language alias fallback works" — one merged index, built by
  * `buildAliasIndex` across every language), so this takes no `language` argument; look the
  * resolved id up per-language with `getKbEntry` afterwards.
  */

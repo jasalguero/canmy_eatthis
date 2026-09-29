@@ -3,13 +3,6 @@
 Launch languages: **English** and **Spanish**. Architected for N languages from Phase 0, because
 retrofitting i18n into a shipped app is several times the work of building it in.
 
-> **Hobby build:** the model below is unchanged in principle but much smaller in practice. With
-> 60–80 entries and no `mechanism` prose, **Tier C disappears entirely** and Tiers A and B come to
-> roughly 250 short strings per language. More importantly the cost was "hire a bilingual vet", and
-> that is no longer the shape of the work — you are authoring the English yourself from cited
-> sources, so the Spanish is your own time rather than anyone's invoice. See
-> `docs/10-hobby-scope.md` §6.
-
 ## 1. How much of the knowledge base actually has to be translated
 
 The tempting answer is "translate the UI, leave the knowledge base in English." That is close to
@@ -23,16 +16,17 @@ or burns a model call to translate a word it already knows. Aliases must be mult
 of what happens to the prose, and fortunately they are the cheapest part: a native speaker listing
 what people type, with no veterinary review needed, because a search index carries no medical claim.
 
-So the useful question is not *whether* to translate the KB but *which fields*. Three tiers:
+So the useful question is not *whether* to translate the KB but *which fields*. Two tiers, both
+required before a language ships:
 
-| Tier | Fields | Translate? | Why | Volume per language |
-|---|---|---|---|---|
-| **A — functional** | `aliases`, `display_name`, verdict labels, `signs`, `emergency_actions` | **Always, before launch** | Either search-index data or the short safety-critical strings a panicking user acts on | ~500 names + ~120 controlled terms |
-| **B — the answer** | `headline`, `summary` | **Before that language's launch** | The one or two sentences the user actually reads | ~1,000 short strings |
-| **C — the detail** | `mechanism`, `dose_band` notes, source labels | **Fall back to English indefinitely** | Collapsed-by-default explanatory depth; a motivated reader can cope with English | ~1,500 strings, deferred |
+| Tier | Fields | Why | Volume per language |
+|---|---|---|---|
+| **A — functional** | `aliases`, `display_name`, verdict labels, `signs`, `emergency_actions` | Either search-index data or the short safety-critical strings a panicking user acts on | A few hundred names + the controlled vocabulary |
+| **B — the answer** | `headline`, `summary` | The one or two sentences the user actually reads | Two short strings per species per entry |
 
-Tier C is where most of the word count lives, and it is exactly the part that can stay English. That
-is your instinct, and it holds — for that tier.
+There is no long-form prose to translate: entries carry no `mechanism` text and no dose-band notes
+(`docs/04-knowledge-base.md` §2). With 60–80 entries, Tiers A and B come to a few hundred short
+strings per language.
 
 ### The trick that makes Tier A cheap
 
@@ -48,44 +42,26 @@ signs: [vomiting, diarrhoea, restlessness, tachycardia, tremors, seizures]
 emergency_actions: [call_vet_now, do_not_induce_vomiting, bring_packaging]
 ```
 
-A handful of entries need something bespoke; those get a free-text override field that *is*
-translated per entry. Everything else is free after the first 120 terms.
+There are no per-entry overrides: `emergency_actions` is the universal set, and a sign that no
+vocabulary term covers gets a new vocabulary id, translated once, rather than bespoke prose.
 
-This is worth doing even for a single-language app — it makes the copy consistent across 500 entries
-instead of 500 slightly different phrasings of "call your vet".
+This is worth doing even for a single-language app — it makes the copy consistent across every entry
+instead of slightly different phrasings of "call your vet".
 
-### What this costs, compared with the two extremes
+Translating nothing but the UI (~250 strings) is not an option: Spanish text lookup would not work,
+and that is the app's core value for those users.
 
-- **Translate everything:** ~3,500 strings of medical prose per language, all needing a bilingual vet
-  or medical translator plus veterinary review. Roughly doubles the largest line item in the project.
-- **Translate nothing but the UI:** ~250 strings, but Spanish text lookup does not work, which is the
-  app's core value for those users.
-- **Tiers A + B:** ~1,620 strings, of which only the ~1,000 in Tier B are real prose needing the
-  medical-translation bar. Aliases need a native speaker, not a vet. **Call it a third of the full
-  cost for nearly all of the user-visible benefit.**
-
-Recommendation: **Tier A always, Tier B before Spanish launch, Tier C English with a visible marker,
-translated later if the market justifies it.**
-
-## 2. Why partial translation is safe here
-
-**A verdict is data, not prose.**
+## 2. A verdict is data, not prose
 
 `verdict: toxic`, `severity: severe` and the presence of emergency actions are structural fields.
-The verdict colour, the glyph, the verdict word, the risk band and the emergency call-to-action all
-render from **UI strings**, which are fully translated, and from the Tier A controlled vocabulary.
-None of it comes from KB prose.
+The verdict colour, the glyph, the verdict word and the emergency call-to-action all render from
+**UI strings**, which are fully translated, and from the Tier A controlled vocabulary. None of it
+comes from KB prose, so the safety-critical parts of a result are correct in every shipped language
+by construction.
 
-So an entry whose Tier C text is still English gives a Spanish user: the right colour, the right
-verdict word, the right severity treatment, the right list of signs to watch for, the right
-emergency instructions and a working hotline button. Only the collapsed "Why" section shows English,
-behind a small *"Shown in English"* marker.
-
-Without this property, partial translation would be unsafe and the choice would be all-or-nothing
-per language. With it, translation coverage becomes a dial rather than a gate.
-
-**The one hard floor:** an entry may not ship with an untranslated or machine-translated Tier A field
-in a shipped language. The strings a frightened person acts on are not where you economise.
+**The hard floor:** an entry may not ship with an untranslated or machine-translated Tier A field in
+a shipped language, and no `toxic` entry ships with Tier B below `approved`. The strings a
+frightened person acts on are not where you economise.
 
 ## 3. Language is not region
 
@@ -96,8 +72,7 @@ this, and here it has safety consequences.
 |---|---|---|
 | UI strings, KB prose | **language** (`es`) | A Spanish speaker in Ohio gets Spanish text |
 | Poison-control hotlines | **region** (`US`) | …and US hotline numbers, because that is who can help them |
-| Weight units | **region**, user-overridable | kg in Spain, lb in the US |
-| Food coverage (Tier 3 KB) | **region** | turrón and jamón for Spain; mole and tamales for Mexico |
+| Food coverage (regional KB entries) | **region** | turrón and jamón for Spain; mole and tamales for Mexico |
 | Date and number formatting | **locale** | `Intl.DateTimeFormat`, `Intl.NumberFormat` |
 | Store listing and ASO | **both** | es-ES and es-MX listings differ |
 
@@ -154,12 +129,11 @@ signs: [vomiting, tremors, tachycardia]        # controlled vocabulary ids, tran
 emergency_actions: [call_vet_now, do_not_induce_vomiting]
 translations:
   es:
-    tier_a: approved       # aliases + display_name + any bespoke Tier A overrides
+    tier_a: approved       # aliases + display_name
     tier_b: approved       # headline + summary        (missing | machine | draft | approved)
-    tier_c: missing        # mechanism + notes         — English fallback is acceptable
     translated_by: "<name>"
-    reviewed_by: "<bilingual vet / medical translator>"
-    reviewed_at: 2026-11-04
+    reviewed_by: "<native speaker>"
+    reviewed_at: 2026-09-28
 ```
 
 **Build-time rules (fail, not warn):**
@@ -167,9 +141,8 @@ translations:
 1. `tier_a` must be `approved` for every shipped language on every entry. No exceptions.
 2. `tier_b` may not be `machine` or `draft` for any entry with `verdict: toxic` in a shipped
    language. Machine-translated safety answers do not reach users.
-3. `tier_c: missing` is permitted and renders an English-fallback marker.
-4. Every controlled-vocabulary id used by any entry exists in every shipped language's catalogue.
-5. The build emits a per-language coverage report — per tier, plus the count of toxic entries below
+3. Every controlled-vocabulary id used by any entry exists in every shipped language's catalogue.
+4. The build emits a per-language coverage report — per tier, plus the count of toxic entries below
    `approved` in Tiers A and B. Those two numbers are release gates.
 
 Emit one KB artefact per language plus a shared structural core, so a device downloads only the
@@ -193,14 +166,14 @@ Writing the English source with translation in mind costs nothing and saves a lo
   is copywriting, not localisation.
 - **Every string has a translator comment.** `t('check')` is ambiguous ("to check" / "a cheque").
 
-Proposed verdict labels (to be confirmed by a native speaker, not final):
+Verdict labels as shipped:
 
 | Verdict | en | es |
 |---|---|---|
-| safe | No known risk | Sin riesgo conocido |
+| safe | No known toxicity | Sin toxicidad conocida |
 | caution | Not great | Mejor evitarlo |
 | toxic | Toxic | Tóxico |
-| unknown | Not sure | No estoy seguro |
+| unknown | Not sure | No lo sabemos |
 
 ## 7. Layout consequences
 
@@ -235,13 +208,11 @@ worst-case layout, and it lands on the verdict banner — the most designed scre
   `errors`, `onboarding`, `legal`, `vocab`.
 - **UI strings and controlled vocabulary:** machine-translated seed, then native-speaker review. The
   vocabulary is small and high-leverage — review it carefully once and it is done for every entry.
-- **Aliases:** native speaker, no veterinary review (a search index makes no medical claim).
-- **Tier B prose:** bilingual vet or medical translator, then veterinary review. Never
-  machine-translated to `approved`.
-- **Tier C:** English fallback, marked in the UI. Translate later if the market justifies it.
-- **Legal text** (disclaimer, ToS, privacy policy): legal translator, reviewed for validity in each
-  jurisdiction. A disclaimer not valid in the user's language and jurisdiction is not a disclaimer.
-  Launch blocker per language.
+- **Aliases:** native speaker (a search index makes no medical claim).
+- **Tier B prose:** drafted from the English and its sources, then reviewed by a native speaker
+  before it is marked `approved`. Never machine-translated to `approved`.
+- **Legal text** (disclaimer, terms of use, privacy policy): written in each shipped language, not
+  machine-translated, and published from `site/` (D31). Launch blocker per language.
 - **Hotlines:** verified by a human per region, recording the number *and* the languages that service
   operates in. Telling a Spanish speaker to call an English-only line is a failure.
 - **Fallback chain:** `es-MX` → `es` → `en`. CI fails the build on any missing UI or vocabulary key
@@ -252,13 +223,12 @@ worst-case layout, and it lands on the verdict banner — the most designed scre
 - **Phase 0:** i18next + ICU wired; `en`/`es` namespaces; pseudo-locale in dev; language and region
   as separate persisted settings; `normalise()` fixtures cover Spanish diacritics.
 - **Phase 1:** controlled vocabulary extracted and translated; `display_name` and `aliases` in both
-  languages on every entry, Spanish authored by a native speaker; per-tier coverage report emitted.
+  languages on every entry, Spanish authored by a native speaker; per-tier coverage report emitted;
+  Spanish Tier A at 100% `approved`, and Tier B at 100% for every `toxic` entry.
 - **Phase 2:** every screen correct at `es` + 200% font scale; pseudo-locale finds zero hardcoded
   strings; CI grep finds no `left`/`right` layout properties.
-- **Phase 4:** Spanish and un-accented Spanish resolve offline; cross-language alias fallback works;
-  a `tier_c: missing` entry still renders a fully usable Spanish result with an English-prose marker.
-- **Phase 7:** disclaimer, ToS and privacy policy legally reviewed per language; hotline language
-  coverage recorded.
-- **Phase 8:** Spanish Tier A at 100% `approved`; Tier B ≥95%, and **100% for every `toxic` entry**.
-- **Phase 10:** store listings, screenshots and keywords per locale; a native speaker has walked the
+- **Phase 3:** Spanish and un-accented Spanish resolve offline; cross-language alias fallback works.
+- **Phase 5:** disclaimer, terms of use and privacy policy published in each shipped language;
+  hotline language coverage recorded.
+- **Phase 6:** store listings, screenshots and keywords per locale; a native speaker has walked the
   full flow in Spanish, including an emergency result.
