@@ -5,5 +5,7 @@
   "termsTitle": "Terms of service",
   "privacyTitle": "Privacy policy",
   "sourcesPolicyTitle": "How entries are sourced",
-  "sourcesPolicyBody": "Every entry cites at least two independent authoritative sources. Where good sources disagree, or coverage is thin, we leave the entry out rather than guess — which is why you will sometimes get \"Not sure\"."
+  "sourcesPolicyBody": "Every entry cites at least two independent authoritative sources. Where good sources disagree, or coverage is thin, we leave the entry out rather than guess — which is why you will sometimes get \"Not sure\".",
+  "privacyPolicy": "Privacy policy",
+  "termsOfUse": "Terms of use"
 }

@@ -31,6 +31,13 @@ if hits=$(grep -rniE "$CLAIM_PATTERNS" packages/kb/data/ 2>/dev/null); then
   fail=1
 fi
 
+echo "Checking the published legal pages (site/) for the word 'safe' (zero tolerance)..."
+# The privacy policy and terms are user-facing too, and the app links to them.
+if hits=$(grep -rniE '\bsafe\b' site/ 2>/dev/null); then
+  echo "$hits"
+  fail=1
+fi
+
 if [ "$fail" -ne 0 ]; then
   echo ""
   echo "FAIL: bare 'safe' claim found in user-facing strings (AGENTS.md #3)."

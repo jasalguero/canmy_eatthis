@@ -7,6 +7,7 @@ import { ScrollScreen, Section } from '@/components/layout';
 import { Button, Divider, Text } from '@/components/primitives';
 import { SUPPORTED_LANGUAGES, type SupportedLanguage } from '@/i18n/namespaces';
 import { features } from '@/lib/features';
+import { openLegal } from '@/lib/legal';
 import { getKbVersion } from '@/lib/offlineKb';
 import { canReport, reportGeneral } from '@/lib/report';
 import { type Appearance, useSettingsStore } from '@/lib/settings';
@@ -181,6 +182,18 @@ export default function Settings() {
         <Text variant="body" tone="secondary">
           {t('legal:sourcesPolicyBody')}
         </Text>
+        <Button
+          label={t('legal:privacyPolicy')}
+          variant="quiet"
+          onPress={() => openLegal('privacy', language)}
+          className="self-start"
+        />
+        <Button
+          label={t('legal:termsOfUse')}
+          variant="quiet"
+          onPress={() => openLegal('terms', language)}
+          className="self-start"
+        />
       </Section>
 
       <Divider />

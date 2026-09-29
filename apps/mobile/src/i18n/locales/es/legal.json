@@ -5,5 +5,7 @@
   "termsTitle": "Términos del servicio",
   "privacyTitle": "Política de privacidad",
   "sourcesPolicyTitle": "Cómo se documentan las entradas",
-  "sourcesPolicyBody": "Cada entrada cita al menos dos fuentes independientes y acreditadas. Cuando las buenas fuentes no coinciden, o la información es escasa, dejamos la entrada fuera en vez de adivinar — por eso a veces la respuesta es «No lo sabemos»."
+  "sourcesPolicyBody": "Cada entrada cita al menos dos fuentes independientes y acreditadas. Cuando las buenas fuentes no coinciden, o la información es escasa, dejamos la entrada fuera en vez de adivinar — por eso a veces la respuesta es «No lo sabemos».",
+  "privacyPolicy": "Política de privacidad",
+  "termsOfUse": "Condiciones de uso"
 }

@@ -890,3 +890,26 @@ Until now every emergency button dialled a placeholder (`+00000000000`). The reg
 
 **Before release:** dial each number, confirm it reaches the named service and takes pet cases,
 and set `verifiedAt`. Repeat before every release.
+
+## D31 — Privacy policy and terms of use: written in-house, published from `site/` via GitHub Pages
+
+Both stores require the privacy policy at a public URL, and Apple also requires it to be
+reachable from inside the app. The pages live in the repository, in `site/` (English and
+Spanish, plain HTML), and `.github/workflows/pages.yml` publishes that folder alone to
+`https://jasalguero.github.io/canmy_eatthis/`. `docs/` is deliberately not published: it is
+internal design documentation. One-time setup: repository Settings → Pages → Source: "GitHub
+Actions".
+
+- **Written from what the app actually does, not a template** (docs/10 §5): no accounts,
+  analytics, crash reporting or ads; typed lookups stay on the phone; a barcode scan sends the
+  barcode and the phone's IP address to Open Food Facts (D29); the emergency-vet search opens
+  Google Maps; hotlines open the dialler; a report is an email the user chooses to send.
+- **Controller:** Jose Salguero, publishing as an individual. Contact:
+  canmy_eatthis@jasalguero.com. Governing law: Spain, with the AEPD as the supervisory authority.
+- **No lawyer review.** docs/05 asks for one; docs/10's hobby scope replaces it with an honest,
+  self-written policy. Revisit if the app ever monetises or photo identification ships.
+- **The app links to them** from the first-run screen and Settings, in the user's language
+  (`apps/mobile/src/lib/legal.ts`). CI checks every linked page exists and that none uses the word
+  "safe" (AGENTS.md #3).
+- **They describe the text-and-barcode release.** Before photo identification ships (D28), the
+  policy must add the photo upload to the vision provider and the AI consent, and change its date.

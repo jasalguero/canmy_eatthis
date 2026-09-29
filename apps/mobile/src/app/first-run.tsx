@@ -5,6 +5,7 @@ import { View } from 'react-native';
 import { ScrollScreen, Section, StickyFooter } from '@/components/layout';
 import { Button, Card, Text } from '@/components/primitives';
 import { features } from '@/lib/features';
+import { openLegal } from '@/lib/legal';
 import { useSettingsStore } from '@/lib/settings';
 
 /**
@@ -18,13 +19,15 @@ import { useSettingsStore } from '@/lib/settings';
  * Phase 7 acceptance), so "Use typed lookups only" is a real choice with its consequence stated,
  * rendered at the same weight as accepting — not a greyed-out escape hatch.
  *
- * A build without photo identification (`lib/features.ts`, D28) sends nothing anywhere, so it
- * asks for no consent: the AI card is not shown, and one "Continue" finishes with consent off.
+ * A build without photo identification (`lib/features.ts`, D28) sends no photos to any AI
+ * service, so it asks for no AI consent: the card is not shown, and one "Continue" finishes with
+ * consent off. What such a build does send, and when, is in the privacy policy linked below.
  */
 export default function FirstRun() {
   const { t } = useTranslation();
   const setPhotoIdConsent = useSettingsStore((s) => s.setPhotoIdConsent);
   const setOnboarded = useSettingsStore((s) => s.setOnboarded);
+  const language = useSettingsStore((s) => s.language);
 
   const finish = (consent: boolean) => {
     setPhotoIdConsent(consent);
@@ -68,6 +71,19 @@ export default function FirstRun() {
             </Text>
           </Card>
         ) : null}
+
+        <View className="flex-row flex-wrap gap-2">
+          <Button
+            label={t('legal:privacyPolicy')}
+            variant="quiet"
+            onPress={() => openLegal('privacy', language)}
+          />
+          <Button
+            label={t('legal:termsOfUse')}
+            variant="quiet"
+            onPress={() => openLegal('terms', language)}
+          />
+        </View>
       </ScrollScreen>
 
       <StickyFooter>

@@ -74,6 +74,18 @@ if hits=$(grep -rnE "from ['\"](@/mock|(\.\.?/)+mock)/" "$SRC" --include='*.tsx'
   fi
 fi
 
+echo "Checking every legal page the app links to exists in site/..."
+# apps/mobile/src/lib/legal.ts opens site/<language>/<page>.html; a missing file is a dead link
+# from the app, and a missing privacy policy is a store rejection.
+for lang in en es; do
+  for page in privacy terms; do
+    if [ ! -f "site/$lang/$page.html" ]; then
+      echo "  missing: site/$lang/$page.html"
+      fail=1
+    fi
+  done
+done
+
 if [ "$fail" -ne 0 ]; then
   echo ""
   echo "FAIL: UI hygiene check failed."
