@@ -4,8 +4,8 @@ display_name:
   es: Pollo cocinado sin condimentar
 category: food
 aliases:
-  en: [cooked chicken, plain chicken, boiled chicken, grilled chicken, chicken breast, roasted chicken]
-  es: [pollo cocinado, pollo hervido, pollo a la plancha, pechuga de pollo, pollo asado, pollo cocido]
+  en: [cooked chicken, plain chicken, boiled chicken, baked chicken, chicken breast, cooked chicken breast]
+  es: [pollo cocinado, pollo cocido, pollo hervido, pollo al horno, pechuga de pollo]
 confusable_with: []
 is_ingredient: true
 high_risk: false
@@ -17,8 +17,8 @@ species:
       en: No known risk from plain cooked chicken.
       es: Sin riesgo conocido con pollo cocinado sin condimentar.
     summary:
-      en: Boneless, skinless, unseasoned cooked chicken is a normal source of protein for dogs. Avoid the bones, skin, and any seasoning such as garlic, onion or heavy salt, oil or butter.
-      es: El pollo cocinado, sin huesos, sin piel y sin condimentar es una fuente de proteína habitual para los perros. Evita los huesos, la piel y cualquier condimento como ajo, cebolla o exceso de sal, aceite o mantequilla.
+      en: Plain chicken breast, boiled or baked, is on university veterinary nutritionists' lists of healthy treats for dogs. Treats should make up no more than 10% of your dog's daily calories, and may not suit a dog with a medical condition, so check with your vet.
+      es: La pechuga de pollo sin condimentar, hervida o al horno, figura en las listas de premios saludables de nutricionistas veterinarios universitarios para perros. Los premios no deberían superar el 10 % de las calorías diarias de tu perro, y pueden no ser adecuados si tiene alguna enfermedad, así que consulta a tu veterinario.
     signs: []
     onset_hours: null
     emergency_actions: []
@@ -29,12 +29,18 @@ species:
       en: No known risk from plain cooked chicken.
       es: Sin riesgo conocido con pollo cocinado sin condimentar.
     summary:
-      en: Plain, boneless cooked chicken — boiled or baked with no seasoning, butter or oil — is a normal part of a cat's diet.
-      es: El pollo cocinado sin huesos ni condimentar —hervido o al horno, sin especias, mantequilla ni aceite— forma parte habitual de la dieta de un gato.
+      en: Plain chicken breast, boiled or baked, is on university veterinary nutritionists' lists of healthy treats for cats. Treats should make up no more than 10% of your cat's daily calories, and may not suit a cat with a medical condition, so check with your vet.
+      es: La pechuga de pollo sin condimentar, hervida o al horno, figura en las listas de premios saludables de nutricionistas veterinarios universitarios para gatos. Los premios no deberían superar el 10 % de las calorías diarias de tu gato, y pueden no ser adecuados si tiene alguna enfermedad, así que consulta a tu veterinario.
     signs: []
     onset_hours: null
     emergency_actions: []
-sources: []
+sources:
+  - label: NC State Veterinary Hospital — Healthy Human Food Treats For Pets
+    url: https://hospital.cvm.ncsu.edu/services/small-animals/nutrition/healthy-human-food-treats-for-pets/
+    accessed: 2026-09-29
+  - label: "Tufts Cummings School of Veterinary Medicine, Petfoodology — Treat Options for Dogs and Cats Without Unbalancing Their Diet"
+    url: https://sites.tufts.edu/petfoodology/2021/10/21/treat-options-for-dogs-and-cats-without-unbalancing-their-diet/
+    accessed: 2026-09-29
 review:
   reviewed_by: "Jose Salguero"
   reviewed_at: 2026-09-19
@@ -42,7 +48,7 @@ review:
 translations:
   es:
     tier_a: approved
-    tier_b: approved
+    tier_b: draft
     translated_by: "Claude (draft)"
     reviewed_by: "Jose Salguero"
     reviewed_at: 2026-09-19
