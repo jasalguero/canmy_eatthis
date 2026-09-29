@@ -17,38 +17,41 @@ species:
       en: Check the label before sharing.
       es: Revisa la etiqueta antes de dárselo.
     summary:
-      en: Plain peanut butter is fine in small amounts, but some "sugar-free" or "protein" peanut butters replace sugar with xylitol, which is genuinely dangerous to dogs. Always read the ingredients label — if it lists xylitol or birch sugar, treat it like the xylitol entry, not like peanut butter.
-      es: La crema de cacahuete normal es aceptable en pequeñas cantidades, pero algunas versiones "sin azúcar" o "proteicas" sustituyen el azúcar por xilitol, que es realmente peligroso para los perros. Lee siempre la etiqueta — si aparece xilitol o azúcar de abedul, trátalo como la entrada de xilitol, no como crema de cacahuete normal.
+      en: "Plain smooth peanut butter is on a university veterinary hospital's list of treats, but some peanut butters are sweetened with xylitol, which is dangerous to dogs. Check the label: if it lists xylitol or birch sugar, treat it as xylitol poisoning and call your vet."
+      es: "La crema de cacahuete natural figura en la lista de premios de un hospital veterinario universitario, pero algunas están endulzadas con xilitol, que es peligroso para los perros. Revisa la etiqueta: si incluye xilitol o azúcar de abedul, trátalo como una intoxicación por xilitol y llama a tu veterinario."
     signs: []
     onset_hours: null
     emergency_actions: []
   cat:
-    verdict: caution
+    verdict: unknown
     severity: null
     headline:
-      en: Not a natural food for cats.
-      es: No es un alimento natural para gatos.
+      en: Not sure — ask your vet.
+      es: No estoy seguro — consulta a tu veterinario.
     summary:
-      en: Cats have little reason to eat peanut butter and it offers them no nutritional benefit, but the same xylitol-label check applies if one somehow does.
-      es: Los gatos no tienen ningún motivo para comer crema de cacahuete y no les aporta ningún beneficio nutricional, pero se aplica la misma comprobación de la etiqueta por si acaso.
+      en: "One university veterinary list includes plain peanut butter as a treat for cats, which isn't enough for us to give you an answer. Xylitol, the sweetener that makes some peanut butters dangerous to dogs, doesn't seem to be as dangerous for cats. Ask your vet if you're unsure."
+      es: "Una lista veterinaria universitaria incluye la crema de cacahuete natural como premio para gatos, pero eso no basta para darte una respuesta. El xilitol, el edulcorante que hace peligrosas algunas cremas de cacahuete para los perros, no parece serlo tanto para los gatos. Consulta a tu veterinario si tienes dudas."
     signs: []
     onset_hours: null
     emergency_actions: []
 sources:
-  - label: FDA — Paws Off Xylitol; It's Dangerous for Dogs
-    url: https://www.fda.gov/consumers/consumer-updates/paws-xylitol-its-dangerous-dogs
-    accessed: 2026-09-19
+  - label: NC State Veterinary Hospital — Healthy Human Food Treats For Pets
+    url: https://hospital.cvm.ncsu.edu/services/small-animals/nutrition/healthy-human-food-treats-for-pets/
+    accessed: 2026-09-29
   - label: Merck Veterinary Manual — Xylitol Toxicosis in Dogs
     url: https://www.merckvetmanual.com/toxicology/food-hazards/xylitol-toxicosis-in-dogs
-    accessed: 2026-09-19
+    accessed: 2026-09-29
+  - label: "FDA — Paws Off Xylitol; It's Dangerous for Dogs"
+    url: https://www.fda.gov/consumers/consumer-updates/paws-xylitol-its-dangerous-dogs
+    accessed: 2026-09-29
 review:
   reviewed_by: "Jose Salguero"
-  reviewed_at: 2026-09-19
-  status: draft
+  reviewed_at: 2026-09-29
+  status: approved
 translations:
   es:
     tier_a: approved
     tier_b: approved
     translated_by: "Claude (draft)"
     reviewed_by: "Jose Salguero"
-    reviewed_at: 2026-09-19
+    reviewed_at: 2026-09-29

@@ -17,9 +17,9 @@ species:
       en: Toxic to dogs. Call your vet.
       es: Tóxico para perros. Llama a tu veterinario.
     summary:
-      en: Dogs are far more sensitive to alcohol than people. Beer, wine, spirits, unbaked dough and even alcohol-based hand sanitiser can cause dangerous drops in body temperature, coordination and breathing.
-      es: Los perros son mucho más sensibles al alcohol que las personas. La cerveza, el vino, los licores, la masa cruda de pan e incluso el gel hidroalcohólico pueden provocar bajadas peligrosas de temperatura corporal, coordinación y respiración.
-    signs: [vomiting, diarrhoea, hypersalivation, ataxia, lethargy, difficulty_breathing, coma]
+      en: "Alcohol poisons dogs. Beer, wine, spirits, alcohol-based hand sanitiser and fermenting bread dough can all cause it. Signs usually start within 30 to 60 minutes: vomiting, wobbliness and drowsiness, and in severe cases dangerously slow breathing, a low body temperature and coma."
+      es: "El alcohol intoxica a los perros. La cerveza, el vino, los licores, el gel hidroalcohólico y la masa de pan en fermentación pueden causarlo. Los signos suelen empezar entre 30 y 60 minutos después: vómitos, falta de coordinación y somnolencia, y en casos graves una respiración peligrosamente lenta, temperatura corporal baja y coma."
+    signs: [vomiting, diarrhoea, ataxia, lethargy, difficulty_breathing, coma]
     onset_hours: { min: 0.5, max: 1 }
     emergency_actions: [call_vet_now, do_not_induce_vomiting, bring_packaging]
   cat:
@@ -29,26 +29,26 @@ species:
       en: Toxic to cats. Call your vet.
       es: Tóxico para gatos. Llama a tu veterinario.
     summary:
-      en: Cats are just as sensitive to alcohol as dogs, and their much smaller size means even a small spill or unattended drink is a real risk.
-      es: Los gatos son igual de sensibles al alcohol que los perros, y su tamaño mucho menor hace que incluso un pequeño derrame o una bebida sin vigilar sean un riesgo real.
-    signs: [vomiting, diarrhoea, hypersalivation, ataxia, lethargy, difficulty_breathing, coma]
+      en: "Alcohol poisons cats too, from drinks, alcohol-based hand sanitiser or fermenting bread dough. Signs usually start within 30 to 60 minutes: vomiting, wobbliness and drowsiness, and in severe cases dangerously slow breathing, a low body temperature and coma."
+      es: "El alcohol también intoxica a los gatos, ya sea de bebidas, gel hidroalcohólico o masa de pan en fermentación. Los signos suelen empezar entre 30 y 60 minutos después: vómitos, falta de coordinación y somnolencia, y en casos graves una respiración peligrosamente lenta, temperatura corporal baja y coma."
+    signs: [vomiting, diarrhoea, ataxia, lethargy, difficulty_breathing, coma]
     onset_hours: { min: 0.5, max: 1 }
     emergency_actions: [call_vet_now, do_not_induce_vomiting, bring_packaging]
 sources:
   - label: Merck Veterinary Manual — Toxicoses From Alcohols in Animals
     url: https://www.merckvetmanual.com/toxicology/toxicoses-from-household-hazards/toxicoses-from-alcohols-in-animals
-    accessed: 2026-09-19
+    accessed: 2026-09-29
   - label: "Kovalkovičová et al., \"Some food toxic for pets\", Interdisciplinary Toxicology (2009)"
     url: https://pmc.ncbi.nlm.nih.gov/articles/PMC2984110/
-    accessed: 2026-09-19
+    accessed: 2026-09-29
 review:
   reviewed_by: "Jose Salguero"
-  reviewed_at: 2026-09-19
-  status: draft
+  reviewed_at: 2026-09-29
+  status: approved
 translations:
   es:
     tier_a: approved
     tier_b: approved
     translated_by: "Claude (draft)"
     reviewed_by: "Jose Salguero"
-    reviewed_at: 2026-09-19
+    reviewed_at: 2026-09-29

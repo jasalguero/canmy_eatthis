@@ -29,26 +29,29 @@ species:
       en: Toxic to cats. Call your vet.
       es: Tóxico para gatos. Llama a tu veterinario.
     summary:
-      en: Cats eat grapes and raisins far less often than dogs, so there's less documented experience, but the same kidney-failure risk is assumed to apply and is treated the same way.
-      es: Los gatos comen uvas y pasas con mucha menos frecuencia que los perros, por lo que hay menos casos documentados, pero se asume el mismo riesgo de fallo renal y se trata de la misma manera.
+      en: "Cats have been reported to develop kidney failure after eating grapes or raisins, although these reports are anecdotal and far fewer than in dogs. Treat it as serious and call your vet."
+      es: "Se han descrito casos de gatos con fallo renal tras comer uvas o pasas, aunque son casos anecdóticos y muchos menos que en perros. Tómatelo en serio y llama a tu veterinario."
     signs: [vomiting, diarrhoea, lethargy, abdominal_pain, increased_thirst, increased_urination, kidney_failure_signs]
     onset_hours: { min: 6, max: 24 }
     emergency_actions: [call_vet_now, do_not_induce_vomiting, bring_packaging]
 sources:
-  - label: Merck Veterinary Manual — Grape, Raisin, and Tamarind Toxicosis in Dogs
+  - label: "Merck Veterinary Manual — Grape, Raisin, and Tamarind Toxicosis in Dogs"
     url: https://www.merckvetmanual.com/toxicology/food-hazards/grape-raisin-and-tamarind-vitis-spp-tamarindus-spp-toxicosis-in-dogs
-    accessed: 2026-09-19
+    accessed: 2026-09-29
   - label: "Kovalkovičová et al., \"Some food toxic for pets\", Interdisciplinary Toxicology (2009)"
     url: https://pmc.ncbi.nlm.nih.gov/articles/PMC2984110/
-    accessed: 2026-09-19
+    accessed: 2026-09-29
+  - label: Cornell Feline Health Center — Poisons
+    url: https://www.vet.cornell.edu/departments-centers-and-institutes/cornell-feline-health-center/health-information/feline-health-topics/poisons
+    accessed: 2026-09-29
 review:
   reviewed_by: "Jose Salguero"
-  reviewed_at: 2026-09-19
-  status: draft
+  reviewed_at: 2026-09-29
+  status: approved
 translations:
   es:
     tier_a: approved
     tier_b: approved
     translated_by: "Claude (draft)"
     reviewed_by: "Jose Salguero"
-    reviewed_at: 2026-09-19
+    reviewed_at: 2026-09-29

@@ -9,6 +9,10 @@ import { DATA_DIR, loadEntries, validateCrossEntry, validateVocabCoverage } from
  * each one passes the same per-entry schema, and the cross-entry checks (alias uniqueness,
  * substring rule, `confusable_with` resolution, vocabulary) against the live KB, so moving a
  * file into `data/` cannot break the build for a reason that was knowable in advance.
+ *
+ * A draft is either a new entry or a **revision** of a live one (same id). A revision is checked
+ * as if it had already replaced the live entry; the live version stays in the app until the
+ * revision is promoted over it.
  */
 const DRAFTS_DIR = join(DATA_DIR, '..', 'drafts');
 const hasDrafts = existsSync(DRAFTS_DIR) && readdirSync(DRAFTS_DIR).some((f) => /\.ya?ml$/.test(f));
@@ -17,14 +21,16 @@ describe.skipIf(!hasDrafts)('KB drafts', () => {
   const drafts = hasDrafts ? loadEntries(DRAFTS_DIR).map((l) => l.entry) : [];
   const live = loadEntries().map((l) => l.entry);
 
-  it('validates alongside the live KB', () => {
-    expect(() => validateCrossEntry([...live, ...drafts])).not.toThrow();
+  it('validates alongside the live KB, each revision in place of the entry it revises', () => {
+    const draftIds = new Set(drafts.map((d) => d.id));
+    const afterPromotion = [...live.filter((e) => !draftIds.has(e.id)), ...drafts];
+    expect(() => validateCrossEntry(afterPromotion)).not.toThrow();
     expect(() => validateVocabCoverage(drafts)).not.toThrow();
   });
 
-  it('never shares an id with a live entry', () => {
-    const liveIds = new Set(live.map((e) => e.id));
-    for (const draft of drafts) expect(liveIds.has(draft.id), draft.id).toBe(false);
+  it('has at most one draft per id', () => {
+    const ids = drafts.map((d) => d.id);
+    expect(new Set(ids).size).toBe(ids.length);
   });
 
   // A draft claims no review it has not had (docs/02 D17). Approval happens on promotion.

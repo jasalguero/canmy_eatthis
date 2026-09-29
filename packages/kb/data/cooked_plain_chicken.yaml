@@ -43,12 +43,12 @@ sources:
     accessed: 2026-09-29
 review:
   reviewed_by: "Jose Salguero"
-  reviewed_at: 2026-09-19
-  status: draft
+  reviewed_at: 2026-09-29
+  status: approved
 translations:
   es:
     tier_a: approved
-    tier_b: draft
+    tier_b: approved
     translated_by: "Claude (draft)"
     reviewed_by: "Jose Salguero"
-    reviewed_at: 2026-09-19
+    reviewed_at: 2026-09-29

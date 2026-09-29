@@ -17,10 +17,10 @@ species:
       en: Best avoided for dogs.
       es: Mejor evitarlo en perros.
     summary:
-      en: Avocado flesh contains persin, which mostly just upsets a dog's stomach rather than causing serious poisoning. The bigger risk is the pit, which can choke a dog or block its gut, and the fat content can trigger pancreatitis in a large amount.
-      es: La pulpa del aguacate contiene persina, que en los perros suele provocar solo molestias digestivas y no una intoxicación grave. El riesgo mayor es el hueso, que puede atragantar al perro u obstruirle el intestino, y su alto contenido en grasa puede provocar pancreatitis si se come en cantidad.
-    signs: [vomiting, diarrhoea, abdominal_pain]
-    onset_hours: { min: 0, max: 24 }
+      en: "Avocado is only mildly toxic to dogs, which are relatively resistant to it. The bigger risk is the pit, which can block a dog's gut if swallowed whole. Call your vet if your dog swallowed a pit or seems unwell."
+      es: "El aguacate es solo levemente tóxico para los perros, que son relativamente resistentes a él. El riesgo mayor es el hueso, que puede obstruir el intestino si se lo traga entero. Llama a tu veterinario si tu perro se ha tragado un hueso o no se encuentra bien."
+    signs: []
+    onset_hours: null
     emergency_actions: []
   cat:
     verdict: caution
@@ -29,26 +29,26 @@ species:
       en: Best avoided for cats.
       es: Mejor evitarlo en gatos.
     summary:
-      en: Cats are less likely to eat avocado than dogs, and reported effects are similarly mild — mostly stomach upset from the persin and fat content, rather than the severe reactions seen in birds or livestock.
-      es: Los gatos comen aguacate con menos frecuencia que los perros, y los efectos descritos son igual de leves — sobre todo molestias digestivas por la persina y la grasa, no las reacciones graves que se ven en aves o ganado.
-    signs: [vomiting, diarrhoea, abdominal_pain]
-    onset_hours: { min: 0, max: 24 }
+      en: "Avocado is only mildly toxic to cats; it is far more dangerous to birds, rabbits, horses and farm animals. Call your vet if your cat ate a lot or seems unwell."
+      es: "El aguacate es solo levemente tóxico para los gatos; es mucho más peligroso para aves, conejos, caballos y animales de granja. Llama a tu veterinario si tu gato ha comido mucho o no se encuentra bien."
+    signs: []
+    onset_hours: null
     emergency_actions: []
 sources:
   - label: Merck Veterinary Manual — Avocado (Persea spp) Toxicosis in Animals
     url: https://www.merckvetmanual.com/toxicology/food-hazards/avocado-persea-spp-toxicosis-in-animals
-    accessed: 2026-09-19
-  - label: "Kovalkovičová et al., \"Some food toxic for pets\", Interdisciplinary Toxicology (2009)"
-    url: https://pmc.ncbi.nlm.nih.gov/articles/PMC2984110/
-    accessed: 2026-09-19
+    accessed: 2026-09-29
+  - label: FDA — Potentially Dangerous Items for Your Pet
+    url: https://www.fda.gov/animal-veterinary/animal-health-literacy/potentially-dangerous-items-your-pet
+    accessed: 2026-09-29
 review:
   reviewed_by: "Jose Salguero"
-  reviewed_at: 2026-09-19
-  status: draft
+  reviewed_at: 2026-09-29
+  status: approved
 translations:
   es:
     tier_a: approved
     tier_b: approved
     translated_by: "Claude (draft)"
     reviewed_by: "Jose Salguero"
-    reviewed_at: 2026-09-19
+    reviewed_at: 2026-09-29

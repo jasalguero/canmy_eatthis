@@ -17,8 +17,8 @@ species:
       en: Toxic to dogs. Emergency — call your vet now.
       es: Tóxico para perros. Emergencia — llama ahora a tu veterinario.
     summary:
-      en: Antifreeze tastes sweet, which is exactly why it's so dangerous — a dog will drink it readily. As little as 3–4 teaspoons can be fatal to a dog, causing kidney failure that becomes irreversible within hours if untreated.
-      es: El anticongelante tiene sabor dulce, y precisamente por eso es tan peligroso — un perro lo bebe sin problema. Tan solo 3-4 cucharaditas pueden ser mortales para un perro, provocando un fallo renal que se vuelve irreversible en horas si no se trata.
+      en: "Antifreeze tastes sweet, so dogs drink it readily, and it can be fatal. Within 30 minutes to 12 hours it causes signs like drunkenness — vomiting, wobbliness, drinking and urinating more — followed by kidney failure a few days later. Treatment works best the sooner it starts, so call your vet immediately, even if your dog seems fine."
+      es: "El anticongelante tiene un sabor dulce, así que los perros lo beben con facilidad, y puede ser mortal. Entre 30 minutos y 12 horas después provoca signos parecidos a una borrachera —vómitos, falta de coordinación, beber y orinar más— y, unos días después, fallo renal. El tratamiento funciona mejor cuanto antes empiece, así que llama inmediatamente a tu veterinario, aunque tu perro parezca estar bien."
     signs: [vomiting, ataxia, lethargy, increased_thirst, increased_urination, seizures, kidney_failure_signs, coma]
     onset_hours: { min: 0.5, max: 12 }
     emergency_actions: [call_vet_now, do_not_induce_vomiting, bring_packaging]
@@ -29,26 +29,29 @@ species:
       en: Toxic to cats. Emergency — call your vet now.
       es: Tóxico para gatos. Emergencia — llama ahora a tu veterinario.
     summary:
-      en: Cats are even more sensitive than dogs — as little as 1–2 teaspoons can be fatal. A small puddle of antifreeze dripped from a car is enough to poison a cat that walks through it and grooms its paws.
-      es: Los gatos son todavía más sensibles que los perros — tan solo 1-2 cucharaditas pueden ser mortales. Un pequeño charco de anticongelante goteado de un coche basta para intoxicar a un gato que lo pise y luego se lama las patas.
+      en: "Cats are even more sensitive to antifreeze than dogs, and kidney failure can follow within 12 to 24 hours. Its sweet taste makes it easy to swallow. Treatment works best the sooner it starts, so call your vet immediately, even if your cat seems fine."
+      es: "Los gatos son aún más sensibles al anticongelante que los perros, y el fallo renal puede llegar en 12 a 24 horas. Su sabor dulce hace que se trague con facilidad. El tratamiento funciona mejor cuanto antes empiece, así que llama inmediatamente a tu veterinario, aunque tu gato parezca estar bien."
     signs: [vomiting, ataxia, lethargy, increased_thirst, increased_urination, seizures, kidney_failure_signs, coma]
     onset_hours: { min: 0.5, max: 12 }
     emergency_actions: [call_vet_now, do_not_induce_vomiting, bring_packaging]
 sources:
   - label: Merck Veterinary Manual — Ethylene Glycol Toxicosis in Animals
     url: https://www.merckvetmanual.com/toxicology/ethylene-glycol-toxicosis/ethylene-glycol-toxicosis-in-animals
-    accessed: 2026-09-19
-  - label: Michigan State University College of Veterinary Medicine — Pets & Poison Control, Making Your Home Safer
-    url: https://cvm.msu.edu/vdl/client-education/guides-for-pet-owners/pets-poison-control-making-your-home-safer
-    accessed: 2026-09-19
+    accessed: 2026-09-29
+  - label: Cornell Feline Health Center — Poisons
+    url: https://www.vet.cornell.edu/departments-centers-and-institutes/cornell-feline-health-center/health-information/feline-health-topics/poisons
+    accessed: 2026-09-29
+  - label: FDA — Potentially Dangerous Items for Your Pet
+    url: https://www.fda.gov/animal-veterinary/animal-health-literacy/potentially-dangerous-items-your-pet
+    accessed: 2026-09-29
 review:
   reviewed_by: "Jose Salguero"
-  reviewed_at: 2026-09-19
-  status: draft
+  reviewed_at: 2026-09-29
+  status: approved
 translations:
   es:
     tier_a: approved
     tier_b: approved
     translated_by: "Claude (draft)"
     reviewed_by: "Jose Salguero"
-    reviewed_at: 2026-09-19
+    reviewed_at: 2026-09-29

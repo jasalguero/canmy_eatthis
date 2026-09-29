@@ -19,8 +19,8 @@ species:
     summary:
       en: A warm stomach is an ideal place for raw yeast dough to keep rising, stretching the stomach, and the yeast produces alcohol as it ferments — so a dog gets both a mechanical problem and alcohol poisoning from the same mouthful.
       es: Un estómago caliente es un lugar ideal para que la masa cruda con levadura siga creciendo, dilatando el estómago, y la levadura produce alcohol al fermentar — así que el perro sufre a la vez un problema mecánico y una intoxicación alcohólica por el mismo bocado.
-    signs: [bloating, abdominal_pain, ataxia, disorientation, weakness, low_blood_sugar_signs, coma]
-    onset_hours: { min: 0.5, max: 2 }
+    signs: [bloating, lethargy, ataxia, disorientation, weakness, low_blood_sugar_signs, seizures, coma]
+    onset_hours: null
     emergency_actions: [call_vet_now, do_not_induce_vomiting, bring_packaging]
   cat:
     verdict: toxic
@@ -29,26 +29,26 @@ species:
       en: Toxic to cats. Call your vet.
       es: Tóxico para gatos. Llama a tu veterinario.
     summary:
-      en: Cats eat raw dough far less often than dogs, but the same risks — a distended stomach and alcohol produced by the fermenting yeast — apply if one does.
-      es: Los gatos comen masa cruda con mucha menos frecuencia que los perros, pero si lo hacen corren los mismos riesgos — dilatación del estómago y alcohol producido por la levadura al fermentar.
-    signs: [bloating, abdominal_pain, ataxia, disorientation, weakness, low_blood_sugar_signs, coma]
-    onset_hours: { min: 0.5, max: 2 }
+      en: "Any animal can be affected by raw yeast dough: it keeps rising in the warm stomach, and the fermenting yeast produces alcohol. If your cat ate some, call your vet."
+      es: "La masa cruda con levadura puede afectar a cualquier animal: sigue creciendo en el estómago caliente y la levadura, al fermentar, produce alcohol. Si tu gato ha comido, llama a tu veterinario."
+    signs: [bloating, lethargy, ataxia, disorientation, weakness, low_blood_sugar_signs, seizures, coma]
+    onset_hours: null
     emergency_actions: [call_vet_now, do_not_induce_vomiting, bring_packaging]
 sources:
   - label: Merck Veterinary Manual — Bread Dough Toxicosis in Animals
     url: https://www.merckvetmanual.com/toxicology/food-hazards/bread-dough-toxicosis-in-animals
-    accessed: 2026-09-19
-  - label: "Kovalkovičová et al., \"Some food toxic for pets\", Interdisciplinary Toxicology (2009)"
-    url: https://pmc.ncbi.nlm.nih.gov/articles/PMC2984110/
-    accessed: 2026-09-19
+    accessed: 2026-09-29
+  - label: FDA — Potentially Dangerous Items for Your Pet
+    url: https://www.fda.gov/animal-veterinary/animal-health-literacy/potentially-dangerous-items-your-pet
+    accessed: 2026-09-29
 review:
   reviewed_by: "Jose Salguero"
-  reviewed_at: 2026-09-19
-  status: draft
+  reviewed_at: 2026-09-29
+  status: approved
 translations:
   es:
     tier_a: approved
     tier_b: approved
     translated_by: "Claude (draft)"
     reviewed_by: "Jose Salguero"
-    reviewed_at: 2026-09-19
+    reviewed_at: 2026-09-29

@@ -17,10 +17,10 @@ species:
       en: Toxic to dogs. Emergency — call your vet now.
       es: Tóxico para perros. Emergencia — llama ahora a tu veterinario.
     summary:
-      en: Rat and mouse baits use several very different active ingredients — some cause internal bleeding over several days, others attack the nervous system within hours with no antidote at all. Because you usually can't tell which type from the pellets alone, treat any ingestion as an emergency and bring the packaging.
-      es: Los venenos para ratas y ratones usan principios activos muy distintos entre sí — unos provocan hemorragias internas a lo largo de varios días, otros atacan el sistema nervioso en cuestión de horas y no tienen antídoto. Como normalmente no se puede distinguir el tipo solo con los gránulos, trata cualquier ingestión como una emergencia y lleva el envase contigo.
-    signs: [lethargy, weakness, pale_gums, difficulty_breathing, blood_in_vomit, blood_in_stool, seizures, ataxia]
-    onset_hours: { min: 0, max: 72 }
+      en: "Rat and mouse baits use different poisons. Some cause internal bleeding that only shows 3 to 7 days later; others cause seizures or kidney damage. Treat any ingestion as an emergency, even if your dog seems fine, and bring the packaging so your vet knows which poison it is."
+      es: "Los venenos para ratas y ratones usan sustancias distintas. Unas provocan hemorragias internas que no se notan hasta 3 a 7 días después; otras, convulsiones o daño renal. Trata cualquier ingestión como una emergencia, aunque tu perro parezca estar bien, y lleva el envase para que tu veterinario sepa qué veneno es."
+    signs: [loss_of_appetite, lethargy, weakness, difficulty_breathing, blood_in_vomit, blood_in_stool, tachycardia, seizures, kidney_failure_signs]
+    onset_hours: null
     emergency_actions: [call_vet_now, do_not_induce_vomiting, bring_packaging]
   cat:
     verdict: toxic
@@ -29,26 +29,29 @@ species:
       en: Toxic to cats. Emergency — call your vet now.
       es: Tóxico para gatos. Emergencia — llama ahora a tu veterinario.
     summary:
-      en: Cats can be poisoned directly by eating bait, or indirectly by catching and eating a poisoned rodent. As with dogs, the active ingredient varies and the packaging is the fastest way for a vet to know what they're treating.
-      es: Los gatos pueden intoxicarse directamente al comer el cebo, o de forma indirecta al cazar y comer un roedor envenenado. Igual que en los perros, el principio activo varía, y el envase es la forma más rápida de que el veterinario sepa a qué se enfrenta.
-    signs: [lethargy, weakness, pale_gums, difficulty_breathing, blood_in_vomit, blood_in_stool, seizures, ataxia]
-    onset_hours: { min: 0, max: 72 }
+      en: "Cats can be poisoned by eating bait, or by eating a rodent that ate it. Rat and mouse baits use different poisons: some cause internal bleeding days later, others seizures or kidney damage. Call your vet now and bring the packaging."
+      es: "Los gatos pueden intoxicarse al comer el cebo o al comerse un roedor que lo haya comido. Los venenos para ratas y ratones usan sustancias distintas: unas provocan hemorragias internas días después; otras, convulsiones o daño renal. Llama ahora a tu veterinario y lleva el envase."
+    signs: [loss_of_appetite, lethargy, weakness, difficulty_breathing, blood_in_vomit, blood_in_stool, tachycardia, seizures, kidney_failure_signs]
+    onset_hours: null
     emergency_actions: [call_vet_now, do_not_induce_vomiting, bring_packaging]
 sources:
   - label: Merck Veterinary Manual — Anticoagulant Rodenticide Poisoning in Animals
     url: https://www.merckvetmanual.com/toxicology/rodenticide-poisoning/anticoagulant-rodenticide-poisoning-in-animals
-    accessed: 2026-09-19
-  - label: Michigan State University College of Veterinary Medicine — Pets & Poison Control, Making Your Home Safer
-    url: https://cvm.msu.edu/vdl/client-education/guides-for-pet-owners/pets-poison-control-making-your-home-safer
-    accessed: 2026-09-19
+    accessed: 2026-09-29
+  - label: Cornell Feline Health Center — Poisons
+    url: https://www.vet.cornell.edu/departments-centers-and-institutes/cornell-feline-health-center/health-information/feline-health-topics/poisons
+    accessed: 2026-09-29
+  - label: FDA — Potentially Dangerous Items for Your Pet
+    url: https://www.fda.gov/animal-veterinary/animal-health-literacy/potentially-dangerous-items-your-pet
+    accessed: 2026-09-29
 review:
   reviewed_by: "Jose Salguero"
-  reviewed_at: 2026-09-19
-  status: draft
+  reviewed_at: 2026-09-29
+  status: approved
 translations:
   es:
     tier_a: approved
     tier_b: approved
     translated_by: "Claude (draft)"
     reviewed_by: "Jose Salguero"
-    reviewed_at: 2026-09-19
+    reviewed_at: 2026-09-29

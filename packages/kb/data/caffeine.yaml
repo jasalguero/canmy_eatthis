@@ -17,10 +17,10 @@ species:
       en: Toxic to dogs. Call your vet.
       es: Tóxico para perros. Llama a tu veterinario.
     summary:
-      en: A lick of coffee or tea is unlikely to cause a problem, but unused coffee grounds, beans, tea bags or caffeine pills are concentrated enough to seriously poison a dog.
-      es: Un lametón de café o té no suele causar problemas, pero los posos de café, los granos, las bolsitas de té o las pastillas de cafeína están lo bastante concentrados como para intoxicar gravemente a un perro.
-    signs: [restlessness, agitation, vomiting, tachycardia, tremors, hyperthermia, seizures]
-    onset_hours: { min: 1, max: 2 }
+      en: "Caffeine, in coffee, tea, energy drinks and caffeine pills, overstimulates a dog's heart and nervous system, causing restlessness, a racing heart, tremors and, in severe cases, seizures. How serious it is depends on how much was eaten, which you can't judge at home, so call your vet."
+      es: "La cafeína, presente en el café, el té, las bebidas energéticas y las pastillas de cafeína, sobreestimula el corazón y el sistema nervioso del perro y provoca inquietud, ritmo cardíaco acelerado, temblores y, en casos graves, convulsiones. La gravedad depende de cuánto haya comido, y eso no se puede valorar en casa, así que llama a tu veterinario."
+    signs: [restlessness, tachycardia, tremors, seizures, coma]
+    onset_hours: null
     emergency_actions: [call_vet_now, do_not_induce_vomiting, bring_packaging]
   cat:
     verdict: toxic
@@ -29,26 +29,26 @@ species:
       en: Toxic to cats. Call your vet.
       es: Tóxico para gatos. Llama a tu veterinario.
     summary:
-      en: Cats are at least as sensitive to caffeine as dogs, and it takes their bodies a long time to clear it, so effects can last for hours.
-      es: Los gatos son al menos tan sensibles a la cafeína como los perros, y su cuerpo tarda mucho en eliminarla, por lo que los efectos pueden durar horas.
-    signs: [restlessness, agitation, vomiting, tachycardia, tremors, hyperthermia, seizures]
-    onset_hours: { min: 1, max: 2 }
+      en: "Caffeine, in coffee, tea, energy drinks and caffeine pills, overstimulates a cat's heart and nervous system, causing restlessness, a racing heart, tremors and, in severe cases, seizures. How serious it is depends on how much was eaten, which you can't judge at home, so call your vet."
+      es: "La cafeína, presente en el café, el té, las bebidas energéticas y las pastillas de cafeína, sobreestimula el corazón y el sistema nervioso del gato y provoca inquietud, ritmo cardíaco acelerado, temblores y, en casos graves, convulsiones. La gravedad depende de cuánto haya comido, y eso no se puede valorar en casa, así que llama a tu veterinario."
+    signs: [restlessness, tachycardia, tremors, seizures, coma]
+    onset_hours: null
     emergency_actions: [call_vet_now, do_not_induce_vomiting, bring_packaging]
 sources:
-  - label: Merck Veterinary Manual — Chocolate Toxicosis in Animals (methylxanthines, incl. caffeine)
-    url: https://www.merckvetmanual.com/toxicology/food-hazards/chocolate-toxicosis-in-animals
-    accessed: 2026-09-19
   - label: "Kovalkovičová et al., \"Some food toxic for pets\", Interdisciplinary Toxicology (2009)"
     url: https://pmc.ncbi.nlm.nih.gov/articles/PMC2984110/
-    accessed: 2026-09-19
+    accessed: 2026-09-29
+  - label: FDA — Potentially Dangerous Items for Your Pet
+    url: https://www.fda.gov/animal-veterinary/animal-health-literacy/potentially-dangerous-items-your-pet
+    accessed: 2026-09-29
 review:
   reviewed_by: "Jose Salguero"
-  reviewed_at: 2026-09-19
-  status: draft
+  reviewed_at: 2026-09-29
+  status: approved
 translations:
   es:
     tier_a: approved
     tier_b: approved
     translated_by: "Claude (draft)"
     reviewed_by: "Jose Salguero"
-    reviewed_at: 2026-09-19
+    reviewed_at: 2026-09-29

@@ -17,8 +17,8 @@ species:
       en: Toxic to dogs. Call your vet.
       es: Tóxico para perros. Llama a tu veterinario.
     summary:
-      en: Dark chocolate is rich in theobromine, a stimulant dogs clear far more slowly than people do. Even a modest amount of dark or baking chocolate can bring on vomiting, a racing heart, tremors or seizures.
-      es: El chocolate negro es rico en teobromina, un estimulante que los perros eliminan mucho más despacio que las personas. Incluso una cantidad moderada de chocolate negro o de repostería puede causar vómitos, taquicardia, temblores o convulsiones.
+      en: "Dark chocolate is rich in theobromine, a stimulant dogs clear very slowly. Even a modest amount of dark or baking chocolate can bring on vomiting, a racing heart, tremors or seizures, usually within 6 to 12 hours."
+      es: "El chocolate negro es rico en teobromina, un estimulante que los perros eliminan muy despacio. Incluso una cantidad moderada de chocolate negro o de repostería puede provocar vómitos, ritmo cardíaco acelerado, temblores o convulsiones, normalmente entre 6 y 12 horas después."
     signs: [vomiting, diarrhoea, restlessness, tachycardia, tremors, seizures, hyperthermia]
     onset_hours: { min: 6, max: 12 }
     emergency_actions: [call_vet_now, do_not_induce_vomiting, bring_packaging]
@@ -29,26 +29,29 @@ species:
       en: Toxic to cats. Call your vet.
       es: Tóxico para gatos. Llama a tu veterinario.
     summary:
-      en: Cats rarely choose to eat chocolate, but if one does, the same theobromine that harms dogs harms cats too, and cats are at least as sensitive.
-      es: Los gatos rara vez comen chocolate por voluntad propia, pero si lo hacen, la misma teobromina que afecta a los perros también les afecta a ellos, y son al menos igual de sensibles.
+      en: "Chocolate is poisonous to cats too, and can cause an abnormal heartbeat, tremors and seizures. If your cat ate some, call your vet."
+      es: "El chocolate también es tóxico para los gatos y puede provocar alteraciones del ritmo cardíaco, temblores y convulsiones. Si tu gato ha comido, llama a tu veterinario."
     signs: [vomiting, diarrhoea, restlessness, tachycardia, tremors, seizures, hyperthermia]
     onset_hours: { min: 6, max: 12 }
     emergency_actions: [call_vet_now, do_not_induce_vomiting, bring_packaging]
 sources:
   - label: Merck Veterinary Manual — Chocolate Toxicosis in Animals
     url: https://www.merckvetmanual.com/toxicology/food-hazards/chocolate-toxicosis-in-animals
-    accessed: 2026-09-19
+    accessed: 2026-09-29
   - label: "Kovalkovičová et al., \"Some food toxic for pets\", Interdisciplinary Toxicology (2009)"
     url: https://pmc.ncbi.nlm.nih.gov/articles/PMC2984110/
-    accessed: 2026-09-19
+    accessed: 2026-09-29
+  - label: Cornell Feline Health Center — Poisons
+    url: https://www.vet.cornell.edu/departments-centers-and-institutes/cornell-feline-health-center/health-information/feline-health-topics/poisons
+    accessed: 2026-09-29
 review:
   reviewed_by: "Jose Salguero"
-  reviewed_at: 2026-09-19
-  status: draft
+  reviewed_at: 2026-09-29
+  status: approved
 translations:
   es:
     tier_a: approved
     tier_b: approved
     translated_by: "Claude (draft)"
     reviewed_by: "Jose Salguero"
-    reviewed_at: 2026-09-19
+    reviewed_at: 2026-09-29
