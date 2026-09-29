@@ -4,6 +4,11 @@ on:
   push:
     branches: [master, main]
   pull_request:
+  # Weekly, so a new Expo patch release fails a run on its own schedule rather than whichever push
+  # happens to come next (see the Expo dependency check below). Monday 07:00 UTC.
+  schedule:
+    - cron: '0 7 * * 1'
+  workflow_dispatch:
 
 jobs:
   build:
@@ -51,8 +56,19 @@ jobs:
       # not fail typecheck, lint, tests or the web build — but it breaks the app on device: a
       # react-native-worklets outside react-native-reanimated's peer range made every route throw
       # "undefined is not a function" at import on iOS while web ran perfectly.
+      #
+      # The check compares against Expo's *latest* SDK patch releases, so it also fails whenever
+      # Expo publishes one, with no change in this repo. On pushes and pull requests a failure is
+      # therefore a warning annotation, not a red build; the weekly scheduled run (and a manual
+      # run) fails outright. The fix is always the same: `npx expo install --fix` in apps/mobile.
+      # The output cannot tell a new patch from a real mismatch, so treat the warning as a to-do.
       - name: Check Expo SDK dependency versions
-        run: pnpm --filter @canmyeatthis/mobile run check:deps
+        env:
+          BLOCKING: ${{ github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' }}
+        run: |
+          if pnpm --filter @canmyeatthis/mobile run check:deps; then exit 0; fi
+          if [ "$BLOCKING" = "true" ]; then exit 1; fi
+          echo "::warning title=Expo dependencies out of date::Run 'npx expo install --fix' in apps/mobile and commit. This fails the weekly scheduled CI run until fixed."
 
       - name: Test
         run: pnpm -r test
