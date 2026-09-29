@@ -76,3 +76,16 @@ EAS and Sentry all sit inside their free tiers at hobby volume; the model bill a
 is roughly a euro a month. The engineering risk is not cost per call but an unbounded bill, so a
 **global daily spend cap and a kill switch are built in the same commit as the first model call**.
 See [`docs/10-hobby-scope.md`](docs/10-hobby-scope.md).
+
+## Licence
+
+Free to use, change and share **for any non-commercial purpose**; commercial use needs permission.
+
+- **Code:** [PolyForm Noncommercial License 1.0.0](LICENSE).
+- **Content** — the knowledge base entries (`packages/kb/data/`), their vocabulary translations
+  (`packages/kb/vocab/`) and the legal pages (`site/`):
+  [Creative Commons Attribution-NonCommercial 4.0](LICENSE-CONTENT). Credit
+  "CanMy*EatThis by Jose Salguero" and link back to this repository.
+
+The sources each knowledge base entry cites keep their own terms. For commercial use, contact
+canmy_eatthis@jasalguero.com.
