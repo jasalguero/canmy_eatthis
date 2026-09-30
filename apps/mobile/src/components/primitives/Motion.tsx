@@ -81,17 +81,27 @@ export interface KeyframeScale {
   unit?: number;
   /** What `translateYFraction` is a fraction of. */
   distance?: number;
+  /**
+   * Where rotations and scales pivot, as a point's offset from the view's own centre in points.
+   * Done with an explicit translate-rotate-translate rather than `transformOrigin`: with a
+   * `transformOrigin` the mascot's ears vanished outright on iOS 27 / RN 0.86 (the layer never
+   * painted — found on a simulator with a tinted layer), and nothing here can afford a hidden
+   * layer for the sake of a pivot.
+   */
+  pivot?: readonly [number, number];
 }
 
 /** A spec's channels as an animated `opacity` + `transform` style driven by `progress` (0→1). */
 export function keyframeStyle(
   progress: Animated.Value,
   spec: Keyframes,
-  { unit = 1, distance = 0 }: KeyframeScale = {},
+  { unit = 1, distance = 0, pivot }: KeyframeScale = {},
 ): Animated.WithAnimatedObject<ViewStyle> {
   const inputRange = spec.at as number[];
   const lerp = (values: readonly number[], k = 1) =>
     progress.interpolate({ inputRange, outputRange: values.map((v) => v * k) });
+  const constant = (range: number[], value: number) =>
+    progress.interpolate({ inputRange: range, outputRange: range.map(() => value) });
 
   // Loosely typed while it's built: RN's transform union type doesn't accept one-key objects
   // pushed into an array. The shape is exactly what `transform` takes.
@@ -100,6 +110,12 @@ export function keyframeStyle(
   if (spec.translateY) transform.push({ translateY: lerp(spec.translateY, unit) });
   if (spec.translateYFraction)
     transform.push({ translateY: lerp(spec.translateYFraction, distance) });
+  // Rotating or scaling about `pivot`: move the pivot to the centre, transform, move it back.
+  const pivoted = pivot && (spec.rotate || spec.scale || spec.scaleX || spec.scaleY);
+  if (pivot && pivoted) {
+    transform.push({ translateX: constant(inputRange, pivot[0]) });
+    transform.push({ translateY: constant(inputRange, pivot[1]) });
+  }
   if (spec.rotate) {
     transform.push({
       rotate: progress.interpolate({
@@ -111,6 +127,10 @@ export function keyframeStyle(
   if (spec.scale) transform.push({ scale: lerp(spec.scale) });
   if (spec.scaleX) transform.push({ scaleX: lerp(spec.scaleX) });
   if (spec.scaleY) transform.push({ scaleY: lerp(spec.scaleY) });
+  if (pivot && pivoted) {
+    transform.push({ translateX: constant(inputRange, -pivot[0]) });
+    transform.push({ translateY: constant(inputRange, -pivot[1]) });
+  }
 
   const style: Record<string, unknown> = {};
   if (spec.opacity) style.opacity = lerp(spec.opacity);
@@ -214,6 +234,7 @@ export function Enter({
   delay = 0,
   unit,
   distance,
+  pivot,
   style,
   origin,
   pointerEvents,
@@ -227,7 +248,7 @@ export function Enter({
       pointerEvents={pointerEvents}
       style={[
         style,
-        enabled ? keyframeStyle(progress, spec, { unit, distance }) : null,
+        enabled ? keyframeStyle(progress, spec, { unit, distance, pivot }) : null,
         enabled && origin ? { transformOrigin: origin } : null,
       ]}
     >
@@ -242,6 +263,7 @@ export function Loop({
   delay = 0,
   unit,
   distance,
+  pivot,
   style,
   origin,
   pointerEvents,
@@ -256,7 +278,7 @@ export function Loop({
       pointerEvents={pointerEvents}
       style={[
         style,
-        enabled ? keyframeStyle(progress, spec, { unit, distance }) : null,
+        enabled ? keyframeStyle(progress, spec, { unit, distance, pivot }) : null,
         enabled && origin ? { transformOrigin: origin } : null,
       ]}
     >

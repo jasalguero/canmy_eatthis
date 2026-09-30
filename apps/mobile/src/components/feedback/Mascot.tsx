@@ -592,7 +592,11 @@ export function Mascot({
       </Svg>
     );
   } else {
-    const originOf = ([x, y]: [number, number]) => `${(x - vbX) * unit}px ${(y - vbY) * unit}px`;
+    // A point in viewBox units as an offset from the frame's centre, in points (see `KeyframeScale`).
+    const pivotOf = ([x, y]: [number, number]): [number, number] => [
+      (x - vbX) * unit - size / 2,
+      (y - vbY) * unit - height / 2,
+    ];
     const renderLayer = (l: Layer) => {
       const m = l.motion;
       if (!m || (calm && m.kind === 'loop' && (m.loop === 'ear' || m.loop === 'twitch'))) {
@@ -610,7 +614,7 @@ export function Mascot({
           key={l.key}
           kind={m.loop}
           delay={m.delay}
-          origin={originOf(m.origin)}
+          pivot={pivotOf(m.origin)}
           style={StyleSheet.absoluteFill}
           pointerEvents="none"
         >
@@ -639,7 +643,7 @@ export function Mascot({
                 kind="puff"
                 delay={p.delay}
                 unit={unit}
-                origin={originOf([p.cx, p.cy])}
+                pivot={pivotOf([p.cx, p.cy])}
                 style={StyleSheet.absoluteFill}
                 pointerEvents="none"
               >

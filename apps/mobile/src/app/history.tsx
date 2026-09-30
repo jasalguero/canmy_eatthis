@@ -52,6 +52,9 @@ function History() {
         placeholder={t('history:searchPlaceholder')}
         value={query}
         onChangeText={setQuery}
+        autoCorrect={false}
+        spellCheck={false}
+        autoCapitalize="none"
         className="rounded-md border border-line-default bg-surface-raised p-3 text-body text-ink-primary"
       />
 

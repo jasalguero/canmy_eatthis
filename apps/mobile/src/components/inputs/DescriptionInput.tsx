@@ -45,6 +45,11 @@ export function DescriptionInput({ value, onChangeText, className }: Description
       <TextInput
         accessibilityLabel={label}
         multiline
+        // This is a lookup, not prose: autocorrect turns a Spanish or Latin word into a different
+        // English one ("limon" -> "lemon") before it is ever searched, and autocapitalise is noise.
+        autoCorrect={false}
+        spellCheck={false}
+        autoCapitalize="none"
         textAlignVertical="top"
         value={value}
         onChangeText={onChangeText}
