@@ -5,6 +5,10 @@
  * `normalise()` is responsible for folding to the same key.
  */
 export const POSITIVE_RESOLUTIONS: { input: string; expected: string }[] = [
+  // Bare "chocolate" is an alias of the more severe entry on purpose (docs/02 D33): a plain
+  // "chocolate" is the commonest dog-toxin query and must not answer "not sure".
+  { input: 'chocolate', expected: 'chocolate_dark' },
+  { input: 'Chocolate', expected: 'chocolate_dark' },
   { input: 'dark chocolate', expected: 'chocolate_dark' },
   { input: 'Chocolate negro', expected: 'chocolate_dark' },
   { input: 'DARK CHOCOLATE', expected: 'chocolate_dark' },

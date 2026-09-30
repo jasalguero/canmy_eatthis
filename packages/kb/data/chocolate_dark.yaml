@@ -4,8 +4,8 @@ display_name:
   es: Chocolate negro
 category: food
 aliases:
-  en: [dark chocolate, baking chocolate, bittersweet chocolate, semisweet chocolate, cocoa powder, unsweetened chocolate, cooking chocolate, cocoa solids, cacao powder]
-  es: [chocolate negro, chocolate amargo, chocolate para postres, chocolate de cobertura, cacao en polvo, chocolate puro, chocolate fondant]
+  en: [chocolate, dark chocolate, baking chocolate, bittersweet chocolate, semisweet chocolate, cocoa powder, unsweetened chocolate, cooking chocolate, cocoa solids, cacao powder]
+  es: [chocolate, chocolate negro, chocolate amargo, chocolate para postres, chocolate de cobertura, cacao en polvo, chocolate puro, chocolate fondant]
 confusable_with: [chocolate_milk]
 is_ingredient: true
 high_risk: true

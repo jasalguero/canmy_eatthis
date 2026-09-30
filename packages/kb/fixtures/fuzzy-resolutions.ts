@@ -5,10 +5,11 @@
  * aliases anywhere in `packages/kb/data` — each is a plausible misspelling or keyboard slip of
  * a real alias, chosen so it is unambiguous: it is close in both edit-distance and length to
  * exactly one entry's alias, never equidistant between two (see `resolveText.ts`'s ambiguity
- * guard, which is why a bare "chocolate" is *not* in this list — it sits between
- * `chocolate_dark` and `chocolate_milk` and correctly resolves to nothing).
+ * guard). A bare "chocolate" is now an exact alias of `chocolate_dark` (docs/02 D33), so it no longer
+ * reaches the fuzzy tier at all.
  */
 export const FUZZY_POSITIVE_RESOLUTIONS: { input: string; expected: string }[] = [
+  { input: 'chocolat', expected: 'chocolate_dark' }, // one letter short of the bare alias
   { input: 'onyon', expected: 'alliums' }, // docs/01-architecture.md's own example
   { input: 'garlik', expected: 'alliums' },
   { input: 'onyons', expected: 'alliums' },
