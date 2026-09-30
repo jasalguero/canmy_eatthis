@@ -1,0 +1,61 @@
+# DRAFT — awaiting review (packages/kb/drafts/README.md). DOES NOT MEET THE EDITORIAL STANDARD YET.
+# docs/04-knowledge-base.md §2 wants Merck / peer-reviewed / university-extension / government
+# sources. None of the ones the KB already uses (NC State, Tufts, Texas A&M, Merck, FDA, Cornell)
+# mention pineapple, and the search for a university source found none. The two sources below are
+# a pet-food company's vet-reviewed article and a vet-reviewed consumer site, and neither covers
+# cats, so cats are `unknown`. Promote only if you accept that, or find a qualifying source first;
+# omitting the entry is the correct outcome under §2 otherwise.
+id: pineapple
+display_name:
+  en: Pineapple
+  es: Piña
+category: food
+aliases:
+  en: [pineapple, pineapples, fresh pineapple, pineapple chunks]
+  es: [piña, piñas, ananá, ananás, piña fresca, trozos de piña]
+confusable_with: [apple]
+is_ingredient: false
+high_risk: false
+species:
+  dog:
+    verdict: safe
+    severity: null
+    headline:
+      en: No known risk from pineapple.
+      es: Sin riesgo conocido con piña.
+    summary:
+      en: "Veterinary guidance lists the soft flesh of pineapple as an acceptable treat for dogs in moderation. The core, rind, stem and leaves are hard to chew and digest and can cause choking or blockages. Treats should make up no more than 10% of your dog's daily calories, and pineapple is high in natural sugar, so check with your vet if your dog has diabetes or another medical condition."
+      es: "Las guías veterinarias incluyen la pulpa blanda de la piña como un premio aceptable para perros con moderación. El corazón, la cáscara, el tallo y las hojas son difíciles de masticar y digerir y pueden causar atragantamiento u obstrucciones. Los premios no deberían superar el 10 % de las calorías diarias de tu perro, y la piña tiene mucho azúcar natural, así que consulta a tu veterinario si tu perro tiene diabetes u otra enfermedad."
+    signs: []
+    onset_hours: null
+    emergency_actions: []
+  cat:
+    verdict: unknown
+    severity: null
+    headline:
+      en: Not sure — ask your vet.
+      es: No estoy seguro — consulta a tu veterinario.
+    summary:
+      en: "The sources we use cover pineapple for dogs but not for cats, which isn't enough for us to give you an answer. Ask your vet if you're unsure."
+      es: "Las fuentes que usamos cubren la piña para perros pero no para gatos, lo que no basta para darte una respuesta. Consulta a tu veterinario si tienes dudas."
+    signs: []
+    onset_hours: null
+    emergency_actions: []
+sources:
+  - label: "Hill's Pet Nutrition — Can Dogs Eat Pineapple?"
+    url: https://www.hillspet.com/dog-care/nutrition-feeding/can-dogs-eat-pineapple
+    accessed: 2026-09-30
+  - label: "PetMD — Can Dogs Eat Pineapple? (medically reviewed by Molly Price, DVM)"
+    url: https://www.petmd.com/dog/nutrition/can-dogs-eat-pineapple
+    accessed: 2026-09-30
+review:
+  reviewed_by: null
+  reviewed_at: null
+  status: draft
+translations:
+  es:
+    tier_a: draft
+    tier_b: draft
+    translated_by: "Claude (draft)"
+    reviewed_by: null
+    reviewed_at: null

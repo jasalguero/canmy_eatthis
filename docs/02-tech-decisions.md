@@ -923,3 +923,34 @@ naming `EXExpoAppSceneDelegate` and makes `AppDelegate` an `ExpoReactNativeFacto
   from the template or `Info.plist` already declares a scene manifest, so it fails loudly.
 - **Temporary.** The property is a no-op on SDK 58 and later. Remove it when upgrading.
 - **Android is unaffected.** Requires `expo >= 57.0.23` (installed: 57.0.26).
+
+## D33 — A bare "chocolate" resolves to `chocolate_dark`; a separate "did you mean" list for near-misses
+
+**Chocolate.** The fuzzy fixtures used to record that a bare "chocolate" sits between
+`chocolate_dark` and `chocolate_milk` and "correctly resolves to nothing" (the ambiguity guard in
+`resolveText`). On a device it meant the commonest dog-toxin query answered "Not sure". Decision
+(2026-09-30): "chocolate" is an exact alias of `chocolate_dark`, in both languages. That is the
+more severe of the two, so it is the cautious side of the ambiguity; `confusable_with` still
+links `chocolate_milk`. "chocolate lab" and the other near-misses still resolve to nothing.
+
+**Suggestions.** `suggestText` (`packages/shared`) returns up to three KB ids for a query that
+resolved to nothing, and the unknown result screen shows them as "Did you mean…?" chips. It is
+looser than `resolveText` on purpose and can be, because it never answers: each chip opens a
+normal result built by `resolveVerdict()` from the KB (AGENTS.md #1, #5). It uses edit distance
+scaled by word length, not Fuse: Fuse's scores ranked "limon" beside "alliums" and "the" beside
+"cannabis". No edits on words of four letters or fewer. Fixtures: `packages/kb/fixtures/suggestions.ts`.
+
+**Also on 2026-09-30:** the lookup field turns off autocorrect, autocapitalise and spellcheck
+(iOS rewrote "limon" to "lemon" before it was searched), and the result screen is keyed on what
+was asked, because Expo Router reuses the screen when only the params change and the banner's
+entrance never replayed.
+
+## D34 — Pivot rotations and scales without `transformOrigin`
+
+On iOS 27 / RN 0.86 a view with `transformOrigin` (px) and an animated rotate never painted: the
+mascot's ears vanished on the result screen (found by tinting the layer, which then showed
+nothing at all; without `transformOrigin` it showed). Not the native driver (the JS driver did the
+same) and not the entrance around it. `keyframeStyle` now takes a `pivot` (offset from the view's
+centre, in points) and wraps the rotate/scale in translate-rotate-translate. `Mascot` uses it for
+the ears, nose, "?" and sniff puffs. `Enter`/`Loop` keep an `origin` prop for percentage origins
+(the emergency ring); it is not known to fail, but if it ever does, convert it the same way.

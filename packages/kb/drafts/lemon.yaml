@@ -1,0 +1,60 @@
+# DRAFT — awaiting review (packages/kb/drafts/README.md).
+# Reviewer, please decide: ASPCA labels lemon "toxic" while NC State only lists citrus among foods
+# that "may cause vomiting/diarrhea". Both agree on the signs, so this draft follows the more
+# cautious ASPCA wording (toxic, mild). If you would rather show "caution", change both species.
+# ASPCA is a poison-control authority but is not one of the source types docs/04-knowledge-base.md
+# §2 names; if that matters, this needs a Merck/FDA/university source before it ships.
+id: lemon
+display_name:
+  en: Lemon
+  es: Limón
+category: food
+aliases:
+  en: [lemon, lemons, lemon peel, lemon rind, lemon zest, lemon juice]
+  es: [limón, limones, cáscara de limón, piel de limón, ralladura de limón, zumo de limón, jugo de limón]
+confusable_with: []
+is_ingredient: false
+high_risk: false
+species:
+  dog:
+    verdict: toxic
+    severity: mild
+    headline:
+      en: Toxic to dogs. Call your vet.
+      es: Tóxico para perros. Llama a tu veterinario.
+    summary:
+      en: "The ASPCA lists lemon as toxic to dogs, mostly because of the oils in the peel and other plant parts, and citrus fruit can upset a dog's stomach. Signs include vomiting, diarrhoea and low energy, and it can irritate the skin. Call your vet."
+      es: "La ASPCA incluye el limón como tóxico para los perros, sobre todo por los aceites de la cáscara y de otras partes de la planta, y los cítricos pueden dar molestias de estómago. Los signos incluyen vómitos, diarrea y decaimiento, y puede irritar la piel. Llama a tu veterinario."
+    signs: [vomiting, diarrhoea, lethargy]
+    onset_hours: null
+    emergency_actions: [call_vet_now, do_not_induce_vomiting, bring_packaging]
+  cat:
+    verdict: toxic
+    severity: mild
+    headline:
+      en: Toxic to cats. Call your vet.
+      es: Tóxico para gatos. Llama a tu veterinario.
+    summary:
+      en: "The ASPCA lists lemon as toxic to cats, mostly because of the oils in the peel and other plant parts, and citrus fruit can upset a cat's stomach. Signs include vomiting, diarrhoea and low energy, and it can irritate the skin. Call your vet."
+      es: "La ASPCA incluye el limón como tóxico para los gatos, sobre todo por los aceites de la cáscara y de otras partes de la planta, y los cítricos pueden dar molestias de estómago. Los signos incluyen vómitos, diarrea y decaimiento, y puede irritar la piel. Llama a tu veterinario."
+    signs: [vomiting, diarrhoea, lethargy]
+    onset_hours: null
+    emergency_actions: [call_vet_now, do_not_induce_vomiting, bring_packaging]
+sources:
+  - label: "ASPCA Animal Poison Control — Toxic and Non-Toxic Plants: Lemon"
+    url: https://www.aspca.org/pet-care/aspca-poison-control/toxic-and-non-toxic-plants/lemon
+    accessed: 2026-09-30
+  - label: NC State Veterinary Hospital — Healthy Human Food Treats For Pets
+    url: https://hospital.cvm.ncsu.edu/services/small-animals/nutrition/healthy-human-food-treats-for-pets/
+    accessed: 2026-09-30
+review:
+  reviewed_by: null
+  reviewed_at: null
+  status: draft
+translations:
+  es:
+    tier_a: draft
+    tier_b: draft
+    translated_by: "Claude (draft)"
+    reviewed_by: null
+    reviewed_at: null

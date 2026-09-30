@@ -108,6 +108,7 @@ earlier. On re-run from the repo root, `pnpm lint:fix` reports no fixes and `bio
   `offlineKb.test.ts`. 🟡 "chocolat", "limon", "platano", "pina": not found by my grep of the
   fixtures; verify they are present or add them.
 - ✅ Negative fixture set fails to match, incl. Spanish near-misses — `negative-resolutions.ts`.
+- ✅ "chocolate" / "Chocolate" resolve (`chocolate_dark`, D33), on device and in `offlineKb.test.ts`.
 - 🟡 English-only alias resolves for a Spanish user — check for a cross-language fixture.
 - 🟡 Airplane mode — `offlineKb.ts` resolves from bundled assets with no network path; run once in
   airplane mode on a device.
@@ -116,27 +117,23 @@ earlier. On re-run from the repo root, `pnpm lint:fix` reports no fixes and `bio
 ## Findings from the device session (2026-09-30, iPhone 17 / iOS 27)
 
 Home, first-run, Settings, the typed-lookup flow and the Result screen all render and behave.
-Problems found:
+Problems found, and what was done (docs/02 D33, D34):
 
-1. **Bare "chocolate" returns "Not sure".** No entry has plain `chocolate` as an alias: only
-   `chocolate_dark` ("dark chocolate", "cocoa powder", …) and `chocolate_milk`. The P3 acceptance
-   list requires "chocolate" and "Chocolate" to resolve, and `resolution.fixtures.ts` only tests
-   "dark chocolate". `unknown` is the safe outcome, but it is the most common dog-toxin query.
-   Decision needed: alias bare "chocolate" to `chocolate_dark` (the more severe entry, so not
-   optimistic; `confusable_with` already links `chocolate_milk`), or send it through the Confirm
-   screen, or amend the criterion.
-2. **The description field mutates input.** No `autoCorrect`, `autoCapitalize` or `spellCheck`
-   prop anywhere in `apps/mobile/src` (`DescriptionInput.tsx`). Typing "chocolate" arrived as
-   "Chocolate", and typing "limon" produced a result headed "lemon", presumably iOS autocorrect.
-   For a lookup field, autocorrect can silently turn a Spanish or Latin word into a different
-   English one. Suggested: `autoCorrect={false}`, `spellCheck={false}`, `autoCapitalize="none"`,
-   plus a test. Not yet changed.
-3. **"limon" and "pina" have no KB entry to match.** There is no lemon or pineapple entry
-   (`banana` covers "plátano", and "platano" is a fair match). The acceptance line for those two
-   words is stale against the current KB: either add sourced entries (two sources each, per
-   AGENTS.md #15) or amend the criterion. Unknown is the correct answer today.
-4. **The header wordmark reads "CanyMy EatThis"** on Home (the app name is "CanMy*EatThis").
-   Possibly the wordmark treatment of the asterisk; worth a look by whoever owns the branding.
+1. **Bare "chocolate" returned "Not sure".** Now an exact alias of `chocolate_dark` (en and es),
+   with fixtures, an on-device test and a fuzzy fixture for "chocolat".
+2. **The description field mutated input** (autocapitalise, autocorrect: "limon" became "lemon").
+   Autocorrect, spellcheck and autocapitalise are off on the lookup field and the history search.
+3. **"limon" and "pina" had no KB entry.** Drafts for `lemon` and `pineapple` are in
+   `packages/kb/drafts/` (not shipped, awaiting review). `lemon` rests on ASPCA and NC State;
+   `pineapple` does **not** meet docs/04 §2 (no Merck/FDA/university source found; cats
+   `unknown`), and its header comment says so. New: a "Did you mean…?" list on the unknown result
+   (`suggestText`).
+4. **Wordmark read "CanyMy EatThis".** A typo in `common:appNameSplit1` (en and es); now "CanMy".
+5. **The dog's ears vanished on the result screen** (reported separately). Root cause found on the
+   simulator: `transformOrigin` on the animated ear layer (D34). Fixed with an explicit pivot.
+6. **A verdict banner could be missing entirely** (found while testing 5): opening a second result
+   while one was showing left the "no known toxicity" banner parked off-screen. The result screen
+   is now keyed on what was asked.
 
 Not yet checked on device: pseudo-locale, permission denial, VoiceOver, 200% system font,
 airplane mode, timings, Android.
