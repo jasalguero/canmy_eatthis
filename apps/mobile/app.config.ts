@@ -79,6 +79,8 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   plugins: [
     'expo-router',
     'expo-localization',
+    // iOS 27 kills an app that has not adopted the scene lifecycle (D32). No-op from SDK 58.
+    ['expo-build-properties', { ios: { enableSceneSupport: true } }],
     [
       'expo-splash-screen',
       { image: './assets/splash.png', resizeMode: 'contain', backgroundColor: splashBackground },

@@ -902,3 +902,24 @@ Actions".
   "safe" (AGENTS.md #3).
 - **They describe the text-and-barcode release.** Before photo identification ships (D28), the
   policy must add the photo upload to the vision provider and the AI consent, and change its date.
+
+## D32 — Opt in to the UIKit scene lifecycle (iOS 27 / Xcode 27)
+
+**Found 2026-09-30** running a standalone dev-client build on the iPhone 17 simulator (iOS 27.0,
+Xcode 27): the app compiled and installed, then died at launch with `SIGTRAP` in
+`UIApplicationEvaluateRuntimeIssueForNoSceneLifecycleAdoption`. iOS 27 asserts unless the app
+adopts scenes; the Expo SDK 57 template's `AppDelegate` builds its own `UIWindow`. Earlier iOS
+checks (D26, and the verification above) ran in Expo Go, which hid this. Every standalone build
+from an Xcode 27 toolchain would crash the same way, including the TestFlight builds Phase 6 needs.
+
+**Decision:** use Expo's own opt-in, the `expo-build-properties` plugin with
+`ios.enableSceneSupport: true` (`apps/mobile/app.config.ts`). It adds a `UIApplicationSceneManifest`
+naming `EXExpoAppSceneDelegate` and makes `AppDelegate` an `ExpoReactNativeFactoryProvider`.
+`expo@57.0.26` already ships the delegate; the published template does not wire it. Upstream:
+<https://github.com/expo/fyi/blob/main/ios-scene-lifecycle.md>.
+
+- **Plugin, not hand-edited native files:** `ios/` is generated and untracked, so an edit there
+  would be lost on the next prebuild. The plugin refuses to patch if `AppDelegate.swift` differs
+  from the template or `Info.plist` already declares a scene manifest, so it fails loudly.
+- **Temporary.** The property is a no-op on SDK 58 and later. Remove it when upgrading.
+- **Android is unaffected.** Requires `expo >= 57.0.23` (installed: 57.0.26).
