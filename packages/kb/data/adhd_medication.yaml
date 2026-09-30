@@ -1,0 +1,54 @@
+id: adhd_medication
+display_name:
+  en: ADHD medication
+  es: Medicación para el TDAH
+category: medication
+aliases:
+  en: [adhd medication, adhd medicine, adderall, amphetamine, methylphenidate, ritalin, concerta, lisdexamfetamine, vyvanse, atomoxetine]
+  es: [medicación para el tdah, anfetamina, metilfenidato, rubifen, medikinet, lisdexanfetamina, elvanse, atomoxetina]
+confusable_with: []
+is_ingredient: false
+high_risk: true
+species:
+  dog:
+    verdict: toxic
+    severity: severe
+    headline:
+      en: Toxic to dogs. Call your vet now.
+      es: Tóxico para perros. Llama ahora a tu veterinario.
+    summary:
+      en: "ADHD medicines such as amphetamine (Adderall), methylphenidate (Ritalin) or lisdexamfetamine are strong stimulants, and even small amounts can seriously harm dogs: agitation, pacing, a racing heart, overheating and seizures. Call your vet immediately."
+      es: "Los medicamentos para el TDAH como las anfetaminas, el metilfenidato o la lisdexanfetamina son estimulantes potentes, e incluso pequeñas cantidades pueden hacer mucho daño a los perros: agitación, inquietud, corazón acelerado, temperatura muy alta y convulsiones. Llama inmediatamente a tu veterinario."
+    signs: [agitation, restlessness, ataxia, tachycardia, hyperthermia, seizures]
+    onset_hours: null
+    emergency_actions: [call_vet_now, do_not_induce_vomiting, bring_packaging]
+  cat:
+    verdict: toxic
+    severity: severe
+    headline:
+      en: Toxic to cats. Call your vet now.
+      es: Tóxico para gatos. Llama ahora a tu veterinario.
+    summary:
+      en: "ADHD medicines such as amphetamine (Adderall), methylphenidate (Ritalin) or lisdexamfetamine are strong stimulants, and even small amounts can seriously harm cats: agitation, pacing, a racing heart, overheating and seizures. Call your vet immediately."
+      es: "Los medicamentos para el TDAH como las anfetaminas, el metilfenidato o la lisdexanfetamina son estimulantes potentes, e incluso pequeñas cantidades pueden hacer mucho daño a los gatos: agitación, inquietud, corazón acelerado, temperatura muy alta y convulsiones. Llama inmediatamente a tu veterinario."
+    signs: [agitation, restlessness, ataxia, tachycardia, hyperthermia, seizures]
+    onset_hours: null
+    emergency_actions: [call_vet_now, do_not_induce_vomiting, bring_packaging]
+sources:
+  - label: Merck Veterinary Manual — Toxicoses in Animals From Amphetamines and ADHD Drugs
+    url: https://www.merckvetmanual.com/toxicology/toxicoses-from-human-recreational-drugs/toxicoses-in-animals-from-amphetamines-and-adhd-drugs-in-animals
+    accessed: 2026-09-29
+  - label: "Stern & Schell, \"Management of attention-deficit disorder and attention-deficit/hyperactivity disorder drug intoxication in dogs and cats\", Vet Clin North Am Small Anim Pract (2012)"
+    url: https://pubmed.ncbi.nlm.nih.gov/22381179/
+    accessed: 2026-09-29
+review:
+  reviewed_by: "Jose Salguero"
+  reviewed_at: 2026-09-30
+  status: approved
+translations:
+  es:
+    tier_a: approved
+    tier_b: approved
+    translated_by: "Claude (draft)"
+    reviewed_by: "Jose Salguero"
+    reviewed_at: 2026-09-30

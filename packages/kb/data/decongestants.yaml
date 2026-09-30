@@ -1,0 +1,54 @@
+id: decongestants
+display_name:
+  en: "Decongestants (pseudoephedrine, phenylephrine)"
+  es: "Descongestionantes (pseudoefedrina, fenilefrina)"
+category: medication
+aliases:
+  en: [decongestant, decongestants, pseudoephedrine, sudafed, phenylephrine]
+  es: [descongestionante, descongestionantes, pseudoefedrina, fenilefrina]
+confusable_with: []
+is_ingredient: false
+high_risk: true
+species:
+  dog:
+    verdict: toxic
+    severity: severe
+    headline:
+      en: Toxic to dogs. Call your vet now.
+      es: Tóxico para perros. Llama ahora a tu veterinario.
+    summary:
+      en: "Decongestants such as pseudoephedrine and phenylephrine, found in many cold and allergy medicines, can make dogs agitated and hyperactive, with a racing or irregular heart, trembling and overheating, and can be fatal. Call your vet immediately and bring the packaging."
+      es: "Los descongestionantes como la pseudoefedrina y la fenilefrina, presentes en muchos medicamentos para el resfriado y la alergia, pueden provocar en los perros agitación e hiperactividad, corazón acelerado o irregular, temblores y temperatura muy alta, y pueden ser mortales. Llama inmediatamente a tu veterinario y lleva el envase."
+    signs: [agitation, restlessness, tachycardia, irregular_heartbeat, tremors, hyperthermia, vomiting]
+    onset_hours: null
+    emergency_actions: [call_vet_now, do_not_induce_vomiting, bring_packaging]
+  cat:
+    verdict: toxic
+    severity: severe
+    headline:
+      en: Toxic to cats. Call your vet now.
+      es: Tóxico para gatos. Llama ahora a tu veterinario.
+    summary:
+      en: "Decongestants such as pseudoephedrine and phenylephrine, found in many cold and allergy medicines, can make cats agitated and hyperactive, with a racing or irregular heart, trembling and overheating, and can be fatal. Call your vet immediately and bring the packaging."
+      es: "Los descongestionantes como la pseudoefedrina y la fenilefrina, presentes en muchos medicamentos para el resfriado y la alergia, pueden provocar en los gatos agitación e hiperactividad, corazón acelerado o irregular, temblores y temperatura muy alta, y pueden ser mortales. Llama inmediatamente a tu veterinario y lleva el envase."
+    signs: [agitation, restlessness, tachycardia, irregular_heartbeat, tremors, hyperthermia, vomiting]
+    onset_hours: null
+    emergency_actions: [call_vet_now, do_not_induce_vomiting, bring_packaging]
+sources:
+  - label: Merck Veterinary Manual — Toxicoses in Animals From Human Cold and Allergy Medications
+    url: https://www.merckvetmanual.com/toxicology/toxicoses-from-human-cold-and-allergy-medications/toxicoses-in-animals-from-human-cold-and-allergy-medications
+    accessed: 2026-09-29
+  - label: "Kang & Park, \"Application of carvedilol in a dog with pseudoephedrine toxicosis-induced tachycardia\", Can Vet J (2012)"
+    url: https://pubmed.ncbi.nlm.nih.gov/23277647/
+    accessed: 2026-09-29
+review:
+  reviewed_by: "Jose Salguero"
+  reviewed_at: 2026-09-30
+  status: approved
+translations:
+  es:
+    tier_a: approved
+    tier_b: approved
+    translated_by: "Claude (draft)"
+    reviewed_by: "Jose Salguero"
+    reviewed_at: 2026-09-30

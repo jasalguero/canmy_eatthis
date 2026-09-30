@@ -1,0 +1,57 @@
+id: fatty_foods
+display_name:
+  en: Fatty and fried foods
+  es: Comida grasa y frita
+category: food
+aliases:
+  en: [fatty food, fatty foods, fried food, fried foods, bacon, fat trimmings, greasy food]
+  es: [comida grasa, comida frita, fritos, beicon, bacon, tocino, restos de grasa]
+confusable_with: []
+is_ingredient: false
+high_risk: false
+species:
+  dog:
+    verdict: caution
+    severity: null
+    headline:
+      en: Best kept away from dogs.
+      es: Mejor mantenerlo alejado de los perros.
+    summary:
+      en: "Fatty, rich and fried foods — bacon, fat trimmings, fried leftovers — can upset a dog's stomach, causing vomiting and diarrhoea. Keep them to the odd tiny piece, or avoid them, and call your vet if your dog seems unwell."
+      es: "La comida grasa, pesada o frita —beicon, restos de grasa, sobras fritas— puede sentarle mal a tu perro y provocar vómitos y diarrea. Dale como mucho un trocito de vez en cuando, o nada, y llama a tu veterinario si no se encuentra bien."
+    signs: [vomiting, diarrhoea]
+    onset_hours: null
+    emergency_actions: []
+  cat:
+    verdict: caution
+    severity: null
+    headline:
+      en: Best kept away from cats.
+      es: Mejor mantenerlo alejado de los gatos.
+    summary:
+      en: "Fatty, rich and fried foods — bacon, fat trimmings, fried leftovers — can upset a cat's stomach, causing vomiting and diarrhoea. Keep them to the odd tiny piece, or avoid them, and call your vet if your cat seems unwell."
+      es: "La comida grasa, pesada o frita —beicon, restos de grasa, sobras fritas— puede sentarle mal a tu gato y provocar vómitos y diarrea. Dale como mucho un trocito de vez en cuando, o nada, y llama a tu veterinario si no se encuentra bien."
+    signs: [vomiting, diarrhoea]
+    onset_hours: null
+    emergency_actions: []
+sources:
+  - label: FDA — Potentially Dangerous Items for Your Pet
+    url: https://www.fda.gov/animal-veterinary/animal-health-literacy/potentially-dangerous-items-your-pet
+    accessed: 2026-09-29
+  - label: NC State Veterinary Hospital — Healthy Human Food Treats For Pets
+    url: https://hospital.cvm.ncsu.edu/services/small-animals/nutrition/healthy-human-food-treats-for-pets/
+    accessed: 2026-09-29
+  - label: "Cornell Riney Canine Health Center — Re-evaluating your dog's diet"
+    url: https://www.vet.cornell.edu/departments-centers-and-institutes/riney-canine-health-center/canine-health-topics/re-evaluating-your-dogs-diet
+    accessed: 2026-09-29
+review:
+  reviewed_by: "Jose Salguero"
+  reviewed_at: 2026-09-30
+  status: approved
+translations:
+  es:
+    tier_a: approved
+    tier_b: approved
+    translated_by: "Claude (draft)"
+    reviewed_by: "Jose Salguero"
+    reviewed_at: 2026-09-30

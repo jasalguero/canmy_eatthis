@@ -1,0 +1,54 @@
+id: antidepressants
+display_name:
+  en: Antidepressants (SSRIs)
+  es: Antidepresivos (ISRS)
+category: medication
+aliases:
+  en: [antidepressant, antidepressants, ssri, fluoxetine, prozac, sertraline, zoloft, citalopram, escitalopram, paroxetine]
+  es: [antidepresivo, antidepresivos, isrs, fluoxetina, sertralina, citalopram, escitalopram, paroxetina]
+confusable_with: []
+is_ingredient: false
+high_risk: true
+species:
+  dog:
+    verdict: toxic
+    severity: moderate
+    headline:
+      en: Toxic to dogs. Call your vet.
+      es: Tóxico para perros. Llama a tu veterinario.
+    summary:
+      en: "Antidepressants such as fluoxetine or sertraline can make dogs drowsy, or the opposite: agitated, trembling, with a racing heart or a fever, and occasionally seizures. Most dogs recover well with prompt veterinary care, so call your vet if yours swallowed any."
+      es: "Los antidepresivos como la fluoxetina o la sertralina pueden dejar a los perros adormilados, o lo contrario: agitados, temblorosos, con el corazón acelerado o fiebre, y a veces con convulsiones. La mayoría se recupera bien con atención veterinaria rápida, así que llama a tu veterinario si ha tragado alguno."
+    signs: [lethargy, agitation, ataxia, tremors, tachycardia, hyperthermia, vomiting, diarrhoea, seizures]
+    onset_hours: null
+    emergency_actions: [call_vet_now, do_not_induce_vomiting, bring_packaging]
+  cat:
+    verdict: toxic
+    severity: moderate
+    headline:
+      en: Toxic to cats. Call your vet.
+      es: Tóxico para gatos. Llama a tu veterinario.
+    summary:
+      en: "Antidepressants such as fluoxetine or sertraline can make cats drowsy, or the opposite: agitated, trembling, with a racing heart or a fever, and occasionally seizures. Most cats recover well with prompt veterinary care, so call your vet if yours swallowed any."
+      es: "Los antidepresivos como la fluoxetina o la sertralina pueden dejar a los gatos adormilados, o lo contrario: agitados, temblorosos, con el corazón acelerado o fiebre, y a veces con convulsiones. La mayoría se recupera bien con atención veterinaria rápida, así que llama a tu veterinario si ha tragado alguno."
+    signs: [lethargy, agitation, ataxia, tremors, tachycardia, hyperthermia, vomiting, diarrhoea, seizures]
+    onset_hours: null
+    emergency_actions: [call_vet_now, do_not_induce_vomiting, bring_packaging]
+sources:
+  - label: "Merck Veterinary Manual — Toxicoses in Animals From Human Antidepressants, Anxiolytics, and Sleep Aids"
+    url: https://www.merckvetmanual.com/toxicology/toxicoses-from-human-antidepressants-anxiolytics-and-sleep-aids/toxicoses-in-animals-from-human-antidepressants-anxiolytics-and-sleep-aids
+    accessed: 2026-09-29
+  - label: "Thomas, Lee & Hovda, \"Retrospective evaluation of toxicosis from selective serotonin reuptake inhibitor antidepressants: 313 dogs (2005-2010)\", J Vet Emerg Crit Care (2012)"
+    url: https://pubmed.ncbi.nlm.nih.gov/23110654/
+    accessed: 2026-09-29
+review:
+  reviewed_by: "Jose Salguero"
+  reviewed_at: 2026-09-30
+  status: approved
+translations:
+  es:
+    tier_a: approved
+    tier_b: approved
+    translated_by: "Claude (draft)"
+    reviewed_by: "Jose Salguero"
+    reviewed_at: 2026-09-30

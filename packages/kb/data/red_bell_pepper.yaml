@@ -1,0 +1,54 @@
+id: red_bell_pepper
+display_name:
+  en: Red bell pepper
+  es: Pimiento rojo
+category: food
+aliases:
+  en: [red bell pepper, red pepper, sweet red pepper, red capsicum]
+  es: [pimiento rojo, morrón rojo, pimentón rojo]
+confusable_with: []
+is_ingredient: true
+high_risk: false
+species:
+  dog:
+    verdict: safe
+    severity: null
+    headline:
+      en: No known risk from red bell pepper.
+      es: Sin riesgo conocido con pimiento rojo.
+    summary:
+      en: "Red bell pepper is on university veterinary nutritionists' lists of healthy treats for dogs. Treats should make up no more than 10% of your dog's daily calories, and may not suit a dog with a medical condition, so check with your vet."
+      es: "El pimiento rojo figura en las listas de premios saludables de nutricionistas veterinarios universitarios para perros. Los premios no deberían superar el 10 % de las calorías diarias de tu perro, y pueden no ser adecuados si tiene alguna enfermedad, así que consulta a tu veterinario."
+    signs: []
+    onset_hours: null
+    emergency_actions: []
+  cat:
+    verdict: unknown
+    severity: null
+    headline:
+      en: Not sure — ask your vet.
+      es: No estoy seguro — consulta a tu veterinario.
+    summary:
+      en: "One university veterinary list includes sweet red peppers as a treat for cats, which isn't enough for us to give you an answer. Ask your vet if you're unsure."
+      es: "Una lista veterinaria universitaria incluye el pimiento rojo como premio para gatos, pero eso no basta para darte una respuesta. Consulta a tu veterinario si tienes dudas."
+    signs: []
+    onset_hours: null
+    emergency_actions: []
+sources:
+  - label: "Tufts Cummings School of Veterinary Medicine, Petfoodology — Treat Options for Dogs and Cats Without Unbalancing Their Diet"
+    url: https://sites.tufts.edu/petfoodology/2021/10/21/treat-options-for-dogs-and-cats-without-unbalancing-their-diet/
+    accessed: 2026-09-29
+  - label: Cornell Riney Canine Health Center — Diets to boost immunity
+    url: https://www.vet.cornell.edu/departments-centers-and-institutes/riney-canine-health-center/canine-health-topics/diets-boost-immunity
+    accessed: 2026-09-29
+review:
+  reviewed_by: "Jose Salguero"
+  reviewed_at: 2026-09-30
+  status: approved
+translations:
+  es:
+    tier_a: approved
+    tier_b: approved
+    translated_by: "Claude (draft)"
+    reviewed_by: "Jose Salguero"
+    reviewed_at: 2026-09-30

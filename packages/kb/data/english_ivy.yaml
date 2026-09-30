@@ -1,0 +1,57 @@
+id: english_ivy
+display_name:
+  en: English ivy
+  es: Hiedra
+category: plant
+aliases:
+  en: [english ivy, ivy, hedera]
+  es: [hiedra, hiedra común, hedera]
+confusable_with: []
+is_ingredient: false
+high_risk: true
+species:
+  dog:
+    verdict: caution
+    severity: null
+    headline:
+      en: Best kept away from dogs.
+      es: Mejor mantenerlo alejado de los perros.
+    summary:
+      en: "English ivy mostly irritates the stomach: eating a lot of it can cause stomach pain and diarrhoea. Keep it out of reach, and call your vet if your dog ate a lot or seems unwell."
+      es: "La hiedra irrita sobre todo el estómago: comer mucha puede provocar dolor abdominal y diarrea. Mantenla fuera de su alcance y llama a tu veterinario si tu perro ha comido mucha o no se encuentra bien."
+    signs: [abdominal_pain, diarrhoea]
+    onset_hours: null
+    emergency_actions: []
+  cat:
+    verdict: caution
+    severity: null
+    headline:
+      en: Best kept away from cats.
+      es: Mejor mantenerlo alejado de los gatos.
+    summary:
+      en: "English ivy mostly irritates the stomach: eating a lot of it can cause stomach pain and diarrhoea. Keep it out of reach, and call your vet if your cat ate a lot or seems unwell."
+      es: "La hiedra irrita sobre todo el estómago: comer mucha puede provocar dolor abdominal y diarrea. Mantenla fuera de su alcance y llama a tu veterinario si tu gato ha comido mucha o no se encuentra bien."
+    signs: [abdominal_pain, diarrhoea]
+    onset_hours: null
+    emergency_actions: []
+sources:
+  - label: Merck Veterinary Manual — Houseplants and Ornamentals Toxic to Animals
+    url: https://www.merckvetmanual.com/toxicology/poisonous-plants/houseplants-and-ornamentals-toxic-to-animals
+    accessed: 2026-09-29
+  - label: FDA — Potentially Dangerous Items for Your Pet
+    url: https://www.fda.gov/animal-veterinary/animal-health-literacy/potentially-dangerous-items-your-pet
+    accessed: 2026-09-29
+  - label: Cornell Feline Health Center — Poisons
+    url: https://www.vet.cornell.edu/departments-centers-and-institutes/cornell-feline-health-center/health-information/feline-health-topics/poisons
+    accessed: 2026-09-29
+review:
+  reviewed_by: "Jose Salguero"
+  reviewed_at: 2026-09-30
+  status: approved
+translations:
+  es:
+    tier_a: approved
+    tier_b: approved
+    translated_by: "Claude (draft)"
+    reviewed_by: "Jose Salguero"
+    reviewed_at: 2026-09-30

@@ -1,0 +1,54 @@
+id: nicotine
+display_name:
+  en: "Nicotine (cigarettes, patches, gum)"
+  es: "Nicotina (cigarrillos, parches, chicles)"
+category: other
+aliases:
+  en: [nicotine, nicotine patch, nicotine gum, cigarette, cigarettes, cigarette butt, cigarette butts, tobacco, cigar]
+  es: [nicotina, parche de nicotina, chicle de nicotina, cigarrillo, cigarrillos, colilla, colillas, tabaco, puro]
+confusable_with: []
+is_ingredient: false
+high_risk: true
+species:
+  dog:
+    verdict: toxic
+    severity: moderate
+    headline:
+      en: Toxic to dogs. Call your vet.
+      es: Tóxico para perros. Llama a tu veterinario.
+    summary:
+      en: "Nicotine — in cigarettes, tobacco, nicotine patches and gum — most often causes vomiting, tiredness and brief agitation in dogs. Larger amounts can cause tremors, seizures, breathing difficulty and a slow heartbeat. Severe poisoning is uncommon but possible, so call your vet."
+      es: "La nicotina —en cigarrillos, tabaco, parches y chicles de nicotina— suele provocar en los perros vómitos, cansancio y agitación pasajera. En mayor cantidad puede causar temblores, convulsiones, dificultad para respirar y un ritmo cardíaco lento. La intoxicación grave es poco frecuente pero posible, así que llama a tu veterinario."
+    signs: [vomiting, lethargy, agitation, tremors, seizures, difficulty_breathing, irregular_heartbeat]
+    onset_hours: null
+    emergency_actions: [call_vet_now, do_not_induce_vomiting, bring_packaging]
+  cat:
+    verdict: toxic
+    severity: moderate
+    headline:
+      en: Toxic to cats. Call your vet.
+      es: Tóxico para gatos. Llama a tu veterinario.
+    summary:
+      en: "Nicotine — in cigarettes, tobacco, nicotine patches and gum — most often causes vomiting, tiredness and brief agitation in cats. Larger amounts can cause tremors, seizures, breathing difficulty and a slow heartbeat. Severe poisoning is uncommon but possible, so call your vet."
+      es: "La nicotina —en cigarrillos, tabaco, parches y chicles de nicotina— suele provocar en los gatos vómitos, cansancio y agitación pasajera. En mayor cantidad puede causar temblores, convulsiones, dificultad para respirar y un ritmo cardíaco lento. La intoxicación grave es poco frecuente pero posible, así que llama a tu veterinario."
+    signs: [vomiting, lethargy, agitation, tremors, seizures, difficulty_breathing, irregular_heartbeat]
+    onset_hours: null
+    emergency_actions: [call_vet_now, do_not_induce_vomiting, bring_packaging]
+sources:
+  - label: Merck Veterinary Manual — Toxicosis in Animals From Human Topical Agents
+    url: https://www.merckvetmanual.com/toxicology/toxicosis-from-human-topical-agents/toxicosis-in-animals-from-human-topical-agents
+    accessed: 2026-09-29
+  - label: FDA — Potentially Dangerous Items for Your Pet
+    url: https://www.fda.gov/animal-veterinary/animal-health-literacy/potentially-dangerous-items-your-pet
+    accessed: 2026-09-29
+review:
+  reviewed_by: "Jose Salguero"
+  reviewed_at: 2026-09-30
+  status: approved
+translations:
+  es:
+    tier_a: approved
+    tier_b: approved
+    translated_by: "Claude (draft)"
+    reviewed_by: "Jose Salguero"
+    reviewed_at: 2026-09-30

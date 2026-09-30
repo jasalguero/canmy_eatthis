@@ -1,0 +1,54 @@
+id: lead
+display_name:
+  en: Lead
+  es: Plomo
+category: chemical
+aliases:
+  en: [lead, lead paint, lead weight, fishing sinker, fishing weight, lead shot, paint chips]
+  es: [plomo, pintura con plomo, plomo de pesca, perdigones]
+confusable_with: []
+is_ingredient: false
+high_risk: true
+species:
+  dog:
+    verdict: toxic
+    severity: moderate
+    headline:
+      en: Toxic to dogs. Call your vet.
+      es: Tóxico para perros. Llama a tu veterinario.
+    summary:
+      en: "Lead — in old paint, fishing weights, lead shot, solder and some ceramic glazes — poisons dogs. It can cause loss of appetite, vomiting, diarrhoea, tiredness and behaviour changes, and in more serious cases wobbliness, tremors and seizures. Call your vet."
+      es: "El plomo —en pintura antigua, plomos de pesca, perdigones, soldadura y algunos esmaltes cerámicos— intoxica a los perros. Puede provocar pérdida de apetito, vómitos, diarrea, cansancio y cambios de comportamiento, y en casos más graves falta de coordinación, temblores y convulsiones. Llama a tu veterinario."
+    signs: [loss_of_appetite, vomiting, diarrhoea, lethargy, abdominal_pain, ataxia, tremors, seizures]
+    onset_hours: null
+    emergency_actions: [call_vet_now, do_not_induce_vomiting, bring_packaging]
+  cat:
+    verdict: toxic
+    severity: moderate
+    headline:
+      en: Toxic to cats. Call your vet.
+      es: Tóxico para gatos. Llama a tu veterinario.
+    summary:
+      en: "Lead — in old paint, fishing weights, lead shot, solder and some ceramic glazes — poisons cats. It can cause loss of appetite, vomiting, diarrhoea, tiredness and behaviour changes, and in more serious cases wobbliness, tremors and seizures. Call your vet."
+      es: "El plomo —en pintura antigua, plomos de pesca, perdigones, soldadura y algunos esmaltes cerámicos— intoxica a los gatos. Puede provocar pérdida de apetito, vómitos, diarrea, cansancio y cambios de comportamiento, y en casos más graves falta de coordinación, temblores y convulsiones. Llama a tu veterinario."
+    signs: [loss_of_appetite, vomiting, diarrhoea, lethargy, abdominal_pain, ataxia, tremors, seizures]
+    onset_hours: null
+    emergency_actions: [call_vet_now, do_not_induce_vomiting, bring_packaging]
+sources:
+  - label: Merck Veterinary Manual — Lead Poisoning in Animals
+    url: https://www.merckvetmanual.com/toxicology/lead-poisoning/lead-poisoning-in-animals
+    accessed: 2026-09-29
+  - label: Cornell Feline Health Center — Poisons
+    url: https://www.vet.cornell.edu/departments-centers-and-institutes/cornell-feline-health-center/health-information/feline-health-topics/poisons
+    accessed: 2026-09-29
+review:
+  reviewed_by: "Jose Salguero"
+  reviewed_at: 2026-09-30
+  status: approved
+translations:
+  es:
+    tier_a: approved
+    tier_b: approved
+    translated_by: "Claude (draft)"
+    reviewed_by: "Jose Salguero"
+    reviewed_at: 2026-09-30

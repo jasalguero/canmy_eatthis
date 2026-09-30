@@ -1,0 +1,54 @@
+id: caladium
+display_name:
+  en: Caladium
+  es: Caladio
+category: plant
+aliases:
+  en: [caladium, caladiums]
+  es: [caladio, caladium]
+confusable_with: []
+is_ingredient: false
+high_risk: true
+species:
+  dog:
+    verdict: caution
+    severity: null
+    headline:
+      en: Best kept away from dogs.
+      es: Mejor mantenerlo alejado de los perros.
+    summary:
+      en: "Caladium contains crystals that cause immediate pain, burning and swelling in the mouth, with drooling. Serious poisoning is rare, but call your vet if your dog has trouble breathing or swallowing."
+      es: "El caladio contiene cristales que provocan de inmediato dolor, ardor e hinchazón en la boca, con babeo. Las intoxicaciones graves son poco frecuentes, pero llama a tu veterinario si a tu perro le cuesta respirar o tragar."
+    signs: [mouth_irritation, hypersalivation]
+    onset_hours: null
+    emergency_actions: []
+  cat:
+    verdict: caution
+    severity: null
+    headline:
+      en: Best kept away from cats.
+      es: Mejor mantenerlo alejado de los gatos.
+    summary:
+      en: "Caladium contains crystals that cause immediate pain, burning and swelling in the mouth, with drooling. Serious poisoning is rare, but call your vet if your cat has trouble breathing or swallowing."
+      es: "El caladio contiene cristales que provocan de inmediato dolor, ardor e hinchazón en la boca, con babeo. Las intoxicaciones graves son poco frecuentes, pero llama a tu veterinario si a tu gato le cuesta respirar o tragar."
+    signs: [mouth_irritation, hypersalivation]
+    onset_hours: null
+    emergency_actions: []
+sources:
+  - label: Merck Veterinary Manual — Houseplants and Ornamentals Toxic to Animals
+    url: https://www.merckvetmanual.com/toxicology/poisonous-plants/houseplants-and-ornamentals-toxic-to-animals
+    accessed: 2026-09-29
+  - label: Cornell Feline Health Center — Poisons
+    url: https://www.vet.cornell.edu/departments-centers-and-institutes/cornell-feline-health-center/health-information/feline-health-topics/poisons
+    accessed: 2026-09-29
+review:
+  reviewed_by: "Jose Salguero"
+  reviewed_at: 2026-09-30
+  status: approved
+translations:
+  es:
+    tier_a: approved
+    tier_b: approved
+    translated_by: "Claude (draft)"
+    reviewed_by: "Jose Salguero"
+    reviewed_at: 2026-09-30

@@ -1,0 +1,54 @@
+id: essential_oils
+display_name:
+  en: Essential oils (tea tree and others)
+  es: Aceites esenciales (árbol de té y otros)
+category: household
+aliases:
+  en: [tea tree oil, melaleuca oil, essential oil, essential oils, eucalyptus oil, wintergreen oil, pennyroyal oil, cinnamon oil]
+  es: [aceite de árbol de té, aceite esencial, aceites esenciales, aceite de eucalipto, aceite de gaulteria, aceite de poleo, aceite de canela]
+confusable_with: []
+is_ingredient: false
+high_risk: true
+species:
+  dog:
+    verdict: toxic
+    severity: moderate
+    headline:
+      en: Toxic to dogs. Call your vet.
+      es: Tóxico para perros. Llama a tu veterinario.
+    summary:
+      en: "Concentrated essential oils, tea tree oil above all, can poison dogs whether swallowed, licked or put on the skin. Drooling, vomiting, wobbliness, weakness and tremors can start within minutes to hours. Never put concentrated oils on your dog, and call your vet."
+      es: "Los aceites esenciales concentrados, sobre todo el de árbol de té, pueden intoxicar a los perros tanto si los tragan como si los lamen o se les aplican en la piel. El babeo, los vómitos, la falta de coordinación, la debilidad y los temblores pueden empezar en minutos u horas. Nunca apliques aceites concentrados a tu perro, y llama a tu veterinario."
+    signs: [hypersalivation, vomiting, lethargy, loss_of_appetite, ataxia, weakness, tremors, seizures]
+    onset_hours: null
+    emergency_actions: [call_vet_now, do_not_induce_vomiting, bring_packaging]
+  cat:
+    verdict: toxic
+    severity: severe
+    headline:
+      en: Toxic to cats. Call your vet now.
+      es: Tóxico para gatos. Llama ahora a tu veterinario.
+    summary:
+      en: "Cats are even more sensitive to essential oils than dogs, and small or young cats are most at risk. Concentrated oils, tea tree oil above all, can poison a cat whether swallowed, licked or put on the skin, with signs within minutes to hours. Never put concentrated oils on your cat, and call your vet now."
+      es: "Los gatos son aún más sensibles a los aceites esenciales que los perros, y los gatos pequeños o jóvenes corren más riesgo. Los aceites concentrados, sobre todo el de árbol de té, pueden intoxicar a un gato tanto si los traga como si los lame o se le aplican en la piel, con signos en minutos u horas. Nunca apliques aceites concentrados a tu gato, y llama ahora a tu veterinario."
+    signs: [hypersalivation, vomiting, lethargy, loss_of_appetite, ataxia, weakness, tremors, seizures]
+    onset_hours: null
+    emergency_actions: [call_vet_now, do_not_induce_vomiting, bring_packaging]
+sources:
+  - label: Merck Veterinary Manual — Toxicoses From Essential Oils in Animals
+    url: https://www.merckvetmanual.com/toxicology/toxicoses-from-household-hazards/toxicoses-from-essential-oils-in-animals
+    accessed: 2026-09-29
+  - label: "Khan, McLean & Slater, \"Concentrated tea tree oil toxicosis in dogs and cats: 443 cases (2002-2012)\", J Am Vet Med Assoc (2014)"
+    url: https://pubmed.ncbi.nlm.nih.gov/24344857/
+    accessed: 2026-09-29
+review:
+  reviewed_by: "Jose Salguero"
+  reviewed_at: 2026-09-30
+  status: approved
+translations:
+  es:
+    tier_a: approved
+    tier_b: approved
+    translated_by: "Claude (draft)"
+    reviewed_by: "Jose Salguero"
+    reviewed_at: 2026-09-30

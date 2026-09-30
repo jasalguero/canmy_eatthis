@@ -1,0 +1,54 @@
+id: zinc_pennies
+display_name:
+  en: Zinc coins (US pennies)
+  es: Monedas de zinc (centavos de dólar)
+category: household
+aliases:
+  en: [penny, pennies, us penny, zinc penny, zinc]
+  es: [centavo de dólar, moneda de un centavo, zinc]
+confusable_with: []
+is_ingredient: false
+high_risk: true
+species:
+  dog:
+    verdict: toxic
+    severity: severe
+    headline:
+      en: Toxic to dogs. Call your vet now.
+      es: Tóxico para perros. Llama ahora a tu veterinario.
+    summary:
+      en: "US pennies minted after 1982 are mostly zinc. Swallowed, they can release zinc that destroys red blood cells and damages the kidneys, which can be fatal. Call your vet: a coin may need to be removed."
+      es: "Los centavos de dólar estadounidenses acuñados después de 1982 son sobre todo de zinc. Si se tragan, pueden liberar zinc, que destruye los glóbulos rojos y daña los riñones, y puede ser mortal. Llama a tu veterinario: puede que haya que extraer la moneda."
+    signs: [pale_gums, jaundice, kidney_failure_signs]
+    onset_hours: null
+    emergency_actions: [call_vet_now, do_not_induce_vomiting, bring_packaging]
+  cat:
+    verdict: toxic
+    severity: severe
+    headline:
+      en: Toxic to cats. Call your vet now.
+      es: Tóxico para gatos. Llama ahora a tu veterinario.
+    summary:
+      en: "US pennies minted after 1982 are mostly zinc. Swallowed, they can release zinc that destroys red blood cells and damages the kidneys, which can be fatal. Call your vet: a coin may need to be removed."
+      es: "Los centavos de dólar estadounidenses acuñados después de 1982 son sobre todo de zinc. Si se tragan, pueden liberar zinc, que destruye los glóbulos rojos y daña los riñones, y puede ser mortal. Llama a tu veterinario: puede que haya que extraer la moneda."
+    signs: [pale_gums, jaundice, kidney_failure_signs]
+    onset_hours: null
+    emergency_actions: [call_vet_now, do_not_induce_vomiting, bring_packaging]
+sources:
+  - label: Merck Veterinary Manual — Toxicoses in Animals From Human Multivitamins and Supplements
+    url: https://www.merckvetmanual.com/toxicology/toxicoses-from-human-vitamins-minerals-and-dietary-supplements/toxicoses-in-animals-from-human-multivitamins-and-supplements
+    accessed: 2026-09-29
+  - label: Cornell Feline Health Center — Poisons
+    url: https://www.vet.cornell.edu/departments-centers-and-institutes/cornell-feline-health-center/health-information/feline-health-topics/poisons
+    accessed: 2026-09-29
+review:
+  reviewed_by: "Jose Salguero"
+  reviewed_at: 2026-09-30
+  status: approved
+translations:
+  es:
+    tier_a: approved
+    tier_b: approved
+    translated_by: "Claude (draft)"
+    reviewed_by: "Jose Salguero"
+    reviewed_at: 2026-09-30

@@ -1,0 +1,54 @@
+id: peace_lily
+display_name:
+  en: Peace lily
+  es: Espatifilo
+category: plant
+aliases:
+  en: [peace lily, spathiphyllum]
+  es: [espatifilo, lirio de la paz, cuna de moisés, spathiphyllum]
+confusable_with: [lily]
+is_ingredient: false
+high_risk: true
+species:
+  dog:
+    verdict: caution
+    severity: null
+    headline:
+      en: Best kept away from dogs.
+      es: Mejor mantenerlo alejado de los perros.
+    summary:
+      en: "Peace lily contains crystals that cause immediate pain, burning and swelling in the mouth, with drooling. Serious poisoning is rare, but call your vet if your dog has trouble breathing or swallowing."
+      es: "El espatifilo contiene cristales que provocan de inmediato dolor, ardor e hinchazón en la boca, con babeo. Las intoxicaciones graves son poco frecuentes, pero llama a tu veterinario si a tu perro le cuesta respirar o tragar."
+    signs: [mouth_irritation, hypersalivation]
+    onset_hours: null
+    emergency_actions: []
+  cat:
+    verdict: caution
+    severity: null
+    headline:
+      en: Best kept away from cats.
+      es: Mejor mantenerlo alejado de los gatos.
+    summary:
+      en: "Peace lily contains crystals that cause immediate pain, burning and swelling in the mouth, with drooling. Serious poisoning is rare, but call your vet if your cat has trouble breathing or swallowing."
+      es: "El espatifilo contiene cristales que provocan de inmediato dolor, ardor e hinchazón en la boca, con babeo. Las intoxicaciones graves son poco frecuentes, pero llama a tu veterinario si a tu gato le cuesta respirar o tragar."
+    signs: [mouth_irritation, hypersalivation]
+    onset_hours: null
+    emergency_actions: []
+sources:
+  - label: Merck Veterinary Manual — Houseplants and Ornamentals Toxic to Animals
+    url: https://www.merckvetmanual.com/toxicology/poisonous-plants/houseplants-and-ornamentals-toxic-to-animals
+    accessed: 2026-09-29
+  - label: FDA — Potentially Dangerous Items for Your Pet
+    url: https://www.fda.gov/animal-veterinary/animal-health-literacy/potentially-dangerous-items-your-pet
+    accessed: 2026-09-29
+review:
+  reviewed_by: "Jose Salguero"
+  reviewed_at: 2026-09-30
+  status: approved
+translations:
+  es:
+    tier_a: approved
+    tier_b: approved
+    translated_by: "Claude (draft)"
+    reviewed_by: "Jose Salguero"
+    reviewed_at: 2026-09-30

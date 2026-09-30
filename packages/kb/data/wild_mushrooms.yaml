@@ -1,0 +1,54 @@
+id: wild_mushrooms
+display_name:
+  en: Wild mushrooms
+  es: Setas silvestres
+category: plant
+aliases:
+  en: [wild mushroom, wild mushrooms, toadstool, toadstools, death cap, amanita]
+  es: [seta silvestre, setas silvestres, hongo silvestre, oronja verde, amanita]
+confusable_with: []
+is_ingredient: false
+high_risk: true
+species:
+  dog:
+    verdict: toxic
+    severity: severe
+    headline:
+      en: Toxic to dogs. Call your vet now.
+      es: Tóxico para perros. Llama ahora a tu veterinario.
+    summary:
+      en: "Wild mushrooms are hard to identify, even for experts, and some, like the death cap, are deadly: a single mushroom can kill a dog. The most dangerous kinds often cause no signs for 6 to 24 hours, then attack the liver and kidneys. Don't wait for signs: call your vet now."
+      es: "Las setas silvestres son difíciles de identificar, incluso para expertos, y algunas, como la oronja verde, son mortales: una sola seta puede matar a un perro. Las más peligrosas no suelen dar signos durante 6 a 24 horas y después atacan el hígado y los riñones. No esperes a que aparezcan signos: llama ahora a tu veterinario."
+    signs: [vomiting, diarrhoea, lethargy, low_blood_sugar_signs, jaundice, collapse]
+    onset_hours: null
+    emergency_actions: [call_vet_now, do_not_induce_vomiting, bring_packaging]
+  cat:
+    verdict: toxic
+    severity: severe
+    headline:
+      en: Toxic to cats. Call your vet now.
+      es: Tóxico para gatos. Llama ahora a tu veterinario.
+    summary:
+      en: "Wild mushrooms are hard to identify, even for experts, and some, like the death cap, are deadly: a single mushroom can kill a cat. The most dangerous kinds often cause no signs for 6 to 24 hours, then attack the liver and kidneys. Don't wait for signs: call your vet now."
+      es: "Las setas silvestres son difíciles de identificar, incluso para expertos, y algunas, como la oronja verde, son mortales: una sola seta puede matar a un gato. Las más peligrosas no suelen dar signos durante 6 a 24 horas y después atacan el hígado y los riñones. No esperes a que aparezcan signos: llama ahora a tu veterinario."
+    signs: [vomiting, diarrhoea, lethargy, low_blood_sugar_signs, jaundice, collapse]
+    onset_hours: null
+    emergency_actions: [call_vet_now, do_not_induce_vomiting, bring_packaging]
+sources:
+  - label: Merck Veterinary Manual — Overview of Mushrooms Toxic to Animals
+    url: https://www.merckvetmanual.com/toxicology/poisonous-mushrooms/overview-of-mushrooms-toxic-to-animals
+    accessed: 2026-09-29
+  - label: "\"Case Report: α-amanitin toxicosis leading to acute death in a puppy\", Front Vet Sci (2025)"
+    url: https://pmc.ncbi.nlm.nih.gov/articles/PMC12213408/
+    accessed: 2026-09-29
+review:
+  reviewed_by: "Jose Salguero"
+  reviewed_at: 2026-09-30
+  status: approved
+translations:
+  es:
+    tier_a: approved
+    tier_b: approved
+    translated_by: "Claude (draft)"
+    reviewed_by: "Jose Salguero"
+    reviewed_at: 2026-09-30

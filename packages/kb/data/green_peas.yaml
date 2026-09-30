@@ -1,0 +1,54 @@
+id: green_peas
+display_name:
+  en: Green peas
+  es: Guisantes
+category: food
+aliases:
+  en: [green peas, garden peas, snap peas, sugar snap peas]
+  es: [guisantes, arvejas, chícharos, tirabeques]
+confusable_with: []
+is_ingredient: true
+high_risk: false
+species:
+  dog:
+    verdict: safe
+    severity: null
+    headline:
+      en: No known risk from green peas.
+      es: Sin riesgo conocido con guisantes.
+    summary:
+      en: "Peas, including snap peas, are on university veterinary nutritionists' lists of healthy treats for dogs. Treats should make up no more than 10% of your dog's daily calories, and may not suit a dog with a medical condition, so check with your vet."
+      es: "Los guisantes, incluidos los tirabeques, figuran en las listas de premios saludables de nutricionistas veterinarios universitarios para perros. Los premios no deberían superar el 10 % de las calorías diarias de tu perro, y pueden no ser adecuados si tiene alguna enfermedad, así que consulta a tu veterinario."
+    signs: []
+    onset_hours: null
+    emergency_actions: []
+  cat:
+    verdict: unknown
+    severity: null
+    headline:
+      en: Not sure — ask your vet.
+      es: No estoy seguro — consulta a tu veterinario.
+    summary:
+      en: "One university veterinary list includes peas as a treat for cats, which isn't enough for us to give you an answer. Ask your vet if you're unsure."
+      es: "Una lista veterinaria universitaria incluye los guisantes como premio para gatos, pero eso no basta para darte una respuesta. Consulta a tu veterinario si tienes dudas."
+    signs: []
+    onset_hours: null
+    emergency_actions: []
+sources:
+  - label: NC State Veterinary Hospital — Healthy Human Food Treats For Pets
+    url: https://hospital.cvm.ncsu.edu/services/small-animals/nutrition/healthy-human-food-treats-for-pets/
+    accessed: 2026-09-29
+  - label: "Cornell Riney Canine Health Center — Re-evaluating your dog's diet"
+    url: https://www.vet.cornell.edu/departments-centers-and-institutes/riney-canine-health-center/canine-health-topics/re-evaluating-your-dogs-diet
+    accessed: 2026-09-29
+review:
+  reviewed_by: "Jose Salguero"
+  reviewed_at: 2026-09-30
+  status: approved
+translations:
+  es:
+    tier_a: approved
+    tier_b: approved
+    translated_by: "Claude (draft)"
+    reviewed_by: "Jose Salguero"
+    reviewed_at: 2026-09-30
