@@ -44,8 +44,10 @@ earlier. On re-run from the repo root, `pnpm lint:fix` reports no fixes and `bio
   on GitHub; earlier runs were likely red because of the alcohol entry.
 - 🟡 Schema change breaks both consumers — `apps/mobile` and `services/api` both typecheck against
   `packages/shared`. Do the deliberate-break experiment once and record it.
-- 🟡 Language and region independent — `apps/mobile/src/lib/settings.test.ts` exists (passes).
-  Confirm it asserts that changing one leaves the other unchanged.
+- ✅ Language and region independent — `settings.test.ts` passes, and checked on device (iPhone 17,
+  iOS 27, 2026-09-30): switching to Español translated Settings and left region unchanged; then
+  choosing region US left the language on Español. Region rows show raw codes (ES, US, MX, AR,
+  GB), not names, and no region is preselected when the device region isn't one of the five.
 - 🟡 Pseudo-locale renders in a dev build — `src/i18n/pseudoLocale.ts` exists and is wired in
   `i18n/index.ts`. Needs a visual check.
 
@@ -110,6 +112,34 @@ earlier. On re-run from the repo root, `pnpm lint:fix` reports no fixes and `bio
 - 🟡 Airplane mode — `offlineKb.ts` resolves from bundled assets with no network path; run once in
   airplane mode on a device.
 - ⬜ Resolution <50 ms and cold start <2 s on mid-range Android — device measurement.
+
+## Findings from the device session (2026-09-30, iPhone 17 / iOS 27)
+
+Home, first-run, Settings, the typed-lookup flow and the Result screen all render and behave.
+Problems found:
+
+1. **Bare "chocolate" returns "Not sure".** No entry has plain `chocolate` as an alias: only
+   `chocolate_dark` ("dark chocolate", "cocoa powder", …) and `chocolate_milk`. The P3 acceptance
+   list requires "chocolate" and "Chocolate" to resolve, and `resolution.fixtures.ts` only tests
+   "dark chocolate". `unknown` is the safe outcome, but it is the most common dog-toxin query.
+   Decision needed: alias bare "chocolate" to `chocolate_dark` (the more severe entry, so not
+   optimistic; `confusable_with` already links `chocolate_milk`), or send it through the Confirm
+   screen, or amend the criterion.
+2. **The description field mutates input.** No `autoCorrect`, `autoCapitalize` or `spellCheck`
+   prop anywhere in `apps/mobile/src` (`DescriptionInput.tsx`). Typing "chocolate" arrived as
+   "Chocolate", and typing "limon" produced a result headed "lemon", presumably iOS autocorrect.
+   For a lookup field, autocorrect can silently turn a Spanish or Latin word into a different
+   English one. Suggested: `autoCorrect={false}`, `spellCheck={false}`, `autoCapitalize="none"`,
+   plus a test. Not yet changed.
+3. **"limon" and "pina" have no KB entry to match.** There is no lemon or pineapple entry
+   (`banana` covers "plátano", and "platano" is a fair match). The acceptance line for those two
+   words is stale against the current KB: either add sourced entries (two sources each, per
+   AGENTS.md #15) or amend the criterion. Unknown is the correct answer today.
+4. **The header wordmark reads "CanyMy EatThis"** on Home (the app name is "CanMy*EatThis").
+   Possibly the wordmark treatment of the asterisk; worth a look by whoever owns the branding.
+
+Not yet checked on device: pseudo-locale, permission denial, VoiceOver, 200% system font,
+airplane mode, timings, Android.
 
 ## Suggested order to close the gaps
 
