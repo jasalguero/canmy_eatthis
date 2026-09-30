@@ -19,6 +19,7 @@ export {
 export {
   buildAliasSearchIndex,
   resolveText,
+  suggestText,
   type AliasIndex,
   type AliasSearchIndex,
   type TextResolution,

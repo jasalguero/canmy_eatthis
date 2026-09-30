@@ -12,6 +12,8 @@
   "forPet": "for {petName}",
   "unknownHeadline": "Not sure — ask your vet",
   "unknownBody": "This is not in our knowledge base, so we will not guess. A vet or a poison line can tell you in a minute.",
+  "didYouMean": "Did you mean…?",
+  "didYouMeanA11yHint": "Shows what we know about {item}",
   "sourceCite": "{source} lists {item} as {verdict, select, toxic {toxic} caution {a concern} unknown {not established} other {not known to be toxic}} {species, select, dog {for dogs} other {for cats}}",
   "sourceCiteA11yHint": "Opens the source in your browser",
   "sectionWhatToDo": "What to do now",

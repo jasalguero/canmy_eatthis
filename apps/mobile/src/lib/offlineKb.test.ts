@@ -1,8 +1,13 @@
-import { getKbEntry, getKbVersion, resolveOffline } from './offlineKb';
+import { getKbEntry, getKbVersion, resolveOffline, suggestOffline } from './offlineKb';
 
 describe('offlineKb — resolution against the bundled asset snapshot', () => {
   it('resolves an exact English alias', () => {
     expect(resolveOffline('dark chocolate')).toEqual({ type: 'exact', kbId: 'chocolate_dark' });
+  });
+
+  it('resolves a bare "chocolate" to the more severe entry, in either case', () => {
+    expect(resolveOffline('chocolate')).toEqual({ type: 'exact', kbId: 'chocolate_dark' });
+    expect(resolveOffline('Chocolate')).toEqual({ type: 'exact', kbId: 'chocolate_dark' });
   });
 
   it('resolves an exact Spanish alias', () => {
@@ -32,5 +37,26 @@ describe('offlineKb — resolution against the bundled asset snapshot', () => {
   it('every shipped language has a non-empty KB version', () => {
     expect(getKbVersion('en').length).toBeGreaterThan(0);
     expect(getKbVersion('es').length).toBeGreaterThan(0);
+  });
+});
+
+describe('suggestOffline', () => {
+  it('offers a named entry for a typo that resolveOffline will not guess', () => {
+    expect(resolveOffline('onyoin')).toEqual({ type: 'none', kbId: null });
+    const suggestions = suggestOffline('onyoin', 'en');
+    expect(suggestions.map((s) => s.kbId)).toContain('alliums');
+    expect(suggestions.every((s) => s.name.length > 0)).toBe(true);
+  });
+
+  it('names the suggestion in the requested language', () => {
+    const en = suggestOffline('onyoin', 'en').find((s) => s.kbId === 'alliums');
+    const es = suggestOffline('onyoin', 'es').find((s) => s.kbId === 'alliums');
+    expect(en?.name).toBeDefined();
+    expect(es?.name).toBeDefined();
+    expect(es?.name).not.toBe(en?.name);
+  });
+
+  it('offers nothing for gibberish', () => {
+    expect(suggestOffline('qwerty', 'en')).toEqual([]);
   });
 });

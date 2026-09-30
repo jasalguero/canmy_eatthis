@@ -18,6 +18,7 @@ import { Button, Enter, MotionStill, Text } from '@/components/primitives';
 import { devResultPayload } from '@/lib/devPreview';
 import { useDraftStore } from '@/lib/draft';
 import { openEmergency } from '@/lib/emergency';
+import { type KbSuggestion, suggestOffline } from '@/lib/offlineKb';
 import { canReport, reportWrongAnswer } from '@/lib/report';
 import { useSettingsStore } from '@/lib/settings';
 import { buildRealVerdict, buildUnknownVerdict } from '@/lib/verdict';
@@ -68,6 +69,9 @@ export default function ResultRoute() {
   // A real on-device resolution (exact or fuzzy match, or a genuine no-match), both through
   // `resolveVerdict()` (AGENTS.md #5). `?case=` is the gallery's fixed scenarios, which only a
   // development build honours (`lib/devPreview.ts`); anything else has no answer to show.
+  // "Did you mean…?" — only for a query that matched nothing; a tap builds a real verdict.
+  const suggestions = params.unknown === '1' ? suggestOffline(params.query ?? '', language) : [];
+
   const payload = params.kbId
     ? buildRealVerdict({ kbId: params.kbId, species, language, disclaimer })
     : params.unknown === '1'
@@ -83,10 +87,29 @@ export default function ResultRoute() {
 
   if (!payload) return <Redirect href="/" />;
   // `still` freezes the entrance animation and the haptic for the gallery and for screenshots.
-  return <Result payload={payload} still={params.still === '1'} />;
+  // Keyed on what was asked, not just the route: Expo Router reuses this screen when only the
+  // params change (a second link, a suggestion tapped), and a reused screen never replays the
+  // banner's entrance, leaving it parked off-screen at its first frame.
+  const resultKey = `${params.kbId ?? ''}|${params.query ?? ''}|${params.case ?? ''}|${species}`;
+  return (
+    <Result
+      key={resultKey}
+      payload={payload}
+      still={params.still === '1'}
+      suggestions={suggestions}
+    />
+  );
 }
 
-function Result({ payload, still }: { payload: VerdictPayload; still: boolean }) {
+function Result({
+  payload,
+  still,
+  suggestions,
+}: {
+  payload: VerdictPayload;
+  still: boolean;
+  suggestions: KbSuggestion[];
+}) {
   const { t, i18n } = useTranslation();
   const resetDraft = useDraftStore((state) => state.reset);
   const reducedMotion = useReducedMotion();
@@ -147,6 +170,31 @@ function Result({ payload, still }: { payload: VerdictPayload; still: boolean })
                 {payload.headline}
               </Text>
             </Staggered>
+
+            {/* Candidates to look at, not answers: each tap builds a verdict from the KB. */}
+            {suggestions.length > 0 ? (
+              <View className="gap-2">
+                <Text variant="label" tone="secondary" accessibilityRole="header">
+                  {t('result:didYouMean')}
+                </Text>
+                <View className="flex-row flex-wrap gap-2">
+                  {suggestions.map((suggestion) => (
+                    <Button
+                      key={suggestion.kbId}
+                      label={suggestion.name}
+                      variant="secondary"
+                      accessibilityHint={t('result:didYouMeanA11yHint', { item: suggestion.name })}
+                      onPress={() =>
+                        router.push({
+                          pathname: '/result',
+                          params: { kbId: suggestion.kbId, species: payload.species },
+                        })
+                      }
+                    />
+                  ))}
+                </View>
+              </View>
+            ) : null}
 
             {/* The app's actual claim, above every section (docs/04-knowledge-base.md §2). */}
             {payload.sources[0] ? (

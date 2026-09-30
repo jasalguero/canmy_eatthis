@@ -1,8 +1,9 @@
-import { buildAliasSearchIndex, resolveText } from '@canmyeatthis/shared';
+import { buildAliasSearchIndex, resolveText, suggestText } from '@canmyeatthis/shared';
 import { describe, expect, it } from 'vitest';
 import { FUZZY_FALSE_FRIENDS, FUZZY_POSITIVE_RESOLUTIONS } from '../fixtures/fuzzy-resolutions.js';
 import { NEGATIVE_RESOLUTIONS } from '../fixtures/negative-resolutions.js';
 import { POSITIVE_RESOLUTIONS } from '../fixtures/resolution.fixtures.js';
+import { SUGGESTION_NEGATIVES, SUGGESTION_POSITIVES } from '../fixtures/suggestions.js';
 import { buildAliasIndex, loadEntries } from './build.js';
 
 /**
@@ -40,5 +41,29 @@ describe('resolveText against the real KB', () => {
     for (const query of FUZZY_FALSE_FRIENDS) {
       expect(resolveText(query, index, searchIndex)).toEqual({ type: 'none', kbId: null });
     }
+  });
+});
+
+describe('suggestText against the real KB', () => {
+  const index = buildAliasIndex(realEntries);
+  const searchIndex = buildAliasSearchIndex(index);
+
+  it('offers the entry a typo, prefix or word of the query points at', () => {
+    for (const { input, expectedIncludes } of SUGGESTION_POSITIVES) {
+      expect(suggestText(input, index, searchIndex), input).toContain(expectedIncludes);
+    }
+  });
+
+  it('offers nothing for gibberish or a short common word', () => {
+    for (const query of SUGGESTION_NEGATIVES) {
+      expect(suggestText(query, index, searchIndex), query).toEqual([]);
+    }
+  });
+
+  it('never offers more than three, or the entry the query already resolves to as its own alias', () => {
+    for (const { input } of SUGGESTION_POSITIVES) {
+      expect(suggestText(input, index, searchIndex).length).toBeLessThanOrEqual(3);
+    }
+    expect(suggestText('dark chocolate', index, searchIndex)).not.toContain('chocolate_dark');
   });
 });

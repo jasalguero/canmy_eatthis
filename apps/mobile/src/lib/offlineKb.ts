@@ -6,6 +6,7 @@ import {
   type TextResolution,
   buildAliasSearchIndex,
   resolveText,
+  suggestText,
 } from '@canmyeatthis/shared';
 
 import type { SupportedLanguage } from '@/i18n/namespaces';
@@ -103,4 +104,22 @@ export function resolveOffline(query: string): TextResolution {
 export function resolveExactOffline(text: string): string | null {
   const resolution = resolveOffline(text);
   return resolution.type === 'exact' ? resolution.kbId : null;
+}
+
+export interface KbSuggestion {
+  kbId: string;
+  /** The entry's display name in the person's language — what the chip says. */
+  name: string;
+}
+
+/**
+ * "Did you mean…?" candidates for a query that resolved to nothing. These are names to tap, never
+ * an answer: the verdict for the one a person picks is built from the KB like any other lookup
+ * (`suggestText` in `packages/shared`).
+ */
+export function suggestOffline(query: string, language: SupportedLanguage): KbSuggestion[] {
+  return suggestText(query, ALIAS_INDEX, getSearchIndex()).flatMap((kbId) => {
+    const entry = getKbEntry(kbId, language);
+    return entry ? [{ kbId, name: entry.displayName }] : [];
+  });
 }

@@ -12,6 +12,8 @@
   "forPet": "para {petName}",
   "unknownHeadline": "No estamos seguros — consulta a tu veterinario",
   "unknownBody": "Esto no está en nuestra base de conocimiento, así que no vamos a adivinar. Un veterinario o un teléfono de toxicología puede decírtelo en un minuto.",
+  "didYouMean": "¿Quisiste decir…?",
+  "didYouMeanA11yHint": "Muestra lo que sabemos sobre {item}",
   "sourceCite": "{source} describe {item} como {verdict, select, toxic {tóxico} caution {un riesgo} unknown {no establecido} other {sin toxicidad conocida}} {species, select, dog {para perros} other {para gatos}}",
   "sourceCiteA11yHint": "Abre la fuente en tu navegador",
   "sectionWhatToDo": "Qué hacer ahora",

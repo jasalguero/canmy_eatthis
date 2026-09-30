@@ -155,3 +155,109 @@ export function resolveText(
 
   return { type: 'fuzzy', kbId: bestId };
 }
+
+/**
+ * "Did you mean…?" candidates for a query that resolved to nothing. **Never a resolution:** these
+ * are ids for the person to look at and tap, and the verdict for whichever they pick still comes
+ * from `resolveVerdict()` on the KB (AGENTS.md #1). A wrong suggestion costs a glance; a wrong
+ * resolution costs an answer the person trusts — which is why this is a separate function and
+ * why nothing may use it to skip the choice.
+ *
+ * It uses plain edit distance, not the Fuse scoring `resolveText` is built on: Fuse's substring-
+ * flavoured scores ranked "limon" next to "alliums" and "the" next to "cannabis", noise that would
+ * teach people to ignore the row. A candidate is an alias that is
+ *  (a) within a length-scaled edit distance of the whole query ("onyoin" → onion, "avacado"),
+ *  (b) within that distance of one word of the query ("chocolat cake" → chocolate), or exactly
+ *      one of its words ("lily flower" → lily), or
+ *  (c) a prefix of the query or the query a prefix of it ("peanut" ↔ "peanut butter", the very
+ *      case `resolveText` refuses to guess).
+ * Best alias per entry, best entries first, at most `limit`.
+ */
+const SUGGEST_MIN_QUERY_LENGTH = 3;
+/** A word or prefix relation only counts when the shorter side is a real word, not "a" or "ca". */
+const SUGGEST_MIN_WORD_LENGTH = 4;
+
+/** Edits allowed for a word of this length: strict on short words, where one edit is a new word. */
+function allowedEdits(length: number): number {
+  if (length <= 4) return 0;
+  if (length === 5) return 1;
+  if (length <= 9) return 2;
+  return 3;
+}
+
+/** Levenshtein distance, giving up (returning `max + 1`) once it must exceed `max`. */
+function editDistance(a: string, b: string, max: number): number {
+  if (Math.abs(a.length - b.length) > max) return max + 1;
+  let previous = Array.from({ length: b.length + 1 }, (_, j) => j);
+  for (let i = 1; i <= a.length; i++) {
+    const current = [i];
+    let rowMin = i;
+    for (let j = 1; j <= b.length; j++) {
+      const cost = a[i - 1] === b[j - 1] ? 0 : 1;
+      const value = Math.min(
+        (previous[j] ?? 0) + 1,
+        (current[j - 1] ?? 0) + 1,
+        (previous[j - 1] ?? 0) + cost,
+      );
+      current.push(value);
+      if (value < rowMin) rowMin = value;
+    }
+    if (rowMin > max) return max + 1;
+    previous = current;
+  }
+  return previous[b.length] ?? max + 1;
+}
+
+export function suggestText(
+  query: string,
+  index: AliasIndex,
+  _searchIndex?: AliasSearchIndex,
+  limit = 3,
+): string[] {
+  const key = normalise(query);
+  if (key.length < SUGGEST_MIN_QUERY_LENGTH) return [];
+  const words = key.split(' ').filter((word) => word.length >= SUGGEST_MIN_WORD_LENGTH);
+
+  // Whatever the query already is an alias of is the answer, not a suggestion.
+  const own = index[key];
+  const best = new Map<string, number>();
+  const offer = (alias: string, score: number) => {
+    const id = index[alias];
+    if (id === undefined || id === own) return;
+    const seen = best.get(id);
+    if (seen === undefined || score < seen) best.set(id, score);
+  };
+
+  for (const alias of Object.keys(index)) {
+    if (alias === key) continue;
+
+    const whole = editDistance(key, alias, allowedEdits(Math.max(key.length, alias.length)));
+    if (whole <= allowedEdits(Math.max(key.length, alias.length))) {
+      offer(alias, whole / Math.max(key.length, alias.length));
+    }
+
+    const prefixed =
+      (alias.startsWith(key) && key.length >= SUGGEST_MIN_WORD_LENGTH) ||
+      (key.startsWith(alias) && alias.length >= SUGGEST_MIN_WORD_LENGTH);
+    if (prefixed) offer(alias, 0.15);
+
+    // Word-level: only against one-word aliases, so "chocolat cake" can reach "chocolate".
+    if (words.length > 1 && !alias.includes(' ')) {
+      for (const word of words) {
+        if (word === alias) {
+          offer(alias, 0.2);
+          continue;
+        }
+        // One edit on a mid-length word, more only on a long one; never on a four-letter word.
+        const limit =
+          word.length >= 8 ? allowedEdits(word.length) : Math.min(1, allowedEdits(word.length));
+        if (limit > 0 && editDistance(word, alias, limit) <= limit) offer(alias, 0.3);
+      }
+    }
+  }
+
+  return [...best.entries()]
+    .sort((a, b) => a[1] - b[1])
+    .slice(0, limit)
+    .map(([id]) => id);
+}

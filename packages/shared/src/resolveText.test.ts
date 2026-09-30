@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { type AliasIndex, buildAliasSearchIndex, resolveText } from './resolveText.js';
+import { type AliasIndex, buildAliasSearchIndex, resolveText, suggestText } from './resolveText.js';
 
 /**
  * A small synthetic index rather than the real KB — `packages/kb` depends on `packages/shared`
@@ -79,5 +79,32 @@ describe('resolveText', () => {
   it('returns none for an empty or whitespace-only query', () => {
     expect(resolve('')).toEqual({ type: 'none', kbId: null });
     expect(resolve('   ')).toEqual({ type: 'none', kbId: null });
+  });
+});
+
+describe('suggestText', () => {
+  const suggest = (query: string) => suggestText(query, INDEX, buildAliasSearchIndex(INDEX));
+
+  it('offers the entry a typo is close to', () => {
+    expect(suggest('carrott')).toEqual(['carrot']);
+  });
+
+  it('offers an entry whose alias the query is a prefix of, which resolveText will not guess', () => {
+    expect(resolve('peanut')).toEqual({ type: 'none', kbId: null });
+    expect(suggest('peanut')).toEqual(['peanut_butter']);
+  });
+
+  it('returns each entry once, however many of its aliases match', () => {
+    expect(suggest('onyon')).toEqual(['alliums']);
+  });
+
+  it('offers nothing for gibberish, a short word, or an empty query', () => {
+    expect(suggest('qwerty')).toEqual([]);
+    expect(suggest('xy')).toEqual([]);
+    expect(suggest('  ')).toEqual([]);
+  });
+
+  it('never offers the entry the query is already an alias of', () => {
+    expect(suggest('dark chocolate')).not.toContain('chocolate_dark');
   });
 });
