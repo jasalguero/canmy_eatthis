@@ -159,8 +159,9 @@ Debug build via `expo run:android`; Metro over `adb reverse`.
   and logged a dev warning on every launch).
 - ⬜ Not run: TalkBack, timings (an emulator says nothing about a mid-range phone), Android
   pseudo-locale.
-- ❓ A deep link `result?kbId=lemon&species=cat` showed "for dogs" on Android. It worked on iOS.
-  Likely the link reused the running screen; not diagnosed.
+- ✅ The "for dogs" oddity on `result?kbId=lemon&species=cat` was a test artefact: unquoted, the
+  device shell split `adb shell am start -d …&species=cat` at the `&`, so the app only received
+  `kbId=lemon`. Quoted, it shows "for cats". Not an app bug.
 
 ## Suggested order to close the gaps
 
