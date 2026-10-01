@@ -29,7 +29,9 @@ export interface SourceCiteProps {
 export function SourceCite({ source, itemName, verdict, species, className }: SourceCiteProps) {
   const { t } = useTranslation();
   const { theme } = useTheme();
-  const sentence = t('result:sourceCite', {
+  // An `unknown` verdict means the source does not settle it, so the sentence must not say the
+  // source "describes" the item as anything: it only says we looked.
+  const sentence = t(verdict === 'unknown' ? 'result:sourceCiteUnknown' : 'result:sourceCite', {
     source: source.label,
     item: itemName,
     verdict,

@@ -15,6 +15,7 @@
   "didYouMean": "Did you mean…?",
   "didYouMeanA11yHint": "Shows what we know about {item}",
   "sourceCite": "{source} lists {item} as {verdict, select, toxic {toxic} caution {a concern} unknown {not established} other {not known to be toxic}} {species, select, dog {for dogs} other {for cats}}",
+  "sourceCiteUnknown": "We checked {source}, which does not give us an answer on {item} {species, select, dog {for dogs} other {for cats}}.",
   "sourceCiteA11yHint": "Opens the source in your browser",
   "sectionWhatToDo": "What to do now",
   "sectionSigns": "What you might see",

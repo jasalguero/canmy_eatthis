@@ -15,6 +15,7 @@
   "didYouMean": "¿Quisiste decir…?",
   "didYouMeanA11yHint": "Muestra lo que sabemos sobre {item}",
   "sourceCite": "{source} describe {item} como {verdict, select, toxic {tóxico} caution {un riesgo} unknown {no establecido} other {sin toxicidad conocida}} {species, select, dog {para perros} other {para gatos}}",
+  "sourceCiteUnknown": "Consultamos {source}, que no nos permite responder sobre {item} {species, select, dog {para perros} other {para gatos}}.",
   "sourceCiteA11yHint": "Abre la fuente en tu navegador",
   "sectionWhatToDo": "Qué hacer ahora",
   "sectionSigns": "Qué puedes observar",

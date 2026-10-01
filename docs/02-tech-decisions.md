@@ -971,3 +971,19 @@ dogs only.
   sources do not cover is `unknown`.
 - **This is an exception, not a precedent.** The next entry that cannot meet §2 is omitted, unless
   the same decision is recorded here again.
+
+## D36 — An `unknown` result does not cite a source as saying something
+
+`docs/04-knowledge-base.md` §2 puts the source above the fold on every result, worded "{source}
+lists {item} as {verdict}". For an `unknown` verdict that sentence says a source "describes" the
+item as "not established", which is not what the source says: pineapple for cats cited Hill's
+dog-only article as if it had spoken about cats. Decision (2026-10-01):
+
+- **No source line above the fold for `unknown`.** A source that does not settle the question is
+  not a claim the app can attribute to it. (A query that matched nothing already had no sources.)
+- **The Sources section still lists them,** worded "We checked {source}, which does not give us an
+  answer on {item}…" (`result:sourceCiteUnknown`), so a person can see what was looked at.
+- **The "not in our knowledge base" line is for a genuine no-match only.** An entry-backed
+  `unknown` shows the entry's own explanation instead.
+- **Phase 6's "source above the fold on every result screen" now means every screen that states
+  a verdict other than `unknown`.**

@@ -197,7 +197,10 @@ function Result({
             ) : null}
 
             {/* The app's actual claim, above every section (docs/04-knowledge-base.md §2). */}
-            {payload.sources[0] ? (
+            {/* Not for `unknown`: a source cannot be cited as saying something it does not say
+                (Hill's dog-only pineapple article under a cat result). Those sources are still
+                listed under Sources, worded as "we checked this", not "this says". */}
+            {payload.sources[0] && payload.verdict !== 'unknown' ? (
               <Staggered enter={rise(0)}>
                 <SourceCite
                   source={payload.sources[0]}
@@ -224,9 +227,12 @@ function Result({
               </Collapsible>
             ) : null}
 
+            {/* Why it is unknown, in the entry's own words. For a query that matched nothing this is
+                `result:unknownBody` ("not in our knowledge base"); for an entry that simply
+                doesn't cover this species it must not say that — the entry is in the KB. */}
             {payload.verdict === 'unknown' ? (
               <Text variant="body" tone="secondary">
-                {t('result:unknownBody')}
+                {payload.summary}
               </Text>
             ) : null}
 
