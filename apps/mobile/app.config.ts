@@ -50,6 +50,9 @@ const blockedPermissions = [
         'android.permission.WRITE_EXTERNAL_STORAGE',
       ]),
   'android.permission.RECORD_AUDIO',
+  // Added by the template for the dev menu's overlay; a release has no use for it and Play
+  // reviews "draw over other apps" closely. The debug manifest still adds it for dev builds.
+  'android.permission.SYSTEM_ALERT_WINDOW',
 ];
 
 const splashBackground = native.splashBackground;
@@ -67,6 +70,9 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   ios: {
     supportsTablet: false,
     bundleIdentifier: 'app.canmyeatthis.mobile',
+    // Only standard HTTPS is used, which is exempt: answers App Store Connect's export-compliance
+    // question once, in the binary, instead of on every upload.
+    config: { usesNonExemptEncryption: false },
   },
   android: {
     adaptiveIcon: {
