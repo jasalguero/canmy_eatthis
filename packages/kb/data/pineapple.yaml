@@ -1,9 +1,8 @@
-# DRAFT — awaiting Spanish review (packages/kb/drafts/README.md).
-# EDITORIAL EXCEPTION, accepted by Jose Salguero on 2026-10-01 (docs/02 D35): docs/04 §2 wants
-# Merck / peer-reviewed / university-extension / government sources, and none of those that the KB
-# uses (NC State, Tufts, Texas A&M, Merck, FDA, Cornell) mention pineapple. The two sources below
-# are a pet-food company's vet-reviewed article (Hill's) and a vet-reviewed consumer site (PetMD,
-# reviewed by Molly Price, DVM). Neither covers cats, so cats stay `unknown`.
+# SOURCE EXCEPTION, accepted by Jose Salguero on 2026-10-01 (docs/02 D35): none of the sources the
+# KB normally uses mention pineapple. The two below are a pet-food company's vet-reviewed article
+# (Hill's) and a vet-reviewed consumer site (PetMD, reviewed by Molly Price, DVM). Neither covers
+# cats, so cats stay `unknown`. Tier A (es) is approved; the Tier B prose and the English summaries
+# still await a full read, hence review.status: needs_review.
 id: pineapple
 display_name:
   en: Pineapple
@@ -48,13 +47,13 @@ sources:
     url: https://www.petmd.com/dog/nutrition/can-dogs-eat-pineapple
     accessed: 2026-09-30
 review:
-  reviewed_by: null
-  reviewed_at: null
-  status: draft
+  reviewed_by: "Jose Salguero"
+  reviewed_at: 2026-10-01
+  status: needs_review
 translations:
   es:
-    tier_a: draft
+    tier_a: approved
     tier_b: draft
     translated_by: "Claude (draft)"
-    reviewed_by: null
-    reviewed_at: null
+    reviewed_by: "Jose Salguero"
+    reviewed_at: 2026-10-01

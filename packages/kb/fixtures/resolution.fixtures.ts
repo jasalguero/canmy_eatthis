@@ -32,4 +32,9 @@ export const POSITIVE_RESOLUTIONS: { input: string; expected: string }[] = [
   { input: 'limón', expected: 'lemon' },
   { input: 'limon', expected: 'lemon' }, // un-accented Spanish must still resolve
   { input: 'lemon peel', expected: 'lemon' },
+  { input: 'pineapple', expected: 'pineapple' },
+  { input: 'piña', expected: 'pineapple' },
+  { input: 'pina', expected: 'pineapple' }, // un-accented Spanish must still resolve
+  { input: 'ananá', expected: 'pineapple' },
+  { input: 'apple', expected: 'apple' }, // the shorter word still means apple
 ];
