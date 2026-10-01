@@ -28,4 +28,8 @@ export const POSITIVE_RESOLUTIONS: { input: string; expected: string }[] = [
   { input: 'antifreeze', expected: 'antifreeze_ethylene_glycol' },
   { input: 'anticongelante', expected: 'antifreeze_ethylene_glycol' },
   { input: 'zanahorias', expected: 'carrot' },
+  { input: 'lemon', expected: 'lemon' },
+  { input: 'limón', expected: 'lemon' },
+  { input: 'limon', expected: 'lemon' }, // un-accented Spanish must still resolve
+  { input: 'lemon peel', expected: 'lemon' },
 ];
