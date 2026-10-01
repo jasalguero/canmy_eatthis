@@ -138,6 +138,30 @@ Problems found, and what was done (docs/02 D33, D34):
 Not yet checked on device: pseudo-locale, permission denial, VoiceOver, 200% system font,
 airplane mode, timings, Android.
 
+## Android emulator pass (2026-10-01, Pixel 8 AVD, Android 37, arm64)
+
+Debug build via `expo run:android`; Metro over `adb reverse`.
+
+- ✅ **Boots** to first-run, then Home (P0 criterion, Android half).
+- ✅ **Typed lookup** "chocolate" -> Dark chocolate, Toxic, with source, actions and call button.
+- ✅ **Airplane mode** (verified `Network is unreachable`): the result stays up, "Call a vet now" opens
+  the emergency screen with the US lines, and a number opens the dialler pre-filled with +1 888-426-4435.
+  Hotline CTA works offline (AGENTS.md #4).
+- ✅ **Camera permission denied** -> "Camera access is off" with Open Settings (lands on the app's
+  Android settings page) and "Type it instead" (back to a working Home).
+- ✅ **200% system font scale**: Home and a toxic Result reflow with no clipping; CTA stays reachable.
+- 🔧 **Bug found and fixed: the scanner could never ask for the camera on Android.**
+  `expo-image-picker` was configured with `cameraPermission: false`, which makes it strip
+  `CAMERA` from the merged manifest, so expo-camera's barcode scanner always showed "off".
+  Now both plugins carry the same string; the permission prompt appears and the scanner shows
+  the (emulated) camera. Verified.
+- 🔧 Removed two `setLayoutAnimationEnabledExperimental` calls (no-op under the New Architecture,
+  and logged a dev warning on every launch).
+- ⬜ Not run: TalkBack, timings (an emulator says nothing about a mid-range phone), Android
+  pseudo-locale.
+- ❓ A deep link `result?kbId=lemon&species=cat` showed "for dogs" on Android. It worked on iOS.
+  Likely the link reused the running screen; not diagnosed.
+
 ## Suggested order to close the gaps
 
 1. Confirm the latest CI run on GitHub is green.

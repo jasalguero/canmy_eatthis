@@ -1,14 +1,9 @@
 import { useState } from 'react';
-import { LayoutAnimation, Platform, Pressable, UIManager, View } from 'react-native';
+import { LayoutAnimation, Pressable, View } from 'react-native';
 import { useReducedMotion } from 'react-native-reanimated';
 
 import { Text } from '@/components/primitives';
 import { sizes } from '@/theme/tokens';
-
-// Android needs this opted into explicitly; without it the expand/collapse is an instant jump.
-if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
-  UIManager.setLayoutAnimationEnabledExperimental(true);
-}
 
 /**
  * A disclosure section.

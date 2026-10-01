@@ -2,27 +2,13 @@ import type { Species } from '@canmyeatthis/shared';
 import * as Haptics from 'expo-haptics';
 import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import {
-  LayoutAnimation,
-  type LayoutChangeEvent,
-  Platform,
-  Pressable,
-  UIManager,
-  View,
-} from 'react-native';
+import { LayoutAnimation, type LayoutChangeEvent, Pressable, View } from 'react-native';
 import { useReducedMotion } from 'react-native-reanimated';
 
 import { Mascot } from '@/components/feedback';
 import { Text } from '@/components/primitives';
 import { useTheme } from '@/theme/ThemeProvider';
 import { hardShadow, motion, radius, sizes, tokens } from '@/theme/tokens';
-
-// Android needs this opted into explicitly, same as `Collapsible` — without it LayoutAnimation
-// is a silent no-op there rather than an instant jump, which would look identical to before this
-// change and defeat the point of adding it.
-if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
-  UIManager.setLayoutAnimationEnabledExperimental(true);
-}
 
 /**
  * Signature interaction #1 (docs/06 §2): a sliding pill between Dog and Cat, with a light haptic

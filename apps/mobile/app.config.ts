@@ -90,7 +90,10 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       'expo-image-picker',
       {
         photosPermission: photosPermission(flags),
-        cameraPermission: false,
+        // Not `false`: on Android that makes this plugin block CAMERA in the merged manifest, which
+        // takes barcode scanning (expo-camera) down with it. The same string as expo-camera's, so
+        // the two plugins agree on the iOS purpose string too.
+        cameraPermission: cameraPermission(flags),
         microphonePermission: false,
       },
     ],
