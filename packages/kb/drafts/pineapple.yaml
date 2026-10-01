@@ -1,10 +1,9 @@
-# DRAFT — awaiting review (packages/kb/drafts/README.md). DOES NOT MEET THE EDITORIAL STANDARD YET.
-# docs/04-knowledge-base.md §2 wants Merck / peer-reviewed / university-extension / government
-# sources. None of the ones the KB already uses (NC State, Tufts, Texas A&M, Merck, FDA, Cornell)
-# mention pineapple, and the search for a university source found none. The two sources below are
-# a pet-food company's vet-reviewed article and a vet-reviewed consumer site, and neither covers
-# cats, so cats are `unknown`. Promote only if you accept that, or find a qualifying source first;
-# omitting the entry is the correct outcome under §2 otherwise.
+# DRAFT — awaiting Spanish review (packages/kb/drafts/README.md).
+# EDITORIAL EXCEPTION, accepted by Jose Salguero on 2026-10-01 (docs/02 D35): docs/04 §2 wants
+# Merck / peer-reviewed / university-extension / government sources, and none of those that the KB
+# uses (NC State, Tufts, Texas A&M, Merck, FDA, Cornell) mention pineapple. The two sources below
+# are a pet-food company's vet-reviewed article (Hill's) and a vet-reviewed consumer site (PetMD,
+# reviewed by Molly Price, DVM). Neither covers cats, so cats stay `unknown`.
 id: pineapple
 display_name:
   en: Pineapple

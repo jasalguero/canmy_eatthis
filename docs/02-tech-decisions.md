@@ -954,3 +954,20 @@ same) and not the entrance around it. `keyframeStyle` now takes a `pivot` (offse
 centre, in points) and wraps the rotate/scale in translate-rotate-translate. `Mascot` uses it for
 the ears, nose, "?" and sniff puffs. `Enter`/`Loop` keep an `origin` prop for percentage origins
 (the emergency ring); it is not known to fail, but if it ever does, convert it the same way.
+
+## D35 — Pineapple ships as a recorded exception to the source standard
+
+`docs/04-knowledge-base.md` §2 asks for two sources from a named class (Merck, peer-reviewed
+literature, university extension, government). For pineapple none was found: NC State, two Tufts
+Petfoodology articles, Texas A&M, Merck's houseplants chapter, Cornell's Riney page and the FDA
+list do not mention it, and ASPCA has no page for it. On 2026-10-01 Jose Salguero accepted
+Hill's Pet Nutrition and PetMD (medically reviewed by Molly Price, DVM) as the two sources, for
+dogs only.
+
+- **Dog: `safe` ("no known risk").** The sources agree: the soft flesh in moderation; the core, rind,
+  stem and leaves are a choking and blockage risk; treats under 10% of calories; sugar matters
+  for diabetic dogs.
+- **Cat: `unknown`.** No source covers cats, and the standard's own rule is that a species the
+  sources do not cover is `unknown`.
+- **This is an exception, not a precedent.** The next entry that cannot meet §2 is omitted, unless
+  the same decision is recorded here again.
