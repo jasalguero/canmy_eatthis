@@ -24,6 +24,8 @@ export type MascotMood = 'idle' | 'happy' | 'worried' | 'confused' | 'cautious' 
 
 export interface MascotPalette {
   fur: string;
+  /** The paws — usually the fur colour, but a cat can have white mittens. */
+  paw: string;
   patch: string;
   muzzle: string;
   blush: string;
@@ -43,6 +45,7 @@ export const MASCOT_SWEAT = '#8FD3FF';
 export const MASCOT_PALETTE: Record<MascotSpecies, MascotPalette> = {
   dog: {
     fur: '#F4B76B',
+    paw: '#F4B76B',
     patch: '#E39A52',
     muzzle: '#FFF6E6',
     blush: '#FF8F80',
@@ -50,8 +53,9 @@ export const MASCOT_PALETTE: Record<MascotSpecies, MascotPalette> = {
     tag: '#FFD84D',
   },
   cat: {
-    fur: '#A9B8CC',
-    patch: '#6F819A',
+    fur: '#34343C',
+    paw: '#34343C',
+    patch: '#52525E',
     muzzle: '#EEF2F8',
     blush: '#FF8F80',
     collar: '#9B7BFF',

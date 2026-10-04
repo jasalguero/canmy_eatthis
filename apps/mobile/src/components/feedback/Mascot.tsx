@@ -519,7 +519,7 @@ function moodExtras(
 
 /** The paws hooked over an edge — the `peek` pose's lower half, shared by both species. */
 function Paws({ species }: { species: MascotSpecies }) {
-  const fill = MASCOT_PALETTE[species].fur;
+  const fill = MASCOT_PALETTE[species].paw;
   return (
     <G>
       <Ellipse cx={68} cy={156} rx={19} ry={12} fill={fill} stroke={MASCOT_INK} strokeWidth={4} />
