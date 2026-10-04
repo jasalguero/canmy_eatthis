@@ -44,6 +44,35 @@ describe('resolveText against the real KB', () => {
   });
 });
 
+describe('every shipped entry resolves from both languages (docs/07 Phase 1)', () => {
+  const index = buildAliasIndex(realEntries);
+  const searchIndex = buildAliasSearchIndex(index);
+
+  it('resolves each entry from its display name and its first alias, in en and es', () => {
+    for (const entry of realEntries) {
+      for (const lang of ['en', 'es'] as const) {
+        for (const text of [entry.display_name[lang], entry.aliases[lang][0] as string]) {
+          expect(resolveText(text, index, searchIndex), `${entry.id} (${lang}): "${text}"`).toEqual(
+            {
+              type: 'exact',
+              kbId: entry.id,
+            },
+          );
+        }
+      }
+    }
+  });
+
+  it('resolves an English-only alias regardless of the app language (one merged index)', () => {
+    // `resolveText` takes no language: an English alias works for a Spanish user and vice versa.
+    expect(resolveText('birch sugar', index, searchIndex)).toEqual({
+      type: 'exact',
+      kbId: 'xylitol',
+    });
+    expect(resolveText('cebolla', index, searchIndex)).toEqual({ type: 'exact', kbId: 'alliums' });
+  });
+});
+
 describe('suggestText against the real KB', () => {
   const index = buildAliasIndex(realEntries);
   const searchIndex = buildAliasSearchIndex(index);

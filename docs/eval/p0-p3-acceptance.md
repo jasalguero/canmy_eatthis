@@ -1,10 +1,31 @@
-# P0–P3 acceptance pass — DRAFT (2026-09-30)
+# P0–P3 acceptance evidence
 
-Evidence gathered on `main` at 67426cf by running the commands below locally. Nothing here has been
-copied into `docs/07-implementation-plan.md`; tick boxes there only once a human agrees.
+Last updated 2026-10-04 (KB 76 entries, `main` at CI-green). This is the evidence behind the ticks in
+`docs/07-implementation-plan.md` Phases 0–3. Anything not ticked there is listed in "Still open" below.
+Older sections are the dated working notes they were written as; where they disagree with this
+paragraph or the plan, the plan wins. Notably: the draft/pineapple notes below were superseded by
+promoting `lemon` and `pineapple` (D35), and the KB now has 76 entries, not 74.
 
-Legend: ✅ verified by a command run in this pass · 🟡 code/test exists, not run or only partly
-covers the criterion · ⬜ needs a device, a person, or a not-yet-built check · ❌ failed.
+Legend: ✅ verified by a command or on a device · 🟡 partly covered · ⬜ needs a device or a person
+· 🔧 bug found and fixed · ❌ failed.
+
+## Still open (not ticked in the plan)
+
+| Item | What is missing |
+|---|---|
+| CI green on a pull request | green on pushes to `main`; open one PR to record it |
+| Pseudo-locale renders / surfaces zero hardcoded strings | wired, never looked at in a running build; no automated check |
+| Every screen navigable with zero network | no test asserts "no network" |
+| Grayscale: four verdicts distinguishable | a person must look at `docs/screenshots/grayscale` |
+| 200% font scale on every screen, and `es` + 200% | two screens checked on Android at 2.0; the rest simulated |
+| VoiceOver reads the verdict word first | a person on an iOS device (and TalkBack on Android) |
+| Image size, `exiftool` zero-tag test, 12 MP < 800 ms | photo path ships with the second release |
+| Resolution < 50 ms; cold start < 2 s | a real mid-range Android phone |
+
+Added in this pass: a test that all 76 entries resolve from their display name and first alias in en
+and es; a test that an English-only alias resolves independent of app language; fixtures for
+`platano`/`plátano`. Verified: all 86 toxic species rows have severity, non-empty emergency actions and
+2+ sources; schema-change type errors reach both consumers; `wrangler dev` serves `/health`.
 
 ## Blocker found and resolved during this pass
 

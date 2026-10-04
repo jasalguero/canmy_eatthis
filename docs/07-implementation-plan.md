@@ -48,12 +48,18 @@ The phases do not all ship at once (`docs/02-tech-decisions.md` D28):
 - EAS project created, dev client builds configured for iOS and Android
 
 **Acceptance**
-- [ ] `pnpm -r typecheck && pnpm -r lint && pnpm -r test` green
-- [ ] App boots to a blank screen on an iOS simulator **and** an Android emulator
-- [ ] `pnpm --filter api dev` serves `/health`
+- [x] `pnpm -r typecheck && pnpm -r lint && pnpm -r test` green
+      *Evidence: typecheck, `biome check .` and tests (52 + 26 + 95 + 150) green, 2026-10-04*
+- [x] App boots to a blank screen on an iOS simulator **and** an Android emulator
+      *Evidence: iOS 27 simulator (D32) and Pixel 8 AVD, both reach first-run then Home; `docs/eval/p0-p3-acceptance.md`*
+- [x] `pnpm --filter api dev` serves `/health`
+      *Evidence: `wrangler dev` returned `{"ok":true,"version":"0.1.0"}`, 2026-10-04*
 - [ ] CI green on a pull request
-- [ ] Changing a Zod schema in `packages/shared` produces a type error in both consumers
-- [ ] Switching language and switching region are independent — changing one does not move the other
+      *Open: CI is green on pushes to `main`; no pull-request run has been recorded yet (the workflow does trigger on `pull_request`)*
+- [x] Changing a Zod schema in `packages/shared` produces a type error in both consumers
+      *Evidence: renaming `VerdictPayload.displayName` gave 13 errors in `apps/mobile` and 1 in `services/api`, then reverted*
+- [x] Switching language and switching region are independent — changing one does not move the other
+      *Evidence: `settings.test.ts` plus on-device on iOS, 2026-09-30*
 - [ ] The pseudo-locale renders in a dev build
 
 ---
@@ -61,6 +67,7 @@ The phases do not all ship at once (`docs/02-tech-decisions.md` D28):
 ## Phase 1 — Knowledge base
 
 **Depends on:** P0. **Blocks:** everything. The long pole — weeks, not days.
+      *Open: wired in (`src/i18n/pseudoLocale.ts`) but not looked at in a running build*
 
 - YAML schema and Zod validator per `docs/04-knowledge-base.md` §1
 - `packages/kb/build.ts` → emits `kb.json` (entries) and `kb.index.json` (normalised alias → id),
@@ -81,23 +88,34 @@ The phases do not all ship at once (`docs/02-tech-decisions.md` D28):
 - Fixture suites: verdict fixtures, resolution fixtures (including the negative near-miss set)
 
 **Acceptance**
-- [ ] 60–80 entries, every one validating, every one with both species and at least two sources
-- [ ] Every `toxic` entry has `severity`, non-empty `emergency_actions` and its sources
-- [ ] `pnpm --filter kb build` emits a gzipped KB under 400 KB
-- [ ] All `VerdictPayload` invariants covered by passing tests
-- [ ] Negative resolution fixtures all fail to match — "chocolate lab" does not resolve to chocolate
-- [ ] Deliberately corrupting an entry fails the build with a readable error
-- [ ] Every entry resolves from both English and Spanish input
-- [ ] A `toxic` entry with `translations.es.tier_b: machine` fails the build
-- [ ] An entry with `tier_a` below `approved` in a shipped language fails the build
-- [ ] Every controlled-vocabulary id used by any entry exists in both language catalogues
-- [ ] The per-tier coverage report is emitted; toxic-below-approved counts for Tiers A and B are zero
+- [x] 60–80 entries, every one validating, every one with both species and at least two sources
+      *Evidence: 76 entries build; every entry has 2+ sources and both species. Source *independence* is still a manual pass (Phase 6); `pineapple` is a recorded exception (D35)*
+- [x] Every `toxic` entry has `severity`, non-empty `emergency_actions` and its sources
+      *Evidence: checked over `kb.json`: all 86 toxic species rows*
+- [x] `pnpm --filter kb build` emits a gzipped KB under 400 KB
+      *Evidence: `kb.json.gz` 30 KB; `kb.en` 16 KB, `kb.es` 18 KB, index 4.6 KB*
+- [x] All `VerdictPayload` invariants covered by passing tests
+      *Evidence: invariants 1-5 map to `resolveVerdict.test.ts` and the `model_fallback` invariant test in `services/api/test/identify.test.ts`*
+- [x] Negative resolution fixtures all fail to match — "chocolate lab" does not resolve to chocolate
+      *Evidence: `negative-resolutions.ts` incl. Spanish near-misses, in `packages/kb/src/resolveText.test.ts`*
+- [x] Deliberately corrupting an entry fails the build with a readable error
+      *Evidence: happened for real on 2026-09-30 (`alcohol.yaml: invalid YAML … line 20`); schema paths in `build.test.ts`*
+- [x] Every entry resolves from both English and Spanish input
+      *Evidence: new test: all 76 entries from display name and first alias, en and es*
+- [x] A `toxic` entry with `translations.es.tier_b: machine` fails the build
+      *Evidence: `build.test.ts`*
+- [x] An entry with `tier_a` below `approved` in a shipped language fails the build
+      *Evidence: `build.test.ts`*
+- [x] Every controlled-vocabulary id used by any entry exists in both language catalogues
+      *Evidence: `validateVocabCoverage` on the real KB*
+- [x] The per-tier coverage report is emitted; toxic-below-approved counts for Tiers A and B are zero
 
 ---
 
 ## Phase 2 — Design system and static UI
 
 **Depends on:** P0 (P1 for realistic mock data). **Parallel with:** P4.
+      *Evidence: `coverage-report.json`: 0 in en and es*
 
 - Tokens, `tailwind.config.js` with the Tailwind palette **removed**, light and dark
 - Full component inventory from `docs/06-ui-design-system.md` §3
@@ -110,22 +128,32 @@ The phases do not all ship at once (`docs/02-tech-decisions.md` D28):
 
 **Acceptance**
 - [ ] Every screen navigable from the gallery with mock data, zero network calls in the build
-- [ ] Light and dark screenshots of all screens committed to `docs/screenshots/`
-- [ ] CI contrast check passes for every verdict token pair (≥4.5:1)
+      *Open: navigation works; "zero network calls" is not asserted by any test*
+- [x] Light and dark screenshots of all screens committed to `docs/screenshots/`
+      *Evidence: `docs/screenshots/{light,dark,grayscale,es-200}`; taken before the 2026-10 changes, so retake before store screenshots*
+- [x] CI contrast check passes for every verdict token pair (≥4.5:1)
+      *Evidence: `scripts/check-contrast.mjs`, in CI*
 - [ ] Grayscale screenshots: all four verdicts still distinguishable
+      *Open: screenshots exist; a person has not looked at them for this*
 - [ ] 200% font scale: no clipping or overlap on any screen
+      *Open: Home and a toxic Result checked on the Android emulator at 2.0; the other screens only in the simulated `es-200` set*
 - [ ] VoiceOver reads the verdict word first on the Result screen
-- [ ] `grep -rE "#[0-9a-fA-F]{6}" apps/mobile/src --include=*.tsx` returns nothing outside `theme/`
+      *Open: needs a person on a device*
+- [x] `grep -rE "#[0-9a-fA-F]{6}" apps/mobile/src --include=*.tsx` returns nothing outside `theme/`
+      *Evidence: `scripts/check-ui-hygiene.sh`, in CI*
 - [ ] **Every screen renders correctly at `es` + 200% font scale** — the worst case, and the one
       that breaks the verdict banner
+      *Open: simulated set only (`docs/screenshots/es-200`), not a device*
 - [ ] A pseudo-locale run surfaces zero hardcoded strings
-- [ ] CI grep finds no `marginLeft`/`marginRight`/`left:`/`right:` layout properties
+      *Open: no automated check and not run*
+- [x] CI grep finds no `marginLeft`/`marginRight`/`left:`/`right:` layout properties
 
 ---
 
 ## Phase 3 — Capture and offline resolution
 
 **Depends on:** P1, P2. At the end of this phase the app answers typed questions fully offline.
+      *Evidence: `scripts/check-ui-hygiene.sh`, in CI*
 
 - `expo-camera` multi-shot (max 4), `expo-image-picker` multi-select, barcode scanning mode
 - Permission flows including **denied** and **denied-permanently** (deep-link to Settings)
@@ -140,16 +168,27 @@ The phases do not all ship at once (`docs/02-tech-decisions.md` D28):
 
 **Acceptance**
 - [ ] Processed images average <200 KB; none exceed 400 KB
+      *Open: the photo path ships with the second release; needs real photos*
 - [ ] Automated test runs `exiftool` over pipeline output: **zero** GPS or EXIF tags remain
-- [ ] Permission denial does not dead-end — text input stays usable, with a route to Settings
-- [ ] Check button enablement exactly matches the ≥1-photo-OR-≥2-chars rule (unit tested)
+      *Open: not built, and the pipeline is unused in the first release (photo ID off)*
+- [x] Permission denial does not dead-end — text input stays usable, with a route to Settings
+      *Evidence: Android emulator: camera denied shows "Camera access is off" with Open Settings (reaches the app settings page) and "Type it instead". iOS not checked*
+- [x] Check button enablement exactly matches the ≥1-photo-OR-≥2-chars rule (unit tested)
+      *Evidence: `checkInput.test.ts`*
 - [ ] A 12 MP photo processes in under 800 ms on a mid-range Android device
-- [ ] "chocolate", "Chocolate", "chocolat", "uvas", "xilitol", "cebolla" all resolve correctly
-- [ ] Un-accented Spanish resolves: "limon", "platano", "pina" all match
-- [ ] The entire negative fixture set fails to match, including its Spanish near-misses
-- [ ] Cross-language alias fallback works: an English-only alias still resolves for a Spanish user
-- [ ] Airplane mode: typed lookups work end to end with no error state
+      *Open: needs a real device and the photo path*
+- [x] "chocolate", "Chocolate", "chocolat", "uvas", "xilitol", "cebolla" all resolve correctly
+      *Evidence: `resolution.fixtures.ts` / `fuzzy-resolutions.ts`; bare "chocolate" is an alias of `chocolate_dark` (D33)*
+- [x] Un-accented Spanish resolves: "limon", "platano", "pina" all match
+      *Evidence: fixtures: `limon` -> lemon, `platano` -> banana, `pina` -> pineapple (lemon and pineapple added 2026-10)*
+- [x] The entire negative fixture set fails to match, including its Spanish near-misses
+      *Evidence: `negative-resolutions.ts`*
+- [x] Cross-language alias fallback works: an English-only alias still resolves for a Spanish user
+      *Evidence: one merged alias index; test: "birch sugar" -> xylitol with no language input*
+- [x] Airplane mode: typed lookups work end to end with no error state
+      *Evidence: Android emulator in airplane mode (`Network is unreachable`): the result and the emergency screen stay up; not repeated on iOS*
 - [ ] Resolution completes in <50 ms on a mid-range Android device
+      *Open: needs a real mid-range device*
 - [ ] Cold start to interactive under 2 s with the KB loaded
 
 ---
@@ -157,6 +196,7 @@ The phases do not all ship at once (`docs/02-tech-decisions.md` D28):
 ## Phase 4 — The Worker
 
 **Depends on:** P0, P1. **Parallel with:** P2, P3. Ships with the second release.
+      *Open: needs a real mid-range device*
 
 - Hono routes: `/v1/identify`, `/v1/verdict`, `/v1/kb/manifest`, `/v1/hotlines`. No sessions:
   callers send an anonymous device UUID (D24)
