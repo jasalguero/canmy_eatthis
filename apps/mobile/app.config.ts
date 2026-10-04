@@ -61,6 +61,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   ...config,
   name: 'CanMy*EatThis',
   slug: 'canmyeatthis',
+  owner: 'jasalguero1',
   scheme: 'canmyeatthis',
   version: '0.0.1',
   orientation: 'portrait',
@@ -109,8 +110,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   },
   extra: {
     features: flags,
-    eas: {
-      projectId: 'REPLACE_WITH_EAS_PROJECT_ID',
-    },
+    // Not a secret: it only says which EAS project this app belongs to (owner jasalguero1).
+    eas: { projectId: 'a64bccbf-7dab-4ddf-b724-bd2d48cfa9c7' },
   },
 });
