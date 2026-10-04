@@ -102,9 +102,9 @@ human health, which is lower risk but not exempt.
 
 ### 3.1 Permissions in the release manifest
 
-After this pass: `CAMERA`, `INTERNET`, `VIBRATE`. Blocked: storage, media, `RECORD_AUDIO`,
-`SYSTEM_ALERT_WINDOW`. **VERIFY** by inspecting the final merged manifest of the first EAS release
-build (a local release build was not possible here; see §6).
+Verified 2026-10-04 on the first EAS production AAB (build 1, `0.0.1`): `CAMERA`, `INTERNET`,
+`VIBRATE`, `ACCESS_NETWORK_STATE` (added by a dependency). Absent: storage, media, `RECORD_AUDIO`,
+`SYSTEM_ALERT_WINDOW`.
 
 ### 3.2 Data safety form
 
@@ -196,10 +196,13 @@ result; Settings (language/region separate). Reviewers' demo video: 30 s screen 
 - `eas build --profile production --platform all`, then `eas submit --platform ios|android`.
   `eas.json` has an empty `submit.production`; it needs the App Store Connect app id and a Play
   service-account key (kept out of the repo: AGENTS.md #6; use EAS secrets).
-- **Open issue (found 2026-10-01):** a local `gradlew :app:createBundleReleaseJsAndAssets` exited 1
-  while the same `expo export:embed` command succeeds by hand, and a release build needs signing
-  anyway. Not diagnosed. Treat the first EAS Android production build as the real test, and look
-  at its log if it fails.
+- **Resolved 2026-10-04:** the first EAS production build failed with `Cannot find module
+  'babel-preset-expo'` (a pnpm strict-layout problem: `babel.config.js` used a package the app
+  never declared). Declared it in `apps/mobile/package.json` (`568c168`); the second build
+  (`518324fd`) finished. A local `gradlew` release build still fails on a different Babel
+  resolution error because the local pnpm store holds stale duplicate versions; EAS installs from
+  the lockfile and is the build that matters. Project: `@jasalguero1/canmyeatthis`; the Android
+  keystore is held by EAS. **iOS build not yet run** (needs the Apple Developer account).
 - **Rollback plan.** Stores cannot un-ship. (1) Halt a staged rollout (Play: halt; App Store:
   phased release can be paused). (2) Ship a fixed build; because the KB is bundled (D21), a
   corrected verdict **is** an app update, so expedite review for a wrong *toxic/no known toxicity*
