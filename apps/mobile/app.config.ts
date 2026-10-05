@@ -92,7 +92,17 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       'expo-splash-screen',
       { image: './assets/splash.png', resizeMode: 'contain', backgroundColor: splashBackground },
     ],
-    ['expo-camera', { cameraPermission: cameraPermission(flags), recordAudioAndroid: false }],
+    [
+      'expo-camera',
+      {
+        cameraPermission: cameraPermission(flags),
+        // The camera only reads barcodes: no video, no audio. Without this the plugin adds a
+        // generic microphone purpose string to the iOS build, which the privacy policy contradicts
+        // and which App Review asks about.
+        microphonePermission: false,
+        recordAudioAndroid: false,
+      },
+    ],
     [
       'expo-image-picker',
       {

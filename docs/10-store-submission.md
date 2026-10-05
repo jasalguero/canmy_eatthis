@@ -71,6 +71,15 @@ label: over-disclosing is never rejected, under-disclosing can be.
   Either keep the string (harmless, matches the code that exists) or drop the plugin for the first
   release. Recommended: keep, and say so in the review notes.
 
+### 2.4.1 First EAS iOS production build (2026-10-05) — checked, one fix
+
+Build 1 (`0.0.1`): bundle id `app.canmyeatthis.mobile`, iPhone only, minimum iOS 16.4,
+`ITSAppUsesNonExemptEncryption=false`, scene manifest with `EXExpoAppSceneDelegate` (D32 shipped),
+privacy manifest as in §2.1 (no tracking, no collected data). **Found:** the camera plugin had added
+an unused `NSMicrophoneUsageDescription`, which contradicts the privacy policy and invites a review
+question. Fixed with `microphonePermission: false` (`app.config.ts`); **build 2 is needed before
+submitting.** The photo-library string is still present (see above).
+
 ### 2.5 Review notes (paste into App Store Connect)
 
 > CanMy*EatThis is a free reference tool that shows what published veterinary sources say about
@@ -202,7 +211,7 @@ result; Settings (language/region separate). Reviewers' demo video: 30 s screen 
   (`518324fd`) finished. A local `gradlew` release build still fails on a different Babel
   resolution error because the local pnpm store holds stale duplicate versions; EAS installs from
   the lockfile and is the build that matters. Project: `@jasalguero1/canmyeatthis`; the Android
-  keystore is held by EAS. **iOS build not yet run** (needs the Apple Developer account).
+  keystore is held by EAS. iOS: build 1 finished 2026-10-05 (see §2.4.1); rebuild after the microphone fix.
 - **Rollback plan.** Stores cannot un-ship. (1) Halt a staged rollout (Play: halt; App Store:
   phased release can be paused). (2) Ship a fixed build; because the KB is bundled (D21), a
   corrected verdict **is** an app update, so expedite review for a wrong *toxic/no known toxicity*
