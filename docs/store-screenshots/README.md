@@ -21,3 +21,14 @@ To retake: build the Release app, set the status bar with `xcrun simctl status_b
 --time 9:41 …`, and **navigate by tapping**, not with `xcrun simctl openurl`: iOS shows an "Open in
 CanMy*EatThis?" confirmation for every URL and queues them up over the screenshot. The draft text
 survives a relaunch (by design), so clear it with "Check something else" before typing a new query.
+
+## Which folder to upload
+
+App Store Connect shows a different size requirement per device class, and it names the sizes in the
+error. If it says **1242 × 2688 or 1284 × 2778**, that is the **6.5-inch** slot: upload
+`6.5-inch/{en,es}/` (1284 × 2778). If it offers the **6.9-inch** slot, upload `{en,es}/` (1320 × 2868).
+You only need one class; Apple scales it to the other sizes.
+
+The 6.5-inch images are the same screenshots scaled to 1284 px wide, with the 12 spare pixels of
+height cropped (6 from the top, 6 from the bottom: status-bar margin and the home-indicator strip),
+so nothing is stretched.
