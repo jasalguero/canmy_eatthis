@@ -63,7 +63,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   slug: 'canmyeatthis',
   owner: 'jasalguero1',
   scheme: 'canmyeatthis',
-  version: '0.0.1',
+  version: '1.0.0',
   orientation: 'portrait',
   icon: './assets/icon.png',
   userInterfaceStyle: 'automatic',
