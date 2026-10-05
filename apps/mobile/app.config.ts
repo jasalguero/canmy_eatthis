@@ -78,7 +78,8 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   android: {
     adaptiveIcon: {
       foregroundImage: './assets/adaptive-icon.png',
-      backgroundColor: splashBackground,
+      // The icon's blue (brand.primary), the same as `assets/icon.png`; see scripts/make-icon.mjs.
+      backgroundColor: '#3E9BFF',
     },
     package: 'app.canmyeatthis.mobile',
     blockedPermissions,
