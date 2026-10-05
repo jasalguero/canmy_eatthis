@@ -1,0 +1,22 @@
+# App Store screenshots (iPhone 6.9", 1320 × 2868)
+
+Captured 2026-10-05 from the **Release** build (`expo run:ios --configuration Release`) on the
+iPhone 18 Pro Max simulator with the status bar set to 9:41, full signal, charged battery. Because it
+is a Release build, there is no development UI and the hotline numbers that have not been verified by
+a person are hidden (so the emergency screen is deliberately not among the screenshots).
+
+| File | What it shows |
+|---|---|
+| `01-home` | Home: species toggle, barcode button, "chocolate" typed |
+| `02-toxic` | Toxic result for a dog, source above the fold, "Call a vet now" |
+| `03-no-known-toxicity` | A "no known toxicity" result (carrot / zanahoria) |
+| `04-not-sure` | "Not sure — ask your vet" with a "Did you mean…?" suggestion |
+| `05-settings` | Language and region as separate settings (es: Español + region US) |
+
+`en/` and `es/` hold the same five screens. Apple takes up to 10 per localisation and also accepts
+these for the smaller iPhone sizes (it scales them), so one 6.9" set is enough to submit.
+
+To retake: build the Release app, set the status bar with `xcrun simctl status_bar <udid> override
+--time 9:41 …`, and **navigate by tapping**, not with `xcrun simctl openurl`: iOS shows an "Open in
+CanMy*EatThis?" confirmation for every URL and queues them up over the screenshot. The draft text
+survives a relaunch (by design), so clear it with "Check something else" before typing a new query.

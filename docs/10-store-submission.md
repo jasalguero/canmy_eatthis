@@ -161,6 +161,10 @@ shared with a third party (Open Food Facts), purpose "App functionality", option
 
 ## 5. Store listings
 
+> **Ready to paste:** `docs/store-listing.md` (App Store text, en and es, limits checked in CI by
+> `scripts/check-store-listing.mjs`) and `docs/store-screenshots/{en,es}/` (five 1320 × 2868 images each).
+> The subtitle/keyword drafts below are superseded by that file.
+
 ### 5.1 Name, subtitle and short text (**DECISION**, drafts)
 
 Store names cannot contain "*" reliably. Suggested store name: **CanMy EatThis** (the in-app

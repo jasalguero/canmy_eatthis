@@ -47,6 +47,10 @@ jobs:
       - name: Check colour contrast
         run: node scripts/check-contrast.mjs
 
+      # docs/store-listing.md — App Store field limits, and AGENTS.md #3 applies to store text too.
+      - name: Check the store listing (limits, no bare "safe")
+        run: node scripts/check-store-listing.mjs
+
       # docs/06 §1–§2 — no colour literals outside theme/, no default-palette classes,
       # logical layout properties only.
       - name: Check UI hygiene
