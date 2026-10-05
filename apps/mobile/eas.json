@@ -23,7 +23,8 @@
     "production": {
       "env": {
         "EXPO_PUBLIC_FEATURE_PHOTO_ID": "0"
-      }
+      },
+      "autoIncrement": true
     }
   },
   "submit": {
