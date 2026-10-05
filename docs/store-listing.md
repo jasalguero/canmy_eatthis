@@ -107,3 +107,4 @@ the app has no browser), user-generated content (No). Expected result: 4+.
 2. Clear answers, with the source above the fold
 3. No known toxicity — and when it is not sure, it says so
 4. Spanish or English; language and region are separate
+5. Poison lines for your region, one tap away, and they work offline
