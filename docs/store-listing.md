@@ -14,6 +14,7 @@ Release build, so they show real release behaviour (no development-only UI).
 | Support URL | — | https://jasalguero.github.io/canmy_eatthis/ |
 | Marketing URL | optional | (leave empty) |
 | Privacy Policy URL | — | en: https://jasalguero.github.io/canmy_eatthis/en/privacy.html · es: https://jasalguero.github.io/canmy_eatthis/es/privacy.html |
+| App name (store) | 30 | en: **CanMyEatThis: Pet Food Check** (chosen 2026-10-05; "CanMy EatThis" was not used) · es: CanMyEatThis. The name inside the app and on the phone's home screen stays "CanMy*EatThis". |
 | Primary category | — | Utilities (alternative: Lifestyle) |
 | Copyright | — | 2026 Jose Salguero |
 | Price | — | Free |
@@ -22,9 +23,9 @@ Release build, so they show real release behaviour (no development-only UI).
 ## English (U.S.)
 
 <!-- field:name -->
-CanMy EatThis
+CanMyEatThis: Pet Food Check
 <!-- field:subtitle -->
-Pet food checks, with sources
+Answers from vet sources
 <!-- field:promo -->
 Did your dog or cat eat something? Look up what published veterinary sources say, in seconds, and reach a poison line if it is serious.
 <!-- field:keywords -->
@@ -53,7 +54,7 @@ First release.
 <!-- field:name -->
 CanMy EatThis
 <!-- field:subtitle -->
-Comida de mascotas, con fuentes
+Comida de mascotas con fuentes
 <!-- field:promo -->
 ¿Tu perro o gato ha comido algo? Consulta en segundos qué dicen las fuentes veterinarias publicadas y llama a un servicio de toxicología si es grave.
 <!-- field:keywords -->

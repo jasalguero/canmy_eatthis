@@ -167,8 +167,8 @@ shared with a third party (Open Food Facts), purpose "App functionality", option
 
 ### 5.1 Name, subtitle and short text (**DECISION**, drafts)
 
-Store names cannot contain "*" reliably. Suggested store name: **CanMy EatThis** (the in-app
-wordmark keeps its styling). Alternative: **Can My Pet Eat This?**
+Store names cannot contain "*" reliably. **Decided 2026-10-05:** store name **CanMyEatThis: Pet Food Check** (en; es uses the brand alone), in
+`docs/store-listing.md`. The in-app wordmark keeps its styling.
 
 | | English | Spanish |
 |---|---|---|
