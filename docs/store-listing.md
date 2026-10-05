@@ -53,7 +53,7 @@ First release.
 <!-- field:name -->
 CanMy EatThis
 <!-- field:subtitle -->
-Comprueba que pueden comer tus mascotas con fuentes
+Comida de mascotas, con fuentes
 <!-- field:promo -->
 ¿Tu perro o gato ha comido algo? Consulta en segundos qué dicen las fuentes veterinarias publicadas y llama a un servicio de toxicología si es grave.
 <!-- field:keywords -->
