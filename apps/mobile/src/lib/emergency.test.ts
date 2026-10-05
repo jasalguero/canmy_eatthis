@@ -14,6 +14,19 @@ describe('emergencyHotlines', () => {
     }
   });
 
+  // AGENTS.md #4: the emergency path must work in a release build. A release that shows no numbers
+  // for a region we cover would be the worst version of this screen, so un-verifying a line (or
+  // dropping one) has to fail here and not on a user's phone.
+  it('offers at least one verified line in a release build for every region that has a registry entry', () => {
+    for (const region of ['ES', 'GB', 'US']) {
+      expect(emergencyHotlines(region, false).length).toBeGreaterThan(0);
+    }
+    expect(emergencyHotlines('US', false).map((h) => h.id)).toEqual([
+      'aspca_apcc_us',
+      'pet_poison_helpline_us',
+    ]);
+  });
+
   it('shows unverified lines in a development build, for testing', () => {
     expect(emergencyHotlines('ES', true).map((h) => h.id)).toEqual(['sit_intcf_es']);
     expect(emergencyHotlines('US', true).map((h) => h.id)).toEqual([

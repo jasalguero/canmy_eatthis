@@ -27,12 +27,18 @@ toll-free). If you cannot dial it yourself, ask someone in that country, and rec
 
 ## Results
 
-| Line | Region | Number | Dialled by | Date | Reached it | Takes pets | Cost as stated | Language | Hours | `verifiedAt` set |
-|---|---|---|---|---|---|---|---|---|---|---|
-| Servicio de Información Toxicológica (INTCF) | ES | 91 562 04 20 | | | | | | es | 24 h | |
-| Animal PoisonLine | GB | 01202 509000 | | | | | | en | 24 h | |
-| ASPCA Animal Poison Control Center | US | (888) 426-4435 | | | | | | en | 24 h | |
-| Pet Poison Helpline | US | (855) 764-7661 | | | | | | en | 24 h | |
+| Line | Region | Number | Dialled by | Date | Reached it | Takes pets | Cost / language / hours | `verifiedAt` set |
+|---|---|---|---|---|---|---|---|---|
+| Servicio de Información Toxicológica (INTCF) | ES | 91 562 04 20 | Jose Salguero | 2026-10-05 | yes | yes | as in the registry; not recorded separately | 2026-10-05 |
+| Animal PoisonLine | GB | 01202 509000 | Jose Salguero | 2026-10-05 | yes | yes | as in the registry; not recorded separately | 2026-10-05 |
+| ASPCA Animal Poison Control Center | US | (888) 426-4435 | Jose Salguero | 2026-10-05 | yes | yes | as in the registry; not recorded separately | 2026-10-05 |
+| Pet Poison Helpline | US | (855) 764-7661 | Jose Salguero | 2026-10-05 | yes | yes | as in the registry; not recorded separately | 2026-10-05 |
+
+Recorded from the owner's statement on 2026-10-05: all four numbers are valid and take calls about
+pets. The checklist also asks to confirm the cost, answering language and hours against the registry;
+that was not reported line by line, so the registry's existing values (from each service's own page,
+2026-09-28) stand unverified by phone. Worth a glance at the fee wording before release: the app tells
+users when a call costs money (`hotlines:fee_*`, `cost_standard_rate`).
 
 Not in the registry on purpose: **MX** (no single national line; centres are per hospital) and
 **AR** (the Centro Nacional de Intoxicaciones is confirmed 24 h and free, but its page does not

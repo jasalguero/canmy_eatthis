@@ -141,17 +141,13 @@ shared with a third party (Open Food Facts), purpose "App functionality", option
 
 ## 4. Gates that block submission
 
-1. **Hotlines verified by a person.** Release builds hide any hotline with `verifiedAt: null`
-   (`hotlinesForRegion`, D30), and **all four registry entries are unverified today**: INTCF
-   (ES, +34 915 620 420), Animal PoisonLine (GB, +44 1202 509 000), ASPCA APCC (US, +1 888 426
-   4435) and Pet Poison Helpline (US, +1 855 764 7661). A release built now would show the
-   emergency screen with **no numbers**, which is worse than not having it. Dial each, confirm it
-   reaches the named service and takes pet cases, and record `verifiedAt` and the operating
-   language(s): use `docs/eval/hotline-verification.md`. MX and AR have no entries on purpose
-   (the registry comment says why), and the emergency screen already handles that: the user's own
-   vet, "no line for your region", and the emergency-vet search. Until a number is verified, every
-   region degrades to that same screen, which is acceptable but weak. **DECISION:** ship with only
-   the lines you have verified, or hold the release until the US/ES/GB ones are.
+1. **Hotlines verified by a person — done 2026-10-05.** All four registry lines (INTCF ES, Animal
+   PoisonLine GB, ASPCA APCC US, Pet Poison Helpline US) were dialled by the owner and take pet calls;
+   `verifiedAt` is set and a test (`emergency.test.ts`) fails if a release build ever shows no line for
+   ES, GB or US. Cost, answering language and hours were not recorded per line (see
+   `docs/eval/hotline-verification.md`). **MX and AR have no entries on purpose** (the registry
+   comment says why); their users get their own vet, "no line for your region" and the emergency-vet
+   search. **DECISION:** release in ES, GB and US only until MX/AR have a confirmed line.
 2. **KB editorial gate** (§6 of `docs/07`): the two-independent-source check is a manual pass.
    Known exceptions: `pineapple` (D35). Also `lemon` cites ASPCA, which is not one of the source
    classes `docs/04` §2 names.

@@ -4,9 +4,10 @@ import { type Hotline, HotlineSchema } from './schemas/hotline.js';
  * The hotline registry, bundled with the app so the emergency path works offline (AGENTS.md #4).
  *
  * Every entry was taken from the service's own official page, recorded in `source`, on
- * 2026-09-28. None is verified yet: `verifiedAt` is set only after a person has dialled the number
- * and confirmed it reaches this service and takes calls about pets. Re-verify before every
- * release (docs/03, docs/05 §3).
+ * 2026-09-28. `verifiedAt` is set only after a person has dialled the number and confirmed it
+ * reaches this service and takes calls about pets. All four were verified by the owner on
+ * 2026-10-05 (`docs/eval/hotline-verification.md`). Re-verify before every release
+ * (docs/03, docs/05 §3).
  *
  * Regions with no entry are deliberate, not gaps to fill with a guess:
  * - **MX**: no single national poison line; the centres are per hospital.
@@ -29,7 +30,7 @@ const REGISTRY: Hotline[] = [
     // The service's animal-poisoning page urges calling SIT for any toxic exposure of an animal.
     source:
       'https://www.mjusticia.gob.es/es/institucional/organismos/instituto-nacional/servicios/servicio-informacion/intoxicaciones-frecuentes/veterinarias',
-    verifiedAt: null,
+    verifiedAt: '2026-10-05',
   },
   {
     id: 'animal_poisonline_gb',
@@ -41,7 +42,7 @@ const REGISTRY: Hotline[] = [
     cost: 'fee',
     hours24: true,
     source: 'https://www.animalpoisonline.co.uk/',
-    verifiedAt: null,
+    verifiedAt: '2026-10-05',
   },
   {
     id: 'aspca_apcc_us',
@@ -53,7 +54,7 @@ const REGISTRY: Hotline[] = [
     cost: 'fee',
     hours24: true,
     source: 'https://www.aspca.org/pet-care/animal-poison-control',
-    verifiedAt: null,
+    verifiedAt: '2026-10-05',
   },
   {
     id: 'pet_poison_helpline_us',
@@ -65,7 +66,7 @@ const REGISTRY: Hotline[] = [
     cost: 'fee',
     hours24: true,
     source: 'https://www.petpoisonhelpline.com/',
-    verifiedAt: null,
+    verifiedAt: '2026-10-05',
   },
 ];
 

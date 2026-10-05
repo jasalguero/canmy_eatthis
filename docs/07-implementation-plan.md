@@ -274,8 +274,9 @@ Photo identification — **second release**:
 - [ ] Every one of the non-negotiable rules in `docs/05-safety-legal.md` §1 has a passing test or a
       recorded manual check
 - [ ] Hotline CTA works in airplane mode and with the daily cap exhausted
-- [ ] Every hotline number dialled and verified by a person; `verifiedAt` and operating language(s)
+- [x] Every hotline number dialled and verified by a person; `verifiedAt` and operating language(s)
       recorded
+      *Evidence: all four dialled by the owner 2026-10-05 (reach + takes pets); `docs/eval/hotline-verification.md`. Cost/language/hours were not recorded per line*
 - [ ] A Spanish speaker in a US region gets Spanish text and US hotline numbers
 - [ ] The privacy policy and terms of use are published and match the app's actual behaviour
 - [ ] *(second release)* End-to-end against a 20-photo test set on both platforms; results recorded
