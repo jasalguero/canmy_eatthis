@@ -4,6 +4,10 @@
  * (apps/mobile/src/components/feedback/Mascot.tsx, `dogLayers`) so the icon and the app match.
  *
  *   assets/icon.png           1024 x 1024, opaque (App Store forbids transparency/alpha)
+ *   assets/splash.png         1284 x 2778, fully transparent. The native splash is just the cream
+ *                             background (app.config.ts); the app's own BootSplash then pops the
+ *                             coin in. A visible image here would be dropped and re-popped, and the
+ *                             old placeholder (blank white) showed as a white box on launch.
  *   assets/adaptive-icon.png  1024 x 1024, transparent, dog kept inside Android's 66% safe zone;
  *                             its background colour is set in app.config.ts (`ICON_BACKGROUND`)
  *
@@ -74,3 +78,12 @@ async function render(svgText, file, flatten) {
 // Icon: the dog fills ~76% of the width. Adaptive: ~52%, inside the 66% safe zone with margin.
 await render(svg(5.1, true), 'icon.png', true);
 await render(svg(3.4, false), 'adaptive-icon.png', false);
+{
+  const buf = await sharp({
+    create: { width: 1284, height: 2778, channels: 4, background: { r: 0, g: 0, b: 0, alpha: 0 } },
+  })
+    .png({ compressionLevel: 9 })
+    .toBuffer();
+  writeFileSync(join(root, 'apps/mobile/assets/splash.png'), buf);
+  console.log(`wrote splash.png (${buf.length} bytes)`);
+}
