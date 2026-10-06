@@ -9,6 +9,7 @@ export {
   isPlausibleBarcode,
   lookupBarcode,
   matchIngredients,
+  matchProduct,
   parseOpenFoodFactsProduct,
   splitIngredients,
   type BarcodeProduct,

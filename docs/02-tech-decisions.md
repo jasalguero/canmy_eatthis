@@ -987,3 +987,14 @@ dog-only article as if it had spoken about cats. Decision (2026-10-01):
   `unknown` shows the entry's own explanation instead.
 - **Phase 6's "source above the fold on every result screen" now means every screen that states
   a verdict other than `unknown`.**
+
+## D37 — Barcode matching strips allergen markup and falls back to the product name
+
+Scanning a Spanish-labelled jar named "Peanut butter" returned "None of its ingredients are in our
+list". Open Food Facts had `_Cacahuetes_ tostados 100%.`: the underscores mark allergens, and the
+list is one ingredient the KB has no entry for, though the KB has the product itself.
+
+- `splitIngredients` drops `_` and `*` markup and a trailing full stop before matching.
+- New shared `matchProduct`: when no ingredient matches, it tries the product's name, exact alias
+  only, never fuzzy. Ingredient matches always win. The `is_ingredient` filter still applies.
+- The app uses it. The Worker's `matchIngredientsAgainstKb` has no product name and is unchanged.

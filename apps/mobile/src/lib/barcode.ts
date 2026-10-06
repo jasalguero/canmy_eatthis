@@ -1,4 +1,4 @@
-import { type FetchLike, lookupBarcode, matchIngredients } from '@canmyeatthis/shared';
+import { type FetchLike, lookupBarcode, matchProduct } from '@canmyeatthis/shared';
 
 import type { SupportedLanguage } from '@/i18n/namespaces';
 import { getKbEntry, resolveExactOffline } from '@/lib/offlineKb';
@@ -14,7 +14,12 @@ import { getKbEntry, resolveExactOffline } from '@/lib/offlineKb';
  */
 export type ProductLookup =
   /** Found, with an ingredient list. `matches` may be empty: nothing in it is in the KB. */
-  | { kind: 'found'; productName: string | null; ingredientsText: string; matches: string[] }
+  | {
+      kind: 'found';
+      productName: string | null;
+      ingredientsText: string;
+      matches: string[];
+    }
   /** Found, but the database has no ingredient list for it. */
   | { kind: 'no_ingredients'; productName: string | null }
   | { kind: 'not_found' }
@@ -32,17 +37,26 @@ export async function lookupProduct(
 ): Promise<ProductLookup> {
   let product: Awaited<ReturnType<typeof lookupBarcode>>;
   try {
-    product = await lookupBarcode(barcode, { fetch: fetchImpl, userAgent: USER_AGENT });
+    product = await lookupBarcode(barcode, {
+      fetch: fetchImpl,
+      userAgent: USER_AGENT,
+    });
   } catch {
     return { kind: 'unavailable' };
   }
   if (!product) return { kind: 'not_found' };
   if (!product.ingredientsText) return { kind: 'no_ingredients', productName: product.productName };
 
-  const matches = matchIngredients(product.ingredientsText, {
-    resolveExact: resolveExactOffline,
-    isIngredient: (kbId) => getKbEntry(kbId, language)?.isIngredient === true,
-  });
+  const matches = matchProduct(
+    {
+      productName: product.productName,
+      ingredientsText: product.ingredientsText,
+    },
+    {
+      resolveExact: resolveExactOffline,
+      isIngredient: (kbId) => getKbEntry(kbId, language)?.isIngredient === true,
+    },
+  );
   return {
     kind: 'found',
     productName: product.productName,

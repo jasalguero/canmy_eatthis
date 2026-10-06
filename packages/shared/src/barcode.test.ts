@@ -4,6 +4,7 @@ import {
   isPlausibleBarcode,
   lookupBarcode,
   matchIngredients,
+  matchProduct,
   parseOpenFoodFactsProduct,
   splitIngredients,
 } from './barcode.js';
@@ -149,5 +150,32 @@ describe('lookupBarcode', () => {
 
   it('throws when offline', async () => {
     await expect(lookupBarcode('3017620422003', opts(fakeFetch({})))).rejects.toThrow();
+  });
+});
+
+describe('allergen markup and product-name fallback', () => {
+  const aliases: Record<string, string> = {
+    cacahuetes: 'peanuts',
+    'peanut butter': 'peanut_butter',
+  };
+  const matcher = {
+    resolveExact: (text: string) => aliases[text.toLowerCase()] ?? null,
+    isIngredient: () => true,
+  };
+
+  it('strips allergen underscores and a trailing full stop', () => {
+    expect(splitIngredients('_Cacahuetes_, sal.')).toEqual(['Cacahuetes', 'sal']);
+  });
+
+  it('falls back to the product name when no ingredient matches', () => {
+    expect(
+      matchProduct({ productName: 'Peanut butter', ingredientsText: 'roasted peanuts' }, matcher),
+    ).toEqual(['peanut_butter']);
+  });
+
+  it('prefers ingredient matches over the name', () => {
+    expect(
+      matchProduct({ productName: 'Peanut butter', ingredientsText: '_Cacahuetes_' }, matcher),
+    ).toEqual(['peanuts']);
   });
 });

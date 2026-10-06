@@ -100,11 +100,15 @@ export async function lookupBarcode(
  * Percentages go first: a decimal comma ("12,5 %") would otherwise be split as a separator.
  */
 export function splitIngredients(ingredientsText: string): string[] {
-  return ingredientsText
-    .replace(/\d+(?:[.,]\d+)?\s*%/g, ' ')
-    .split(/[,;()[\]{}]/)
-    .map((item) => item.replace(/\s+/g, ' ').trim())
-    .filter(Boolean);
+  return (
+    ingredientsText
+      // Allergens are marked up as "_Cacahuetes_" or "**milk**", which would stop an exact match.
+      .replace(/[_*]/g, '')
+      .replace(/\d+(?:[.,]\d+)?\s*%/g, ' ')
+      .split(/[,;()[\]{}]/)
+      .map((item) => item.replace(/\s+/g, ' ').replace(/\.$/, '').trim())
+      .filter(Boolean)
+  );
 }
 
 export interface IngredientMatcher {
@@ -128,4 +132,18 @@ export function matchIngredients(ingredientsText: string, matcher: IngredientMat
     if (kbId && matcher.isIngredient(kbId) && !matches.includes(kbId)) matches.push(kbId);
   }
   return matches;
+}
+
+/**
+ * Like `matchIngredients`, but when no ingredient is in the KB, falls back to the product's own
+ * name, exact alias only. A jar named "Peanut butter" whose list reads "roasted peanuts 100%"
+ * would otherwise come back as "not in our list" although the KB has the product itself.
+ */
+export function matchProduct(
+  product: { productName: string | null; ingredientsText: string },
+  matcher: IngredientMatcher,
+): string[] {
+  const matches = matchIngredients(product.ingredientsText, matcher);
+  if (matches.length > 0 || !product.productName) return matches;
+  return matchIngredients(product.productName, matcher);
 }
