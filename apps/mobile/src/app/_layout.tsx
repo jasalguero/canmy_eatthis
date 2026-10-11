@@ -9,6 +9,7 @@ import { useReducedMotion } from 'react-native-reanimated';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { BootSplash } from '@/components/feedback';
+import { ResetOnRefocus } from '@/components/layout';
 import { initI18n } from '@/i18n';
 import { useSettingsStore } from '@/lib/settings';
 import { ThemeProvider, useTheme } from '@/theme/ThemeProvider';
@@ -76,7 +77,10 @@ function ThemedRootLayout() {
         <ThemeProvider theme={themeOverride}>
           {/* Inside the provider so useTheme() resolves the real theme, not the context default. */}
           <StatusBarThemer>
-            <Stack screenOptions={{ headerShown: false }} />
+            <Stack
+              screenOptions={{ headerShown: false }}
+              screenLayout={({ children }) => <ResetOnRefocus>{children}</ResetOnRefocus>}
+            />
             {showSplash ? <BootSplash onDone={() => setShowSplash(false)} /> : null}
           </StatusBarThemer>
         </ThemeProvider>
