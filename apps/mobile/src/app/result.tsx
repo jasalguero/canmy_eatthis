@@ -1,7 +1,7 @@
 import type { Species, VerdictPayload } from '@canmyeatthis/shared';
 import * as Haptics from 'expo-haptics';
 import { Redirect, router, useLocalSearchParams } from 'expo-router';
-import { type ReactNode, useEffect } from 'react';
+import { type ReactNode, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ScrollView, View } from 'react-native';
 import { useReducedMotion } from 'react-native-reanimated';
@@ -18,6 +18,8 @@ import { Button, Enter, MotionStill, Text } from '@/components/primitives';
 import { devResultPayload } from '@/lib/devPreview';
 import { useDraftStore } from '@/lib/draft';
 import { openEmergency } from '@/lib/emergency';
+import { recordFromPayload } from '@/lib/history';
+import { useHistoryStore } from '@/lib/historyStore';
 import { type KbSuggestion, suggestOffline } from '@/lib/offlineKb';
 import { canReport, reportWrongAnswer } from '@/lib/report';
 import { useSettingsStore } from '@/lib/settings';
@@ -61,6 +63,7 @@ export default function ResultRoute() {
     unknown?: string;
     species?: string;
     query?: string;
+    fromHistory?: string;
   }>();
   const language = useSettingsStore((state) => state.language);
   const species: Species = params.species === 'cat' ? 'cat' : 'dog';
@@ -85,12 +88,27 @@ export default function ResultRoute() {
         })
       : devResultPayload(params.case ?? '', language, disclaimer);
 
-  if (!payload) return <Redirect href="/" />;
   // `still` freezes the entrance animation and the haptic for the gallery and for screenshots.
   // Keyed on what was asked, not just the route: Expo Router reuses this screen when only the
   // params change (a second link, a suggestion tapped), and a reused screen never replays the
   // banner's entrance, leaving it parked off-screen at its first frame.
   const resultKey = `${params.kbId ?? ''}|${params.query ?? ''}|${params.case ?? ''}|${species}`;
+
+  // Every real answer goes into History (`lib/history.ts`) — not the gallery's fixed cases, and
+  // not a row being re-opened from History itself. The ref keeps one check to one row when the
+  // effect runs twice (React's development double-invoke, a re-render with the same params).
+  const recordCheck = useHistoryStore((state) => state.record);
+  const recordedKey = useRef<string | null>(null);
+  const isRealCheck = Boolean(params.kbId) || params.unknown === '1';
+  const shouldRecord =
+    payload !== null && isRealCheck && params.fromHistory !== '1' && params.still !== '1';
+  useEffect(() => {
+    if (!shouldRecord || !payload || recordedKey.current === resultKey) return;
+    recordedKey.current = resultKey;
+    void recordCheck(recordFromPayload(payload, params.query ?? '', Date.now()));
+  }, [shouldRecord, payload, resultKey, recordCheck, params.query]);
+
+  if (!payload) return <Redirect href="/" />;
   return (
     <Result
       key={resultKey}

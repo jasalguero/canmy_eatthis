@@ -326,7 +326,9 @@ Worth building once the app is in users' hands, in rough order:
 
 - **Photo identification** — the second release above.
 - **History** — SQLite, with thumbnails, search, re-open and delete, KB version stamped per entry.
-  The History screen exists on mock data and is development-only until then.
+  *Built on `claude/history` (2026-10-12): `lib/history.ts`, shown in every build. A row re-opens
+  today's answer and says when it differs from the one given then. The thumbnail column exists
+  but stays empty until the photo release.*
 - **Pet profile** — species and name only (`docs/00-product-spec.md` §2.5).
 - **OTA knowledge base updates** — a KB edit reaching a running app within hours, via the Worker's
   manifest.

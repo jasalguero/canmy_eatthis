@@ -112,9 +112,10 @@ export default function Identifying() {
       }
       const resolution = resolveOffline(description);
       if (resolution.type === 'exact' && resolution.kbId) {
+        // `query` rides along only so History can find the check by what was typed.
         router.replace({
           pathname: '/result',
-          params: { kbId: resolution.kbId, species: params.species ?? 'dog' },
+          params: { kbId: resolution.kbId, species: params.species ?? 'dog', query: description },
         });
       } else if (resolution.type === 'fuzzy' && resolution.kbId) {
         router.replace({
