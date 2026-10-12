@@ -125,7 +125,25 @@ export async function listChecks(db: HistoryDatabase): Promise<HistoryRecord[]> 
   return rows.map(fromRow);
 }
 
+/**
+ * A check identical to the newest row and this close to it is the same check arriving twice — a
+ * screen remounted by the router, a deep link delivered again — not a second question.
+ */
+export const DUPLICATE_WINDOW_MS = 60_000;
+
 export async function addCheck(db: HistoryDatabase, record: NewHistoryRecord): Promise<void> {
+  const newest = await db.getFirstAsync<CheckRow>(
+    'SELECT * FROM checks ORDER BY checked_at DESC, id DESC LIMIT 1',
+  );
+  if (
+    newest &&
+    newest.kb_id === record.kbId &&
+    newest.query === record.query &&
+    newest.species === record.species &&
+    Math.abs(record.checkedAt - newest.checked_at) < DUPLICATE_WINDOW_MS
+  ) {
+    return;
+  }
   await db.runAsync(
     `INSERT INTO checks
        (kb_id, query, species, verdict, severity, kb_version, display_name, checked_at, thumbnail_uri)
