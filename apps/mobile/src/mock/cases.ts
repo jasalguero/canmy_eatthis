@@ -123,17 +123,3 @@ export const MOCK_PLANT_CANDIDATE: Candidate = {
   confidence: 0.35,
   confidenceBand: 'low',
 };
-
-/** History rows. Dates are fixed, never `Date.now()`, so screenshots are reproducible. */
-export interface MockHistoryRow {
-  id: string;
-  caseId: string;
-  checkedAt: Date;
-}
-
-export const MOCK_HISTORY: readonly MockHistoryRow[] = [
-  { id: 'h1', caseId: 'toxic-moderate-dog', checkedAt: new Date('2026-09-21T20:14:00Z') },
-  { id: 'h2', caseId: 'safe-dog', checkedAt: new Date('2026-09-21T12:02:00Z') },
-  { id: 'h3', caseId: 'unknown-cat', checkedAt: new Date('2026-09-19T08:40:00Z') },
-  { id: 'h4', caseId: 'toxic-severe-cat', checkedAt: new Date('2026-09-17T23:11:00Z') },
-];

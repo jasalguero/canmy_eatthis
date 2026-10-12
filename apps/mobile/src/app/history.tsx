@@ -1,45 +1,68 @@
-import { Redirect, router } from 'expo-router';
-import { useMemo, useState } from 'react';
+import { router } from 'expo-router';
+import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { TextInput, View } from 'react-native';
 
 import { EmptyState, VerdictCard } from '@/components/feedback';
 import { ScrollScreen } from '@/components/layout';
-import { Text } from '@/components/primitives';
-import { devHistoryRows } from '@/lib/devPreview';
+import { Button, Text } from '@/components/primitives';
+import { matchesSearch } from '@/lib/history';
+import { type HistoryRowView, toRowView } from '@/lib/historyRows';
+import { useHistoryStore } from '@/lib/historyStore';
 import { useSettingsStore } from '@/lib/settings';
+import { verdictWordKey } from '@/theme/verdict';
 
 /**
- * History (the real SQLite store comes after the first release, docs/07; Phase 2 built the screen).
+ * History (docs/00 §2.5): past checks from the on-device store (`lib/history.ts`), newest first,
+ * searchable, each one re-openable and deletable.
  *
- * Each row stamps the KB version that produced it, which is why the row renders from a resolved
- * payload rather than from a stored verdict string: an answer given under an older KB should be
- * re-readable as what it was, not silently restated under today's content.
- *
- * `?empty=1` renders the empty state, which is a designed screen rather than a blank list
- * (docs/06 §4).
- *
- * **Development builds only, for now.** Nothing records a check yet, so a release build would
- * show either a list that never fills or someone else's made-up history. Home hides its History
- * icon outside development for the same reason.
+ * A row shows and re-opens **today's** answer, resolved again from the bundled KB, not the one
+ * stored at the time: an entry corrected since must never be re-shown with its old, more
+ * optimistic verdict (AGENTS.md #10). When the two differ, the row says what it was. Each row
+ * still stamps the KB version that answered it then (docs/04-knowledge-base.md §5).
  */
 export default function HistoryRoute() {
-  if (!__DEV__) return <Redirect href="/" />;
-  return <History />;
-}
-
-function History() {
   const { t } = useTranslation();
   const language = useSettingsStore((state) => state.language);
+  const records = useHistoryStore((state) => state.records);
+  const loaded = useHistoryStore((state) => state.loaded);
+  const load = useHistoryStore((state) => state.load);
+  const remove = useHistoryStore((state) => state.remove);
   const [query, setQuery] = useState('');
 
-  const rows = useMemo(() => devHistoryRows(language, t('legal:disclaimer')), [language, t]);
+  useEffect(() => {
+    void load();
+  }, [load]);
 
-  const filtered = query.trim()
-    ? rows.filter((row) =>
-        row.payload.displayName.toLocaleLowerCase().includes(query.trim().toLocaleLowerCase()),
-      )
-    : rows;
+  const disclaimer = t('legal:disclaimer');
+  const rows = useMemo(
+    () => records.map((record) => toRowView(record, language, disclaimer)),
+    [records, language, disclaimer],
+  );
+
+  const filtered = rows.filter((row) =>
+    matchesSearch([row.name, row.record.displayName, row.record.query], query),
+  );
+
+  const open = (row: HistoryRowView) => {
+    const { target } = row;
+    router.push(
+      target.kind === 'entry'
+        ? {
+            pathname: '/result',
+            params: { kbId: target.kbId, species: target.species, fromHistory: '1' },
+          }
+        : {
+            pathname: '/result',
+            params: {
+              unknown: '1',
+              query: target.query,
+              species: target.species,
+              fromHistory: '1',
+            },
+          },
+    );
+  };
 
   return (
     <ScrollScreen contentClassName="gap-4 px-4 pb-6 pt-2">
@@ -47,18 +70,20 @@ function History() {
         {t('history:title')}
       </Text>
 
-      <TextInput
-        accessibilityLabel={t('history:searchPlaceholder')}
-        placeholder={t('history:searchPlaceholder')}
-        value={query}
-        onChangeText={setQuery}
-        autoCorrect={false}
-        spellCheck={false}
-        autoCapitalize="none"
-        className="rounded-md border border-line-default bg-surface-raised p-3 text-body text-ink-primary"
-      />
+      {rows.length > 0 ? (
+        <TextInput
+          accessibilityLabel={t('history:searchPlaceholder')}
+          placeholder={t('history:searchPlaceholder')}
+          value={query}
+          onChangeText={setQuery}
+          autoCorrect={false}
+          spellCheck={false}
+          autoCapitalize="none"
+          className="rounded-md border border-line-default bg-surface-raised p-3 text-body text-ink-primary"
+        />
+      ) : null}
 
-      {rows.length === 0 ? (
+      {!loaded ? null : rows.length === 0 ? (
         <EmptyState
           title={t('history:emptyTitle')}
           body={t('history:emptyBody')}
@@ -75,17 +100,32 @@ function History() {
       ) : (
         <View className="gap-3">
           {filtered.map((row) => (
-            <View key={row.id} className="gap-1">
+            <View key={row.record.id} className="gap-1">
               <VerdictCard
-                verdict={row.payload.verdict}
-                itemName={row.payload.displayName}
-                species={row.payload.species}
-                detail={t('history:checkedAt', { date: row.checkedAt })}
-                onPress={() => router.push({ pathname: '/result', params: { case: row.caseId } })}
+                verdict={row.verdictNow}
+                itemName={row.name}
+                species={row.record.species}
+                detail={t('history:checkedAt', { date: row.record.checkedAt })}
+                onPress={() => open(row)}
               />
-              <Text variant="caption" tone="tertiary">
-                {t('history:kbStamp', { version: row.payload.kbVersion })}
-              </Text>
+              {row.changed ? (
+                <Text variant="caption" tone="secondary">
+                  {t('history:answerChanged', {
+                    verdictWord: t(verdictWordKey(row.record.verdict)),
+                  })}
+                </Text>
+              ) : null}
+              <View className="flex-row items-center justify-between gap-2">
+                <Text variant="caption" tone="tertiary" className="flex-1">
+                  {t('history:kbStamp', { version: row.record.kbVersion })}
+                </Text>
+                <Button
+                  label={t('history:delete')}
+                  variant="quiet"
+                  accessibilityHint={t('history:deleteA11yHint')}
+                  onPress={() => void remove(row.record.id)}
+                />
+              </View>
             </View>
           ))}
         </View>

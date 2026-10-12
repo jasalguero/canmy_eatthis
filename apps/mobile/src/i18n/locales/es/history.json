@@ -10,5 +10,6 @@
   "deleteA11yHint": "Quita esta consulta de tu historial",
   "checkedAt": "{date, date, medium}",
   "kbStamp": "Respondido con la base de conocimiento {version}",
-  "itemA11yLabel": "{item}, {verdictWord}, {species, select, dog {perro} other {gato}}"
+  "itemA11yLabel": "{item}, {verdictWord}, {species, select, dog {perro} other {gato}}",
+  "answerChanged": "La respuesta ha cambiado desde esta consulta. Entonces era «{verdictWord}»; toca para ver la respuesta de hoy."
 }

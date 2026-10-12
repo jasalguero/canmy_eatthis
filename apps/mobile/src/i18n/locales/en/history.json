@@ -10,5 +10,6 @@
   "deleteA11yHint": "Removes this check from your history",
   "checkedAt": "{date, date, medium}",
   "kbStamp": "Answered with knowledge base {version}",
-  "itemA11yLabel": "{item}, {verdictWord}, {species, select, dog {dog} other {cat}}"
+  "itemA11yLabel": "{item}, {verdictWord}, {species, select, dog {dog} other {cat}}",
+  "answerChanged": "The answer has changed since this check. It was “{verdictWord}” then; tap to see today’s answer."
 }
