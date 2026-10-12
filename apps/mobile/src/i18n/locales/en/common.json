@@ -10,5 +10,8 @@
   "retry": "Try again",
   "done": "Done",
   "notNow": "Not now",
-  "loading": "Loading"
+  "loading": "Loading",
+  "noMailAppTitle": "No email app found",
+  "noMailAppMessage": "There's no email app on this device. You can write to us at {email}.",
+  "shareEmailAddress": "Copy or share address"
 }
