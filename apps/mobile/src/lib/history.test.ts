@@ -2,6 +2,7 @@ import { DatabaseSync } from 'node:sqlite';
 
 import { buildRealVerdict, buildUnknownVerdict } from '@/lib/verdict';
 import {
+  DUPLICATE_WINDOW_MS,
   HISTORY_LIMIT,
   type HistoryDatabase,
   type NewHistoryRecord,
@@ -72,6 +73,21 @@ describe('the history table', () => {
     const [row] = await listChecks(db);
     expect(row).toMatchObject({ kbId: null, verdict: 'unknown', severity: null, query: 'zzz' });
     expect(typeof row?.id).toBe('number');
+  });
+
+  it('saves the same check arriving twice only once', async () => {
+    const db = await freshDb();
+    await addCheck(db, check({ checkedAt: 1_000 }));
+    await addCheck(db, check({ checkedAt: 1_500 }));
+    expect(await listChecks(db)).toHaveLength(1);
+  });
+
+  it('saves a repeat of a check once the window has passed, or for the other species', async () => {
+    const db = await freshDb();
+    await addCheck(db, check({ checkedAt: 1_000 }));
+    await addCheck(db, check({ checkedAt: 1_100, species: 'cat' }));
+    await addCheck(db, check({ checkedAt: 1_100 + DUPLICATE_WINDOW_MS, species: 'cat' }));
+    expect(await listChecks(db)).toHaveLength(3);
   });
 
   it('lists newest first', async () => {
