@@ -10,5 +10,8 @@
   "retry": "Reintentar",
   "done": "Hecho",
   "notNow": "Ahora no",
-  "loading": "Cargando"
+  "loading": "Cargando",
+  "noMailAppTitle": "No hay app de correo",
+  "noMailAppMessage": "No hay ninguna app de correo en este dispositivo. Puedes escribirnos a {email}.",
+  "shareEmailAddress": "Copiar o compartir dirección"
 }

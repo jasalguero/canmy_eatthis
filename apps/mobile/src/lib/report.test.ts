@@ -1,8 +1,8 @@
-import { Linking } from 'react-native';
+import { Alert, Linking, Share } from 'react-native';
 
 import { initI18n } from '@/i18n';
 import { buildRealVerdict } from '@/lib/verdict';
-import { CONTACT_EMAIL, canReport, mailtoUrl, reportWrongAnswer } from './report';
+import { CONTACT_EMAIL, canReport, mailtoUrl, reportGeneral, reportWrongAnswer } from './report';
 
 const i18n = initI18n('en');
 
@@ -39,7 +39,7 @@ describe('the report email', () => {
 });
 
 describe('reportWrongAnswer', () => {
-  it('opens an email to the contact address about that answer', () => {
+  it('opens an email to the contact address about that answer', async () => {
     expect(CONTACT_EMAIL).toBe('canmy_eatthis@jasalguero.com');
     expect(canReport()).toBe(true);
     const open = jest.spyOn(Linking, 'openURL').mockResolvedValue(true);
@@ -49,10 +49,39 @@ describe('reportWrongAnswer', () => {
       language: 'en',
       disclaimer: 'x',
     });
-    reportWrongAnswer(i18n.t, payload);
+    await reportWrongAnswer(i18n.t, payload);
     const url = open.mock.calls[0]?.[0] ?? '';
     expect(url.startsWith('mailto:canmy_eatthis@jasalguero.com?subject=')).toBe(true);
     expect(decodeURIComponent(url)).toContain('Wrong answer: Grapes and raisins (dog)');
     open.mockRestore();
+  });
+});
+
+describe('with no mail app on the device', () => {
+  afterEach(() => jest.restoreAllMocks());
+
+  it('shows the contact address instead, with a way to copy it', async () => {
+    jest
+      .spyOn(Linking, 'openURL')
+      .mockRejectedValue(new Error('Unable to open URL: mailto:canmy_eatthis@jasalguero.com'));
+    const alert = jest.spyOn(Alert, 'alert').mockImplementation(() => undefined);
+    const share = jest.spyOn(Share, 'share').mockResolvedValue({ action: 'sharedAction' });
+
+    await expect(reportGeneral(i18n.t, '1.0.0')).resolves.toBeUndefined();
+
+    expect(alert).toHaveBeenCalledTimes(1);
+    const [title, message, buttons] = alert.mock.calls[0] ?? [];
+    expect(title).toBe('No email app found');
+    expect(message).toContain('canmy_eatthis@jasalguero.com');
+    const shareButton = buttons?.find((b) => b.text === 'Copy or share address');
+    shareButton?.onPress?.();
+    expect(share).toHaveBeenCalledWith({ message: 'canmy_eatthis@jasalguero.com' });
+  });
+
+  it('does not show the fallback when the email app opens', async () => {
+    jest.spyOn(Linking, 'openURL').mockResolvedValue(true);
+    const alert = jest.spyOn(Alert, 'alert').mockImplementation(() => undefined);
+    await reportGeneral(i18n.t, '1.0.0');
+    expect(alert).not.toHaveBeenCalled();
   });
 });

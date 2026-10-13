@@ -209,7 +209,7 @@ export default function Settings() {
           <Button
             label={t('settings:reportWrongAnswer')}
             variant="quiet"
-            onPress={() => reportGeneral(t, kbVersion)}
+            onPress={() => void reportGeneral(t, kbVersion)}
             className="self-start"
           />
         ) : null}

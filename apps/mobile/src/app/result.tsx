@@ -293,7 +293,7 @@ function Result({
               <Button
                 label={t('result:reportWrongAnswer')}
                 variant="quiet"
-                onPress={() => reportWrongAnswer(t, payload)}
+                onPress={() => void reportWrongAnswer(t, payload)}
                 className="self-start"
               />
             ) : null}
