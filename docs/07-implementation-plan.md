@@ -144,8 +144,8 @@ The phases do not all ship at once (`docs/02-tech-decisions.md` D28):
 - [ ] **Every screen renders correctly at `es` + 200% font scale** — the worst case, and the one
       that breaks the verdict banner
       *Open: simulated set only (`docs/screenshots/es-200`), not a device*
-- [ ] A pseudo-locale run surfaces zero hardcoded strings
-      *Open: no automated check and not run*
+- [x] A pseudo-locale run surfaces zero hardcoded strings
+      *Evidence: `src/i18n/noHardcodedStrings.test.ts` parses every screen and component for words in JSX or user-facing props: none (2026-10-14). A static check standing in for a visual pseudo-locale pass*
 - [x] CI grep finds no `marginLeft`/`marginRight`/`left:`/`right:` layout properties
 
 ---
@@ -271,13 +271,16 @@ Photo identification — **second release**:
 - Text-only mode for users who decline photo upload — fully functional
 
 **Acceptance**
-- [ ] Every one of the non-negotiable rules in `docs/05-safety-legal.md` §1 has a passing test or a
+- [x] Every one of the non-negotiable rules in `docs/05-safety-legal.md` §1 has a passing test or a
       recorded manual check
-- [ ] Hotline CTA works in airplane mode and with the daily cap exhausted
+      *Evidence: `docs/eval/safety-rules.md`; tests in `apps/mobile/src/safety/safetyRules.test.tsx`. Rules 5 and 8 are recorded manual checks, 2026-10-14*
+- [x] Hotline CTA works in airplane mode and with the daily cap exhausted
+      *Evidence: test renders a toxic result and the emergency screen (US, GB, ES) with every network call failing; the cap guards only the Worker's photo path, which this release does not call*
 - [x] Every hotline number dialled and verified by a person; `verifiedAt` and operating language(s)
       recorded
       *Evidence: all four dialled by the owner 2026-10-05 (reach + takes pets); `docs/eval/hotline-verification.md`. Cost/language/hours were not recorded per line*
-- [ ] A Spanish speaker in a US region gets Spanish text and US hotline numbers
+- [x] A Spanish speaker in a US region gets Spanish text and US hotline numbers
+      *Evidence: `safetyRules.test.tsx`: `es` + `US` shows Spanish copy, US lines only, and the Spanish KB on a toxic result*
 - [ ] The privacy policy and terms of use are published and match the app's actual behaviour
 - [ ] *(second release)* End-to-end against a 20-photo test set on both platforms; results recorded
       in `docs/eval/` with per-item pass/fail
