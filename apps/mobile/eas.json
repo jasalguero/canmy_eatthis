@@ -22,7 +22,9 @@
     },
     "production": {
       "env": {
-        "EXPO_PUBLIC_FEATURE_PHOTO_ID": "0"
+        "EXPO_PUBLIC_FEATURE_PHOTO_ID": "0",
+        "EXPO_PUBLIC_API_URL": "https://canmyeatthis-api.canmyeatthis.workers.dev",
+        "EXPO_PUBLIC_KB_PUBLIC_KEY": "/Ke/cpIj2e4KPQikp/bMljAFA9THBRxyHdpITEfdf/A="
       },
       "autoIncrement": true
     }
