@@ -65,8 +65,13 @@ lower of the two confidences.
    id into `wrangler.toml`.
 4. **Secret:** `pnpm --filter @canmyeatthis/api exec wrangler secret put GEMINI_API_KEY`. This is
    the only place the key lives. `scripts/check-no-secrets.sh` fails CI if one is committed.
-5. **Deploy:** `pnpm --filter @canmyeatthis/api run deploy`.
-6. **Nightly eval:** add the repository secret `GEMINI_API_KEY_EVAL` (a paid-tier key) so
+5. **KB signing key** (docs/02 D38): `pnpm --filter @canmyeatthis/api run kb:keygen` prints a key
+   pair. Put the private key in the Worker with
+   `pnpm --filter @canmyeatthis/api exec wrangler secret put KB_SIGNING_KEY`, and the public key in
+   the app build as `EXPO_PUBLIC_KB_PUBLIC_KEY` (with `EXPO_PUBLIC_API_URL` set to the Worker's
+   https URL). Without both, the app never downloads a KB.
+6. **Deploy:** `pnpm --filter @canmyeatthis/api run deploy`.
+7. **Nightly eval:** add the repository secret `GEMINI_API_KEY_EVAL` (a paid-tier key) so
    `.github/workflows/live-eval.yml` can run. Add real photos to `eval/images/` named
    `<expectedKbId>__<anything>.jpg`.
 

@@ -9,7 +9,8 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "build": "tsc --noEmit",
-    "eval:live": "tsx eval/live.ts"
+    "eval:live": "tsx eval/live.ts",
+    "kb:keygen": "node scripts/kb-keygen.mjs"
   },
   "dependencies": {
     "@canmyeatthis/shared": "workspace:*",

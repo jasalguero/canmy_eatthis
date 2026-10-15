@@ -13,6 +13,9 @@ export type Env = {
   MIN_APP_VERSION: string;
   /** Secret. Must be a key on a billing-enabled (paid tier) Google Cloud project — docs/01-architecture.md §6.2. */
   GEMINI_API_KEY?: string;
+  /** Secret. Base64 PKCS#8 Ed25519 key that signs the served KB (docs/02 D38). The app holds the
+   *  matching public key; without this the manifest carries no signature and no app updates. */
+  KB_SIGNING_KEY?: string;
 };
 
 /**

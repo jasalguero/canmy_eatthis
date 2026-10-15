@@ -131,13 +131,21 @@ export function createApp() {
 
   app.get('/v1/kb/manifest', async (c) => {
     const language = parseKbLanguage(c.req.query('lang') ?? 'en');
-    const { manifest } = await getServedKb(language, c.env.MIN_APP_VERSION || '0.0.0');
+    const { manifest } = await getServedKb(
+      language,
+      c.env.MIN_APP_VERSION || '0.0.0',
+      c.env.KB_SIGNING_KEY,
+    );
     return c.json(KbManifestSchema.parse(manifest));
   });
 
   app.get('/v1/kb/:lang', async (c) => {
     const language = parseKbLanguage(c.req.param('lang'));
-    const { body, manifest } = await getServedKb(language, c.env.MIN_APP_VERSION || '0.0.0');
+    const { body, manifest } = await getServedKb(
+      language,
+      c.env.MIN_APP_VERSION || '0.0.0',
+      c.env.KB_SIGNING_KEY,
+    );
     return c.body(body, 200, {
       'content-type': 'application/json; charset=utf-8',
       etag: `"${manifest.sha256}"`,
