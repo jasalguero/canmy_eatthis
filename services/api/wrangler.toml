@@ -9,7 +9,7 @@ compatibility_flags = ["nodejs_compat"]
 # See services/api/README.md for the full setup runbook.
 [[kv_namespaces]]
 binding = "KV"
-id = "REPLACE_WITH_KV_NAMESPACE_ID"
+id = "b482ab78f3484b66a2544b0fd455942a"
 
 [vars]
 # Non-secret config only. The one secret is set with:
@@ -18,4 +18,4 @@ id = "REPLACE_WITH_KV_NAMESPACE_ID"
 # Never put a secret in this file — AGENTS.md #6.
 VISION_DAILY_CALL_CAP = "500"
 DEVICE_HOURLY_CALL_LIMIT = "20"
-MIN_APP_VERSION = "0.1.0"
+MIN_APP_VERSION = "1.1.0"

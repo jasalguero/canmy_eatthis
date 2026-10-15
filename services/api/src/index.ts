@@ -17,7 +17,7 @@ import { DISCLAIMER } from './strings.js';
 
 // Bump on every deploy-relevant change. Surfaced by /health so we can confirm what's live
 // without digging through the Cloudflare dashboard.
-const VERSION = '0.1.0';
+const VERSION = '1.0.0';
 
 /** docs/01-architecture.md §6.3 — the conservative starting values if a var is missing or garbled. */
 const DEFAULT_DAILY_CAP = 500;
