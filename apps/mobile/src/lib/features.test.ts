@@ -2,7 +2,7 @@ import type { ExpoConfig } from 'expo/config';
 
 import native from '../theme/native.json';
 import { tokens } from '../theme/tokens';
-import { parseFlag } from './features';
+import { kbUpdateConfig, parseFlag } from './features';
 
 describe('parseFlag', () => {
   it('is on only for "1" or "true"', () => {
@@ -11,6 +11,18 @@ describe('parseFlag', () => {
     for (const off of [undefined, '', '0', 'false', 'yes', 'TRUE']) {
       expect(parseFlag(off)).toBe(false);
     }
+  });
+});
+
+describe('kbUpdateConfig', () => {
+  it('is on only with an https Worker URL and a public key', () => {
+    expect(kbUpdateConfig('https://api.example', 'key')).toEqual({
+      apiUrl: 'https://api.example',
+      publicKeyBase64: 'key',
+    });
+    expect(kbUpdateConfig('http://api.example', 'key')).toBeNull();
+    expect(kbUpdateConfig('https://api.example', '')).toBeNull();
+    expect(kbUpdateConfig(undefined, 'key')).toBeNull();
   });
 });
 

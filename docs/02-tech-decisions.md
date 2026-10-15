@@ -998,3 +998,40 @@ list is one ingredient the KB has no entry for, though the KB has the product it
 - New shared `matchProduct`: when no ingredient matches, it tries the product's name, exact alias
   only, never fuzzy. Ingredient matches always win. The `is_ingredient` filter still applies.
 - The app uses it. The Worker's `matchIngredientsAgainstKb` has no product name and is unchanged.
+
+## D38 — Knowledge-base updates: signed by the Worker, installed at the next launch
+
+The post-release OTA work in docs/07 (and the `GET /v1/kb/manifest` contract in docs/03), built on
+the Worker that Phase 4 already has. It ends D21's "bundled only", not its guarantee: the bundled
+KB still answers from the first frame and remains the fallback.
+
+**What is served.** `GET /v1/kb/:lang` serves one language's entries **plus the alias index**
+(`KbBundleSchema`). The index is language-agnostic, but an update that brought new entries under
+the old index would never find them, and an old index could point at ids the new entries no longer
+have. The manifest's `sha256`, `sizeBytes` and `signature` describe those exact bytes.
+
+**Signing.** The Worker signs the served bytes with Ed25519 using the `KB_SIGNING_KEY` secret
+(`pnpm --filter @canmyeatthis/api run kb:keygen`); the app holds the public key
+(`EXPO_PUBLIC_KB_PUBLIC_KEY`). Signing at serve time rather than at build time keeps the CI
+snapshot check deterministic (no key in CI). What it protects against is anything between the
+Worker and the phone; a compromised Worker could sign a bad KB, which is the same trust the app
+already places in that Worker for photo identification. Without a key the manifest says
+`signature: null` and no app installs anything.
+
+**What the app checks before installing** (`apps/mobile/src/lib/kbVerify.ts`): manifest schema,
+language, `minAppVersion`, size, SHA-256, signature, bundle schema, entry count, that every index
+target exists, that every sign and emergency action has text in this build's catalogues
+(AGENTS.md #13), and that every entry passes `resolveVerdict`'s invariants for both species. Any
+failure keeps the current KB.
+
+**When it changes.** At most one check a day per language. A verified download is stored in SQLite
+(`kb.db`) and installed at the **next** launch, so nothing changes under an open screen. An
+update applies only while the app is in the update's language, entries and index together, so a
+language switch never mixes an updated index with bundled entries. A stored update is dropped when
+the app ships a different bundled KB (a store release carries its own, possibly newer, snapshot).
+KB versions are content hashes, not ordered, so "different from the one in use" is the test, not
+"newer".
+
+**Off by default.** A build makes no network call for this unless it sets both
+`EXPO_PUBLIC_API_URL` (https) and `EXPO_PUBLIC_KB_PUBLIC_KEY`. Turning it on means the app contacts
+our Worker at launch, which the privacy policy must say before that build ships (docs/05 §6).

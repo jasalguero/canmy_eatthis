@@ -1,4 +1,10 @@
-import { ApiErrorSchema, KbManifestSchema, VerdictPayloadSchema } from '@canmyeatthis/shared';
+import { generateKeyPairSync, verify } from 'node:crypto';
+import {
+  ApiErrorSchema,
+  KbBundleSchema,
+  KbManifestSchema,
+  VerdictPayloadSchema,
+} from '@canmyeatthis/shared';
 import { describe, expect, it } from 'vitest';
 import { app, makeEnv } from './helpers.js';
 
@@ -49,6 +55,36 @@ describe('GET /v1/kb/manifest', () => {
       expect(manifest.lang).toBe(lang);
       expect(res.headers.get('etag')).toBe(`"${manifest.sha256}"`);
     }
+  });
+
+  it("serves one language's entries with the alias index", async () => {
+    const res = await app.request('/v1/kb/es', {}, makeEnv());
+    const bundle = KbBundleSchema.parse(await res.json());
+    expect(bundle.lang).toBe('es');
+    const ids = new Set(bundle.entries.map((entry) => entry.id));
+    expect(Object.values(bundle.index).every((id) => ids.has(id))).toBe(true);
+  });
+
+  it('is unsigned without a signing key', async () => {
+    const manifest = KbManifestSchema.parse(
+      await (await app.request('/v1/kb/manifest?lang=en', {}, makeEnv())).json(),
+    );
+    expect(manifest.signature).toBeNull();
+  });
+
+  it('signs the served bytes with KB_SIGNING_KEY', async () => {
+    const { privateKey, publicKey } = generateKeyPairSync('ed25519');
+    const env = makeEnv({
+      KB_SIGNING_KEY: privateKey.export({ format: 'der', type: 'pkcs8' }).toString('base64'),
+    });
+    const manifest = KbManifestSchema.parse(
+      await (await app.request('/v1/kb/manifest?lang=en', {}, env)).json(),
+    );
+    const bytes = Buffer.from(await (await app.request(manifest.url, {}, env)).arrayBuffer());
+    const signature = Buffer.from(manifest.signature ?? '', 'base64');
+    expect(verify(null, bytes, publicKey, signature)).toBe(true);
+    bytes.writeUInt8(bytes.readUInt8(10) ^ 1, 10);
+    expect(verify(null, bytes, publicKey, signature)).toBe(false);
   });
 
   it('rejects an unsupported language', async () => {

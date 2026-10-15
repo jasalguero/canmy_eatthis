@@ -335,6 +335,8 @@ Worth building once the app is in users' hands, in rough order:
 - **Pet profile** — species and name only (`docs/00-product-spec.md` §2.5).
 - **OTA knowledge base updates** — a KB edit reaching a running app within hours, via the Worker's
   manifest.
+  *Built on `claude/ota-kb` (2026-10-15), docs/02 D38. Off until a build sets the Worker URL and
+  public key; needs the Worker deployed with `KB_SIGNING_KEY` and a privacy policy update first.*
 - **Knowledge base growth** — only under the editorial standard.
 - **Optional:** an on-device pre-filter (ML Kit) that rejects unusable photos before an API call.
 

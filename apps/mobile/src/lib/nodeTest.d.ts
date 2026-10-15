@@ -1,6 +1,7 @@
 /**
  * The slices of Node's built-ins that Jest tests read the source tree with
- * (`i18n/noHardcodedStrings.test.ts`, `safety/safetyRules.test.tsx`). Tests run in Node; the app
+ * and sign test KBs with (`i18n/noHardcodedStrings.test.ts`, `safety/safetyRules.test.tsx`,
+ * `lib/kbUpdate.test.ts`). Tests run in Node; the app
  * never imports these, and the app has no `@types/node`.
  */
 declare module 'node:fs' {
@@ -19,6 +20,20 @@ declare module 'node:os' {
 }
 declare module 'node:module' {
   export function createRequire(path: string): (id: string) => unknown;
+}
+declare module 'node:crypto' {
+  interface KeyObject {
+    export(options: { format: 'jwk' }): { x?: string };
+  }
+  export function generateKeyPairSync(type: 'ed25519'): {
+    privateKey: KeyObject;
+    publicKey: KeyObject;
+  };
+  export function sign(algorithm: null, data: Uint8Array, key: KeyObject): Buffer;
+}
+declare class Buffer extends Uint8Array {
+  static from(data: string | Uint8Array, encoding?: 'base64' | 'base64url'): Buffer;
+  toString(encoding?: 'base64' | 'base64url' | 'utf8'): string;
 }
 declare const __dirname: string;
 declare namespace NodeJS {

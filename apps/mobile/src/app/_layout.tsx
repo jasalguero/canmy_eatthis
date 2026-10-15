@@ -11,7 +11,9 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { BootSplash } from '@/components/feedback';
 import { ResetOnRefocus } from '@/components/layout';
 import { initI18n } from '@/i18n';
-import { useSettingsStore } from '@/lib/settings';
+import { startKbUpdates } from '@/lib/kbUpdateRunner';
+import { setActiveKbLanguage } from '@/lib/offlineKb';
+import { useSettingsHydrated, useSettingsStore } from '@/lib/settings';
 import { ThemeProvider, useTheme } from '@/theme/ThemeProvider';
 import { useAppFonts } from '@/theme/fonts';
 
@@ -62,6 +64,18 @@ function ThemedRootLayout() {
       void i18n.changeLanguage(language);
     }
   }, [language]);
+
+  // A downloaded KB update answers only in its own language (`lib/offlineKb.ts`), so the KB
+  // follows the language setting. Set during render, not in an effect: the screen rendering right
+  // now must resolve against the same KB as the next one.
+  setActiveKbLanguage(language);
+
+  // Once the stored language is known: install a downloaded KB update and check for a newer one
+  // (docs/02 D38). Off in builds without a Worker URL and key, and never on the emergency path.
+  const settingsHydrated = useSettingsHydrated();
+  useEffect(() => {
+    if (settingsHydrated) startKbUpdates(useSettingsStore.getState().language);
+  }, [settingsHydrated]);
 
   // `system` means "no override", which is what ThemeProvider's undefined `theme` prop means.
   const themeOverride = appearance === 'system' ? undefined : appearance;

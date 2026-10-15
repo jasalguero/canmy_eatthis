@@ -1,6 +1,7 @@
 import {
   type AliasIndex,
   type AliasSearchIndex,
+  type KbBundle,
   type ResolvedKbEntryWithMeta,
   ResolvedKbEntryWithMetaSchema,
   type TextResolution,
@@ -49,6 +50,8 @@ const entryMapCache: Partial<Record<SupportedLanguage, EntryMap>> = {};
  * mode we want: loud at development time, never a silently wrong verdict on a phone.
  */
 function getEntryMap(language: SupportedLanguage): EntryMap {
+  const updated = activeUpdate(language);
+  if (updated) return updated;
   const cached = entryMapCache[language];
   if (cached) return cached;
 
@@ -69,8 +72,60 @@ let searchIndex: AliasSearchIndex | null = null;
 
 /** Built once, lazily — this is the expensive part `docs/07 Phase 3`'s <150 ms budget is about. */
 function getSearchIndex(): AliasSearchIndex {
+  const updated = activeUpdate(activeLanguage);
+  if (updated) return updated.search;
   if (!searchIndex) searchIndex = buildAliasSearchIndex(ALIAS_INDEX);
   return searchIndex;
+}
+
+function getAliasIndex(): AliasIndex {
+  return activeUpdate(activeLanguage)?.index ?? ALIAS_INDEX;
+}
+
+/**
+ * A KB update installed at launch (`lib/kbUpdate.ts`, docs/02 D38), already signature-checked and
+ * validated. It replaces the bundled KB as a whole — entries and alias index together — and only
+ * while the app is in the update's language, so an id the index finds always exists in the entries
+ * it is looked up in. Any other language runs on the bundled KB, also as a whole.
+ */
+interface UpdatedKb extends EntryMap {
+  lang: SupportedLanguage;
+  index: AliasIndex;
+  search: AliasSearchIndex;
+}
+
+let update: UpdatedKb | null = null;
+let activeLanguage: SupportedLanguage | null = null;
+
+function activeUpdate(language: SupportedLanguage | null): UpdatedKb | null {
+  return update && language && update.lang === language && activeLanguage === language
+    ? update
+    : null;
+}
+
+/** The language the app is showing; an installed update applies only while it matches. */
+export function setActiveKbLanguage(language: SupportedLanguage): void {
+  activeLanguage = language;
+}
+
+export function installKbUpdate(bundle: KbBundle): void {
+  update = {
+    lang: bundle.lang,
+    version: bundle.version,
+    byId: new Map(bundle.entries.map((entry) => [entry.id, entry])),
+    index: bundle.index,
+    search: buildAliasSearchIndex(bundle.index),
+  };
+}
+
+/** Back to the bundled KB everywhere. For tests, and for an update found faulty after install. */
+export function clearKbUpdate(): void {
+  update = null;
+}
+
+/** The version the app shipped with, which an update must differ from to be worth installing. */
+export function getBundledKbVersion(language: SupportedLanguage): string {
+  return RAW_BY_LANGUAGE[language].version;
 }
 
 export function getKbEntry(
@@ -87,13 +142,13 @@ export function getKbVersion(language: SupportedLanguage): string {
 /**
  * Tier 0 (exact/alias) then tier 1 (conservative fuzzy) resolution, entirely on-device
  * (docs/01-architecture.md §"resolution tiers"). Calls the shared, pure `resolveText` —
- * AGENTS.md #5 — against the bundled index built above. The alias index is language-agnostic
+ * AGENTS.md #5 — against the bundled index built above, or an installed update's. The alias index is language-agnostic
  * (docs/07 Phase 3: "cross-language alias fallback works" — one merged index, built by
  * `buildAliasIndex` across every language), so this takes no `language` argument; look the
  * resolved id up per-language with `getKbEntry` afterwards.
  */
 export function resolveOffline(query: string): TextResolution {
-  return resolveText(query, ALIAS_INDEX, getSearchIndex());
+  return resolveText(query, getAliasIndex(), getSearchIndex());
 }
 
 /**
@@ -118,7 +173,7 @@ export interface KbSuggestion {
  * (`suggestText` in `packages/shared`).
  */
 export function suggestOffline(query: string, language: SupportedLanguage): KbSuggestion[] {
-  return suggestText(query, ALIAS_INDEX, getSearchIndex()).flatMap((kbId) => {
+  return suggestText(query, getAliasIndex(), getSearchIndex()).flatMap((kbId) => {
     const entry = getKbEntry(kbId, language);
     return entry ? [{ kbId, name: entry.displayName }] : [];
   });

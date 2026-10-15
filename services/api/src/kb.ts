@@ -110,6 +110,11 @@ export function getEntryCount(language: Language): number {
   return getEntryMap(language).byId.size;
 }
 
+/** The language-agnostic alias index, served alongside each language's entries. */
+export function getAliasIndex(): AliasIndex {
+  return ALIAS_INDEX;
+}
+
 /** The raw artefact exactly as bundled — served by `GET /v1/kb/:lang` and hashed by the manifest. */
 export function getRawArtifact(language: Language): LanguageArtifact {
   return RAW_BY_LANGUAGE[language];

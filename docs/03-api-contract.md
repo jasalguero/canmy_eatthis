@@ -120,13 +120,15 @@ There is no `mechanism`, `riskBand` or weight/amount context: those features are
 ## `GET /v1/kb/manifest`
 
 ```jsonc
-{ "version": "2026.09.17", "entryCount": 512, "sha256": "...", "minAppVersion": "1.0.0",
-  "url": "https://cdn.../kb-2026.09.17.json.gz", "sizeBytes": 214_880 }
+{ "version": "99890da4c347", "lang": "en", "entryCount": 76, "sha256": "...",
+  "sizeBytes": 160_221, "minAppVersion": "1.0.0", "url": "/v1/kb/en",
+  "signature": "base64 Ed25519 over the bytes at url, or null" }
 ```
 
-App checks on cold start (max once per 24 h), downloads and swaps atomically if newer, keeps the
-bundled snapshot as fallback. Signature-verify before swapping. This is the path that lets a wrong
-verdict be corrected the same day without a store release.
+`GET /v1/kb/:lang` serves `{ version, lang, entries, index }`: one language's entries and the alias
+index. The app checks at most once a day per language, verifies everything before storing, installs
+at the next launch, and keeps the bundled snapshot as the fallback (docs/02 D38). This is the path
+that lets a wrong verdict be corrected the same day without a store release.
 
 ## `GET /v1/hotlines?region=ES`
 

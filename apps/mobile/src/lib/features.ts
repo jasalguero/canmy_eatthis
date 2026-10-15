@@ -17,12 +17,23 @@ export interface Features {
   /** Photo identification: the camera's photo mode, the library picker, the photo tray and AI
    *  consent. */
   photoId: boolean;
+  /** Knowledge-base updates from the Worker (`lib/kbUpdate.ts`, docs/02 D38). On only when the
+   *  build names both the Worker and the key its KB must be signed with. */
+  kbUpdates: { apiUrl: string; publicKeyBase64: string } | null;
 }
 
 export function parseFlag(value: string | undefined): boolean {
   return value === '1' || value === 'true';
 }
 
+export function kbUpdateConfig(
+  apiUrl: string | undefined,
+  publicKeyBase64: string | undefined,
+): Features['kbUpdates'] {
+  return apiUrl?.startsWith('https://') && publicKeyBase64 ? { apiUrl, publicKeyBase64 } : null;
+}
+
 export const features: Features = {
   photoId: parseFlag(process.env.EXPO_PUBLIC_FEATURE_PHOTO_ID),
+  kbUpdates: kbUpdateConfig(process.env.EXPO_PUBLIC_API_URL, process.env.EXPO_PUBLIC_KB_PUBLIC_KEY),
 };
