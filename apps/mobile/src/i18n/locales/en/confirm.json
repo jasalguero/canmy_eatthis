@@ -9,5 +9,6 @@
   "somethingElsePlaceholder": "Type what it is",
   "confirmCta": "Yes, that's it",
   "plantWarning": "Identifying plants from photos is unreliable. Confirm with a vet before acting on this.",
-  "a11ySelected": "Selected"
+  "a11ySelected": "Selected",
+  "confirmChoiceCta": "Check this one"
 }

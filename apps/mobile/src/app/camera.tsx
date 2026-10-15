@@ -9,9 +9,9 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Screen } from '@/components/layout';
 import { Button, IconButton, Text } from '@/components/primitives';
 import { MAX_PHOTOS, useDraftStore } from '@/lib/draft';
-import { features } from '@/lib/features';
 import { processImage } from '@/lib/imagePipeline';
 import { openAppSettings, permissionUiState } from '@/lib/permissions';
+import { usePhotoIdEnabled } from '@/lib/photoFlow';
 import { sizes } from '@/theme/tokens';
 
 /**
@@ -30,7 +30,8 @@ const BARCODE_TYPES = ['ean13', 'ean8', 'upc_a', 'upc_e'] as const;
 export default function CameraRoute() {
   const params = useLocalSearchParams<{ mode?: string }>();
   const isBarcode = params.mode === 'barcode';
-  if (!isBarcode && !features.photoId) return <Redirect href="/" />;
+  const photoId = usePhotoIdEnabled();
+  if (!isBarcode && !photoId) return <Redirect href="/" />;
   return <CameraScreen isBarcode={isBarcode} />;
 }
 

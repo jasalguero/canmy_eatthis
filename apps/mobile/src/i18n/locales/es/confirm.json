@@ -9,5 +9,6 @@
   "somethingElsePlaceholder": "Escribe qué es",
   "confirmCta": "Sí, es eso",
   "plantWarning": "Identificar plantas a partir de fotos no es fiable. Confírmalo con tu veterinario antes de actuar.",
-  "a11ySelected": "Seleccionado"
+  "a11ySelected": "Seleccionado",
+  "confirmChoiceCta": "Comprobar este"
 }

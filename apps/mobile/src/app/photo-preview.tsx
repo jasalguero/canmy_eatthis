@@ -6,11 +6,12 @@ import { Image, View } from 'react-native';
 import { Screen } from '@/components/layout';
 import { Button, IconButton, Text } from '@/components/primitives';
 import { useDraftStore } from '@/lib/draft';
-import { features } from '@/lib/features';
+import { usePhotoIdEnabled } from '@/lib/photoFlow';
 
 /** Photos exist only in a build with photo identification (`lib/features.ts`, D28). */
 export default function PhotoPreviewRoute() {
-  if (!features.photoId) return <Redirect href="/" />;
+  const photoId = usePhotoIdEnabled();
+  if (!photoId) return <Redirect href="/" />;
   return <PhotoPreview />;
 }
 

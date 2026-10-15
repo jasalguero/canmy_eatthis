@@ -20,6 +20,9 @@ export interface Features {
   /** Knowledge-base updates from the Worker (`lib/kbUpdate.ts`, docs/02 D38). On only when the
    *  build names both the Worker and the key its KB must be signed with. */
   kbUpdates: { apiUrl: string; publicKeyBase64: string } | null;
+  /** The Worker's https URL, or `null` when the build names none (photo identification then has
+   *  nowhere to send a photo, and says so). */
+  apiUrl: string | null;
 }
 
 export function parseFlag(value: string | undefined): boolean {
@@ -33,7 +36,12 @@ export function kbUpdateConfig(
   return apiUrl?.startsWith('https://') && publicKeyBase64 ? { apiUrl, publicKeyBase64 } : null;
 }
 
+export function apiUrlConfig(apiUrl: string | undefined): string | null {
+  return apiUrl?.startsWith('https://') ? apiUrl : null;
+}
+
 export const features: Features = {
   photoId: parseFlag(process.env.EXPO_PUBLIC_FEATURE_PHOTO_ID),
   kbUpdates: kbUpdateConfig(process.env.EXPO_PUBLIC_API_URL, process.env.EXPO_PUBLIC_KB_PUBLIC_KEY),
+  apiUrl: apiUrlConfig(process.env.EXPO_PUBLIC_API_URL),
 };

@@ -22,8 +22,8 @@ import {
   Text,
 } from '@/components/primitives';
 import { MAX_PHOTOS, useDraftStore } from '@/lib/draft';
-import { features } from '@/lib/features';
 import { processImage } from '@/lib/imagePipeline';
+import { usePhotoIdEnabled } from '@/lib/photoFlow';
 import { useSettingsHydrated, useSettingsStore } from '@/lib/settings';
 import { useTheme } from '@/theme/ThemeProvider';
 import { tokens } from '@/theme/tokens';
@@ -64,6 +64,7 @@ export default function Home() {
 }
 
 function HomeScreen() {
+  const photoId = usePhotoIdEnabled();
   const { t } = useTranslation();
   const { theme } = useTheme();
   const species = useDraftStore((state) => state.species);
@@ -145,7 +146,7 @@ function HomeScreen() {
 
             <SpeciesToggle value={species} onChange={setSpecies} />
 
-            {features.photoId ? (
+            {photoId ? (
               <View className="gap-2">
                 <Text variant="label" tone="secondary" accessibilityRole="header">
                   {t('home:photosLabel')}
@@ -174,19 +175,19 @@ function HomeScreen() {
 
         <StickyFooter>
           <CheckButton
-            photoCount={photos.length}
+            photoCount={photoId ? photos.length : 0}
             description={description}
             onPress={() =>
               router.push({
                 pathname: '/identifying',
-                params: { species, hasPhoto: photos.length > 0 ? '1' : '0' },
+                params: { species, hasPhoto: photoId && photos.length > 0 ? '1' : '0' },
               })
             }
           />
         </StickyFooter>
       </KeyboardAvoidingView>
 
-      {features.photoId ? (
+      {photoId ? (
         <PhotoSourceSheet
           visible={sourceSheetVisible}
           onClose={() => setSourceSheetVisible(false)}

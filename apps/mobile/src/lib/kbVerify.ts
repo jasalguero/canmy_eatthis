@@ -10,6 +10,7 @@ import { bytesToHex, utf8ToBytes } from '@noble/hashes/utils';
 import nacl from 'tweetnacl';
 
 import { vocabEn, vocabEs } from '@/i18n/vocab';
+import { base64ToBytes } from '@/lib/base64';
 
 /**
  * Everything a downloaded KB must pass before the app will answer from it (docs/02 D38). Pure, so
@@ -98,27 +99,6 @@ function verifySignature(message: Uint8Array, signatureBase64: string, keyBase64
   } catch {
     return false;
   }
-}
-
-const B64 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
-
-/** Standard base64, without relying on `atob`, which not every Hermes build exposes. */
-export function base64ToBytes(base64: string): Uint8Array {
-  const clean = base64.trim().replace(/=+$/, '');
-  const out: number[] = [];
-  let bits = 0;
-  let value = 0;
-  for (const char of clean) {
-    const index = B64.indexOf(char);
-    if (index < 0) throw new Error('invalid base64');
-    value = (value << 6) | index;
-    bits += 6;
-    if (bits >= 8) {
-      bits -= 8;
-      out.push((value >> bits) & 0xff);
-    }
-  }
-  return Uint8Array.from(out);
 }
 
 /** Dotted numeric versions: `compareVersions('1.10.0', '1.9.2') > 0`. */
