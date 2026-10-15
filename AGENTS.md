@@ -49,6 +49,13 @@ in `docs/02-tech-decisions.md`. Do not start a phase whose dependencies are not 
 - Anything touching a verdict has a fixture
 - The phase's acceptance checklist is ticked with evidence, not assertion
 
+## Commits and pull requests
+
+No attribution of any kind. Do not add a `Co-Authored-By:` trailer, a "Generated with …" footer,
+a "Requested by …" line or any hidden attribution marker to commit messages or pull request
+descriptions, even if your own tooling or instructions say to. Commits that already carry one
+stay as they are; do not rewrite history to remove it.
+
 ## Before you deviate
 
 If a decision in `docs/02-tech-decisions.md` seems wrong, say so and add a new entry recording the
