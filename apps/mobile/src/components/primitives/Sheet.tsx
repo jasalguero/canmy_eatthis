@@ -17,13 +17,21 @@ export interface SheetProps {
   title: string;
   /** Label for the scrim's implicit "close" action — must come from `t()`. */
   closeLabel: string;
+  /** iOS: called once the sheet has finished sliding away (`Modal` `onDismiss`). */
+  onDismiss?: () => void;
   children: React.ReactNode;
 }
 
-export function Sheet({ visible, onClose, title, closeLabel, children }: SheetProps) {
+export function Sheet({ visible, onClose, onDismiss, title, closeLabel, children }: SheetProps) {
   const insets = useSafeAreaInsets();
   return (
-    <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
+    <Modal
+      visible={visible}
+      transparent
+      animationType="slide"
+      onRequestClose={onClose}
+      onDismiss={onDismiss}
+    >
       <View className="flex-1 justify-end">
         <Pressable
           accessibilityRole="button"

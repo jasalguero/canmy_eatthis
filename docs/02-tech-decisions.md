@@ -1035,3 +1035,18 @@ KB versions are content hashes, not ordered, so "different from the one in use" 
 **Off by default.** A build makes no network call for this unless it sets both
 `EXPO_PUBLIC_API_URL` (https) and `EXPO_PUBLIC_KB_PUBLIC_KEY`. Turning it on means the app contacts
 our Worker at launch, which the privacy policy must say before that build ships (docs/05 §6).
+
+## D39 — The photo request is a plain client, not TanStack Query
+
+docs/07 Phase 5 named a TanStack Query client for photo identification. The app makes exactly one
+kind of server call that a screen waits on, `POST /v1/identify`, once per check, with nothing to
+cache on the device (the Worker caches answers) and nothing to refetch. A query library would add
+a provider, a dependency and its own retry semantics for that one call.
+
+Instead `apps/mobile/src/lib/identifyClient.ts` is a small typed client over the shared Zod
+schemas, with what the plan actually asked of the library: retry with backoff (twice, only for a
+dropped connection or a 502/503/504, never for a refusal such as `RATE_LIMITED` or
+`SPEND_CAP_EXCEEDED`), a timeout, and cancellation when the person leaves the Identifying screen.
+Its outcome is always `ok`, a docs/03 error code, or `offline`, each with a designed screen.
+
+Revisit if the app grows a second server-backed screen that needs caching or background refetch.

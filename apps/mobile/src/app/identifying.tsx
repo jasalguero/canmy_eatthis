@@ -1,6 +1,6 @@
 import type { Species } from '@canmyeatthis/shared';
 import { router, useLocalSearchParams } from 'expo-router';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Animated, Image, type LayoutChangeEvent, View } from 'react-native';
 
@@ -20,7 +20,12 @@ import {
 import { devPhotoUri } from '@/lib/devPreview';
 import { useDraftStore } from '@/lib/draft';
 import { features } from '@/lib/features';
+import type { IdentifyOutcome } from '@/lib/identifyClient';
+import { encodeForUpload } from '@/lib/imagePipeline';
 import { resolveOffline } from '@/lib/offlineKb';
+import { runPhotoCheck } from '@/lib/photoCheck';
+import { routeForPhotoOutcome, usePhotoIdEnabled, usePhotoResultStore } from '@/lib/photoFlow';
+import { useSettingsStore } from '@/lib/settings';
 import { useTheme } from '@/theme/ThemeProvider';
 import { MAGNIFIER_COLORS } from '@/theme/mascot';
 import { type Keyframes, MAGNIFIER, SCAN } from '@/theme/motion';
@@ -75,13 +80,46 @@ const STAGE_MS = 900;
 export default function Identifying() {
   const { t } = useTranslation();
   const params = useLocalSearchParams<{ species?: string; hasPhoto?: string }>();
-  // A photo path only exists with photo identification (`lib/features.ts`, D28).
-  const hasPhoto = features.photoId && params.hasPhoto === '1';
   const species: Species = params.species === 'cat' ? 'cat' : 'dog';
   const [stage, setStage] = useState(0);
-  const stageKeys = hasPhoto ? PHOTO_STAGE_KEYS : TEXT_STAGE_KEYS;
   const description = useDraftStore((state) => state.description);
   const draftPhotos = useDraftStore((state) => state.photos);
+  const language = useSettingsStore((state) => state.language);
+  const setPhotoResponse = usePhotoResultStore((state) => state.setResponse);
+
+  // Typed text is tried on the device first, even with a photo attached (docs/07 Phase 5): an
+  // exact match is a sourced answer that costs nothing and never sends the photo. Decided once,
+  // for what was on Home when Check was pressed.
+  const [localExact] = useState(() => {
+    const resolution = resolveOffline(description);
+    return resolution.type === 'exact' ? resolution.kbId : null;
+  });
+  // A photo path only exists with photo identification and consent (`lib/photoFlow.ts`).
+  const photoIdOn = usePhotoIdEnabled();
+  const hasPhoto = photoIdOn && params.hasPhoto === '1' && draftPhotos.length > 0 && !localExact;
+  const stageKeys = hasPhoto ? PHOTO_STAGE_KEYS : TEXT_STAGE_KEYS;
+
+  // The request starts as soon as the screen does; the stages keep the moment readable and the
+  // last one waits for the answer. Leaving the screen cancels it.
+  const [photoOutcome, setPhotoOutcome] = useState<IdentifyOutcome | null>(null);
+  const started = useRef(false);
+  useEffect(() => {
+    if (!hasPhoto || started.current) return;
+    started.current = true;
+    const controller = new AbortController();
+    void runPhotoCheck(
+      { photos: draftPhotos, description, species, language, signal: controller.signal },
+      {
+        apiUrl: features.apiUrl,
+        deviceId: () => useSettingsStore.getState().ensureDeviceId(),
+        encode: encodeForUpload,
+        fetch,
+      },
+    ).then((outcome) => {
+      if (!controller.signal.aborted) setPhotoOutcome(outcome);
+    });
+    return () => controller.abort();
+  }, [hasPhoto, draftPhotos, description, species, language]);
   const previewUri = draftPhotos[0] ?? devPhotoUri();
 
   // Only a photo is "sniffed": it's a metaphor for examining the picture, and doesn't fit a
@@ -96,18 +134,19 @@ export default function Identifying() {
 
     // Last stage: hand off, rather than sitting on a finished progress list forever.
     //
-    // A photo-derived identification always goes through Confirm — real photo *identification*
-    // needs a vision model that doesn't exist until Phase 4, so this still hands off to Confirm's
-    // mock candidates (AGENTS.md #1: the model produces candidates, never verdicts, so this was
-    // always going through a confirmation step regardless).
+    // A photo check goes where `routeForPhotoOutcome` says: Confirm for any identification
+    // (docs/05 §1 rule 5: never straight to a result), or the designed screen for its error. It
+    // waits here, on the last stage, until the answer is in.
     //
     // Typed input is real as of Phase 3: `resolveOffline` runs the on-device exact/alias/fuzzy
     // resolver from `packages/shared` (AGENTS.md #5) against the bundled KB. An exact match
     // skips Confirm — nothing to confirm when the user typed the exact name — a fuzzy match
     // goes to Confirm with that one real candidate, and no match is a real `unknown`, not a mock.
+    if (hasPhoto && !photoOutcome) return;
     const id = setTimeout(() => {
-      if (hasPhoto) {
-        router.replace('/confirm');
+      if (hasPhoto && photoOutcome) {
+        setPhotoResponse(photoOutcome.kind === 'ok' ? photoOutcome.response : null);
+        router.replace(routeForPhotoOutcome(photoOutcome, species));
         return;
       }
       const resolution = resolveOffline(description);
@@ -130,7 +169,16 @@ export default function Identifying() {
       }
     }, STAGE_MS);
     return () => clearTimeout(id);
-  }, [stage, hasPhoto, stageKeys.length, description, params.species]);
+  }, [
+    stage,
+    hasPhoto,
+    photoOutcome,
+    stageKeys.length,
+    description,
+    params.species,
+    species,
+    setPhotoResponse,
+  ]);
 
   return (
     <Screen className="justify-between px-4 py-6">

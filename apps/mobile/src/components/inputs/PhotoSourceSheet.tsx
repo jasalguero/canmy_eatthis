@@ -1,5 +1,6 @@
+import { useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Pressable, View } from 'react-native';
+import { Platform, Pressable, View } from 'react-native';
 
 import { Sheet, Text } from '@/components/primitives';
 import { sizes } from '@/theme/tokens';
@@ -25,6 +26,24 @@ export function PhotoSourceSheet({
   onSelectBarcode,
 }: PhotoSourceSheetProps) {
   const { t } = useTranslation();
+  // iOS will not present the photo picker or the camera while this sheet's `Modal` is still
+  // sliding away: the call returns and nothing appears. So the chosen action waits for the sheet
+  // to finish dismissing. Android has no such limit and no `onDismiss`, so it runs at once.
+  const pending = useRef<(() => void) | null>(null);
+  const choose = (action: () => void) => {
+    if (Platform.OS === 'ios') {
+      pending.current = action;
+      onClose();
+    } else {
+      onClose();
+      action();
+    }
+  };
+  const runPending = () => {
+    const action = pending.current;
+    pending.current = null;
+    action?.();
+  };
 
   const options: { label: string; onPress: () => void }[] = [
     { label: t('camera:sourceCamera'), onPress: onSelectCamera },
@@ -38,6 +57,7 @@ export function PhotoSourceSheet({
       onClose={onClose}
       title={t('camera:sourceSheetTitle')}
       closeLabel={t('camera:sourceSheetCloseA11y')}
+      onDismiss={runPending}
     >
       <View className="gap-1 pb-2">
         {options.map((option) => (
@@ -45,10 +65,7 @@ export function PhotoSourceSheet({
             key={option.label}
             accessibilityRole="button"
             accessibilityLabel={option.label}
-            onPress={() => {
-              onClose();
-              option.onPress();
-            }}
+            onPress={() => choose(option.onPress)}
             style={{ minHeight: sizes.touchTarget }}
             className="justify-center rounded-md px-2 active:bg-surface-sunken"
           >

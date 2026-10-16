@@ -39,6 +39,14 @@ interface SettingsState {
   photoIdConsent: boolean;
   /** Whether the first-run flow has been completed. */
   onboarded: boolean;
+  /**
+   * The anonymous id `POST /v1/identify` needs for per-device rate limiting (docs/03 Auth, D24).
+   * Made the first time a photo is sent, never before; it identifies no one and is sent nowhere
+   * else.
+   */
+  deviceId: string | null;
+  /** Returns the device id, making it on first use. */
+  ensureDeviceId: () => string;
   /** Sets language only. Never touches region — see the module doc comment. */
   setLanguage: (language: SupportedLanguage) => void;
   /** Sets region only. Never touches language — see the module doc comment. */
@@ -50,12 +58,20 @@ interface SettingsState {
 
 export const useSettingsStore = create<SettingsState>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       language: deviceDefaultLanguage(),
       region: deviceDefaultRegion(),
       appearance: 'system',
       photoIdConsent: false,
       onboarded: false,
+      deviceId: null,
+      ensureDeviceId: () => {
+        const existing = get().deviceId;
+        if (existing) return existing;
+        const id = randomUuid();
+        set({ deviceId: id });
+        return id;
+      },
       setLanguage: (language) => set({ language }),
       setRegion: (region) => set({ region }),
       setAppearance: (appearance) => set({ appearance }),
@@ -71,6 +87,7 @@ export const useSettingsStore = create<SettingsState>()(
         appearance: state.appearance,
         photoIdConsent: state.photoIdConsent,
         onboarded: state.onboarded,
+        deviceId: state.deviceId,
       }),
     },
   ),
@@ -91,3 +108,19 @@ export function useSettingsHydrated(): boolean {
 }
 
 export { SUPPORTED_LANGUAGES };
+
+/**
+ * A version-4 UUID. `crypto.getRandomValues` where the runtime has it; otherwise `Math.random`,
+ * which is enough for an id whose only job is to tell one phone's request rate from another's.
+ */
+export function randomUuid(): string {
+  const bytes = new Uint8Array(16);
+  const cryptoApi = (globalThis as { crypto?: { getRandomValues?: (a: Uint8Array) => void } })
+    .crypto;
+  if (cryptoApi?.getRandomValues) cryptoApi.getRandomValues(bytes);
+  else for (let i = 0; i < 16; i++) bytes[i] = Math.floor(Math.random() * 256);
+  bytes[6] = ((bytes[6] ?? 0) & 0x0f) | 0x40;
+  bytes[8] = ((bytes[8] ?? 0) & 0x3f) | 0x80;
+  const hex = Array.from(bytes, (b) => b.toString(16).padStart(2, '0')).join('');
+  return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20)}`;
+}

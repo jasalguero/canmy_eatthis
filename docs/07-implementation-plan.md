@@ -284,13 +284,16 @@ Photo identification — **second release**:
 - [ ] The privacy policy and terms of use are published and match the app's actual behaviour
 - [ ] *(second release)* End-to-end against a 20-photo test set on both platforms; results recorded
       in `docs/eval/` with per-item pass/fail
-- [ ] *(second release)* Confirm screen never skipped for a photo-derived identification (asserted
+- [x] *(second release)* Confirm screen never skipped for a photo-derived identification (asserted
       in code and tested)
-- [ ] *(second release)* Killing the network mid-request produces the designed offline state, not a
+      *Evidence: `routeForPhotoOutcome` (`lib/photoFlow.ts`) sends every photo answer to Confirm or an error screen; `photoId.test.ts` holds it, including a server answer that says no confirmation is needed, 2026-10-15*
+- [x] *(second release)* Killing the network mid-request produces the designed offline state, not a
       crash
+      *Evidence: `photoId.test.ts`: a dropped connection is retried twice and then routes to the designed `offline` error screen; leaving the screen cancels the request. Unit-tested, not yet pulled on a device*
 - [ ] *(second release)* Identical `(kbId, species)` yields byte-identical verdicts on-device and
       server-side — shared fixture suite runs in both environments
-- [ ] *(second release)* Declining AI consent leaves a working app
+- [x] *(second release)* Declining AI consent leaves a working app
+      *Evidence: photo controls need the build flag and consent (`usePhotoIdEnabled`); on the iOS simulator with consent off, Home showed the text-and-barcode layout, and turning consent on in Settings brought the photo tray back, 2026-10-15*
 
 ---
 
