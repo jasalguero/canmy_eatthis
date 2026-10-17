@@ -24,6 +24,7 @@ interface DraftState {
   addPhoto: (uri: string) => void;
   removePhoto: (index: number) => void;
   movePhoto: (index: number, direction: -1 | 1) => void;
+  /** Clears the input for the next check. Keeps `species`: the pet doesn't change between checks. */
   reset: () => void;
 }
 
@@ -51,7 +52,7 @@ export const useDraftStore = create<DraftState>()(
           photos.splice(target, 0, moved);
           return { photos };
         }),
-      reset: () => set(initialState),
+      reset: () => set({ description: initialState.description, photos: initialState.photos }),
     }),
     {
       name: 'canmyeatthis.draft.v1',

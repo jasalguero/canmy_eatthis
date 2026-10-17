@@ -3,6 +3,7 @@ import { MAX_PHOTOS, useDraftStore } from './draft';
 describe('useDraftStore', () => {
   beforeEach(() => {
     useDraftStore.getState().reset();
+    useDraftStore.getState().setSpecies('dog');
   });
 
   it('adds and removes photos', () => {
@@ -50,7 +51,7 @@ describe('useDraftStore', () => {
     expect(useDraftStore.getState().photos).toEqual(['file://a.jpg', 'file://b.jpg']);
   });
 
-  it('reset clears species, description and photos back to defaults', () => {
+  it('reset clears description and photos but keeps the species', () => {
     useDraftStore.getState().setSpecies('cat');
     useDraftStore.getState().setDescription('dark chocolate');
     useDraftStore.getState().addPhoto('file://a.jpg');
@@ -58,7 +59,7 @@ describe('useDraftStore', () => {
     useDraftStore.getState().reset();
 
     const state = useDraftStore.getState();
-    expect(state.species).toBe('dog');
+    expect(state.species).toBe('cat');
     expect(state.description).toBe('');
     expect(state.photos).toEqual([]);
   });

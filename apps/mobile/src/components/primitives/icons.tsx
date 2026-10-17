@@ -58,6 +58,24 @@ export function HistoryIcon({ size = 22, color }: IconProps) {
   );
 }
 
+/** A downward chevron — `Collapsible`'s open/closed affordance; the caller rotates it when open. */
+export function ChevronDownIcon({ size = 18, color }: IconProps) {
+  return (
+    <Svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke={color}
+      strokeWidth={2.8}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <Path d="M6 9.5l6 6 6-6" />
+    </Svg>
+  );
+}
+
 /** A camera body — the photo tray's empty-state icon, matching the design canvas's camera glyph. */
 export function CameraIcon({ size = 26, color }: IconProps) {
   return (

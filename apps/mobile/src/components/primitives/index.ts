@@ -5,6 +5,7 @@ export { IconButton, type IconButtonProps } from './IconButton';
 export {
   CameraIcon,
   CheckIcon,
+  ChevronDownIcon,
   HistoryIcon,
   type IconProps,
   MagnifierIcon,
