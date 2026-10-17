@@ -59,10 +59,7 @@ export function Collapsible({
 
   return (
     <View
-      className={[
-        'rounded-md border-2 border-line-strong bg-surface-raised',
-        className ?? '',
-      ]
+      className={['rounded-md border-2 border-line-strong bg-surface-raised', className ?? '']
         .filter(Boolean)
         .join(' ')}
     >
