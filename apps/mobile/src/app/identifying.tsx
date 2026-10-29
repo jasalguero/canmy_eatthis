@@ -120,7 +120,7 @@ export default function Identifying() {
       } else if (resolution.type === 'fuzzy' && resolution.kbId) {
         router.replace({
           pathname: '/confirm',
-          params: { kbId: resolution.kbId, species: params.species ?? 'dog' },
+          params: { kbId: resolution.kbId, species: params.species ?? 'dog', query: description },
         });
       } else {
         router.replace({

@@ -44,7 +44,12 @@ interface ConfirmProps {
 }
 
 export default function ConfirmRoute() {
-  const params = useLocalSearchParams<{ plant?: string; kbId?: string; species?: string }>();
+  const params = useLocalSearchParams<{
+    plant?: string;
+    kbId?: string;
+    species?: string;
+    query?: string;
+  }>();
   const language = useSettingsStore((state) => state.language);
   const draftPhotos = useDraftStore((state) => state.photos);
   const isPlant = params.plant === '1';
@@ -65,7 +70,8 @@ export default function ConfirmRoute() {
         alternates={[]}
         photoUri={null}
         isPlant={false}
-        resultParams={{ kbId: entry.id, species }}
+        // `query` rides along so History can find the check by what was typed.
+        resultParams={{ kbId: entry.id, species, query: params.query ?? '' }}
       />
     );
   }

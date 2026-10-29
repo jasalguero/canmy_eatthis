@@ -124,9 +124,10 @@ export async function checkForKbUpdate(
     const manifestRes = await fetchWithTimeout(
       deps.fetch,
       `${base}/v1/kb/manifest?lang=${language}`,
+      (res) => res.json() as Promise<{ version?: unknown; url?: unknown }>,
     );
     if (!manifestRes.ok) return { failed: `manifest HTTP ${manifestRes.status}` };
-    const manifest = (await manifestRes.json()) as { version?: unknown; url?: unknown };
+    const manifest = manifestRes.value;
 
     await db.runAsync(
       'INSERT OR REPLACE INTO kb_checks (lang, checked_at) VALUES (?, ?)',
@@ -138,9 +139,11 @@ export async function checkForKbUpdate(
       return { rejected: 'manifest url is not a path on this server' };
     }
 
-    const bodyRes = await fetchWithTimeout(deps.fetch, `${base}${manifest.url}`);
+    const bodyRes = await fetchWithTimeout(deps.fetch, `${base}${manifest.url}`, (res) =>
+      res.text(),
+    );
     if (!bodyRes.ok) return { failed: `KB HTTP ${bodyRes.status}` };
-    const body = await bodyRes.text();
+    const body = bodyRes.value;
 
     const result = verifyKbDownload({
       manifest,
@@ -166,11 +169,23 @@ export async function checkForKbUpdate(
   }
 }
 
-async function fetchWithTimeout(fetchFn: typeof fetch, url: string): Promise<Response> {
+type Fetched<T> = { ok: true; value: T } | { ok: false; status: number };
+
+/**
+ * The timeout covers reading the body too, not only the headers: a server that answers and then
+ * stalls mid-body would otherwise hang this check for the rest of the app's run.
+ */
+async function fetchWithTimeout<T>(
+  fetchFn: typeof fetch,
+  url: string,
+  read: (res: Response) => Promise<T>,
+): Promise<Fetched<T>> {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
   try {
-    return await fetchFn(url, { signal: controller.signal });
+    const res = await fetchFn(url, { signal: controller.signal });
+    if (!res.ok) return { ok: false, status: res.status };
+    return { ok: true, value: await read(res) };
   } finally {
     clearTimeout(timer);
   }

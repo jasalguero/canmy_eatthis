@@ -21,8 +21,13 @@ export function emergencyHotlines(region: string, isDev: boolean = __DEV__): Hot
   return hotlinesForRegion(region, { includeUnverified: isDev });
 }
 
+/**
+ * A device that cannot place calls (an iPad, a simulator) rejects the `tel:` link. The number is
+ * already on the button the person pressed, so there is nothing more to show; the rejection is
+ * caught so it is not an unhandled promise on the emergency path.
+ */
 export function callHotline(hotline: Hotline): void {
-  void Linking.openURL(`tel:${hotline.phone}`);
+  Linking.openURL(`tel:${hotline.phone}`).catch(() => undefined);
 }
 
 /** A maps search, which the platform opens in its maps app or the browser. */

@@ -64,6 +64,7 @@ export default function ResultRoute() {
     species?: string;
     query?: string;
     fromHistory?: string;
+    recorded?: string;
   }>();
   const language = useSettingsStore((state) => state.language);
   const species: Species = params.species === 'cat' ? 'cat' : 'dog';
@@ -96,16 +97,24 @@ export default function ResultRoute() {
 
   // Every real answer goes into History (`lib/history.ts`) — not the gallery's fixed cases, and
   // not a row being re-opened from History itself. The ref keeps one check to one row when the
-  // effect runs twice (React's development double-invoke, a re-render with the same params).
+  // effect runs twice (React's development double-invoke, a re-render with the same params); the
+  // `recorded` param does the same across a remount (`ResetOnRefocus` remounts this screen when
+  // the person comes back from the emergency screen or a suggestion), since params live in the
+  // navigator and survive it.
   const recordCheck = useHistoryStore((state) => state.record);
   const recordedKey = useRef<string | null>(null);
   const isRealCheck = Boolean(params.kbId) || params.unknown === '1';
   const shouldRecord =
-    payload !== null && isRealCheck && params.fromHistory !== '1' && params.still !== '1';
+    payload !== null &&
+    isRealCheck &&
+    params.fromHistory !== '1' &&
+    params.still !== '1' &&
+    params.recorded !== '1';
   useEffect(() => {
     if (!shouldRecord || !payload || recordedKey.current === resultKey) return;
     recordedKey.current = resultKey;
     void recordCheck(recordFromPayload(payload, params.query ?? '', Date.now()));
+    router.setParams({ recorded: '1' });
   }, [shouldRecord, payload, resultKey, recordCheck, params.query]);
 
   if (!payload) return <Redirect href="/" />;

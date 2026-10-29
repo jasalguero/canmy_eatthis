@@ -38,6 +38,14 @@ function worstFirst(a: VerdictPayload, b: VerdictPayload): number {
   return VERDICT_RANK[a.verdict] - VERDICT_RANK[b.verdict] || bySeverity(a) - bySeverity(b);
 }
 
+/**
+ * Answered lookups, by barcode and language. `ResetOnRefocus` remounts this screen when the person
+ * comes back from an ingredient's result; without this, that remount would ask the database again
+ * and, offline, replace the matches (and a toxic one's call button) with "can't reach it".
+ * An `unavailable` answer is never kept, so "Try again" still asks again.
+ */
+const LOOKUP_CACHE = new Map<string, ProductLookup>();
+
 export default function Product() {
   const { t } = useTranslation();
   const params = useLocalSearchParams<{ code?: string; species?: string }>();
@@ -46,20 +54,29 @@ export default function Product() {
   const language = useSettingsStore((state) => state.language);
   const resetDraft = useDraftStore((state) => state.reset);
 
-  const [lookup, setLookup] = useState<ProductLookup | null>(null);
+  const cacheKey = `${code}|${language}`;
+  const [lookup, setLookup] = useState<ProductLookup | null>(
+    () => LOOKUP_CACHE.get(cacheKey) ?? null,
+  );
   const [attempt, setAttempt] = useState(0);
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: `attempt` is the "Try again" trigger itself.
   useEffect(() => {
+    const cached = LOOKUP_CACHE.get(cacheKey);
+    if (cached) {
+      setLookup(cached);
+      return;
+    }
     let cancelled = false;
     setLookup(null);
     void lookupProduct(code, language).then((result) => {
+      if (result.kind !== 'unavailable') LOOKUP_CACHE.set(cacheKey, result);
       if (!cancelled) setLookup(result);
     });
     return () => {
       cancelled = true;
     };
-  }, [code, language, attempt]);
+  }, [cacheKey, attempt]);
 
   const typeInstead = () => router.dismissTo('/');
   const scanAnother = () => router.replace({ pathname: '/camera', params: { mode: 'barcode' } });

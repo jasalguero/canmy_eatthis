@@ -41,7 +41,9 @@ function CameraScreen({ isBarcode }: { isBarcode: boolean }) {
   const [permission, requestPermission] = useCameraPermissions();
   const cameraRef = useRef<CameraView>(null);
   const [capturing, setCapturing] = useState(false);
-  const [scanned, setScanned] = useState(false);
+  // A ref, not state: the scanner can fire several times before a re-render would publish a
+  // state update, and each of those calls would navigate.
+  const scanned = useRef(false);
 
   const photos = useDraftStore((state) => state.photos);
   const addPhoto = useDraftStore((state) => state.addPhoto);
@@ -102,8 +104,8 @@ function CameraScreen({ isBarcode }: { isBarcode: boolean }) {
   function handleBarcode(result: BarcodeScanningResult) {
     // The scanner fires for every frame it can read; act on the first plausible product code
     // only, and keep scanning past anything else.
-    if (scanned || !isPlausibleBarcode(result.data)) return;
-    setScanned(true);
+    if (scanned.current || !isPlausibleBarcode(result.data)) return;
+    scanned.current = true;
     router.replace({ pathname: '/product', params: { code: result.data, species } });
   }
 

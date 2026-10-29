@@ -2,7 +2,7 @@ import type { Species, Verdict } from '@canmyeatthis/shared';
 
 import type { SupportedLanguage } from '@/i18n/namespaces';
 import type { HistoryRecord } from '@/lib/history';
-import { getKbEntry, resolveOffline } from '@/lib/offlineKb';
+import { getKbEntry, resolveExactOffline } from '@/lib/offlineKb';
 import { buildRealVerdict } from '@/lib/verdict';
 
 /**
@@ -22,9 +22,9 @@ export function reopenTarget(record: HistoryRecord, language: SupportedLanguage)
     return { kind: 'entry', kbId: record.kbId, species: record.species };
   }
   const query = record.query || record.displayName;
-  const resolution = resolveOffline(query);
-  if (resolution.type === 'exact' && resolution.kbId && getKbEntry(resolution.kbId, language)) {
-    return { kind: 'entry', kbId: resolution.kbId, species: record.species };
+  const kbId = resolveExactOffline(query);
+  if (kbId && getKbEntry(kbId, language)) {
+    return { kind: 'entry', kbId, species: record.species };
   }
   return { kind: 'unknown', query, species: record.species };
 }
