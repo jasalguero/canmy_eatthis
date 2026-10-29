@@ -31,7 +31,13 @@ import enCatalogue from '../i18n/locales/en/result.json';
 
 const mockParams: { current: Record<string, string> } = { current: {} };
 jest.mock('expo-router', () => ({
-  router: { push: jest.fn(), back: jest.fn(), dismissTo: jest.fn(), replace: jest.fn() },
+  router: {
+    push: jest.fn(),
+    back: jest.fn(),
+    dismissTo: jest.fn(),
+    replace: jest.fn(),
+    setParams: jest.fn(),
+  },
   useLocalSearchParams: () => mockParams.current,
   Redirect: () => null,
 }));
